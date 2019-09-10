@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="net-learning-file" />
+        <module name="net-learning-course" />
+        <module name="net-learning-server-config" />
+        <module name="net-learning-client-config" />
+        <module name="net-learning-eureka-server-9001" />
+        <module name="net-learning-model" />
+        <module name="net-learning-manage-cms" />
+        <module name="net-learning-service-api" />
+        <module name="net-learning-utils" />
+        <module name="net-learning-manage-cms-client" />
+        <module name="net-learning-common" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="net-learning-client-config" options="-parameters" />
+      <module name="net-learning-common" options="-parameters" />
+      <module name="net-learning-course" options="-parameters" />
+      <module name="net-learning-eureka-server-9001" options="-parameters" />
+      <module name="net-learning-file" options="-parameters" />
+      <module name="net-learning-manage-cms" options="-parameters" />
+      <module name="net-learning-manage-cms-client" options="-parameters" />
+      <module name="net-learning-model" options="-parameters" />
+      <module name="net-learning-server-config" options="-parameters" />
+      <module name="net-learning-service-api" options="-parameters" />
+      <module name="net-learning-utils" options="-parameters" />
+    </option>
+  </component>
+</project>

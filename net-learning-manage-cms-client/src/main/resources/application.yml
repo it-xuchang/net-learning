@@ -1,0 +1,52 @@
+server:
+  port: 31000
+spring:
+  application:
+    name: netlearning-service-manage-cms-client
+  data:
+    mongodb:
+      uri:  mongodb://root:root@localhost:27017
+      #uri:  mongodb://localhost:27017
+      database: netlearning_cms
+  freemarker:
+    cache: false  #关闭模板缓存，方便测试
+    settings:
+      template_update_delay: 0
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: /
+    
+netlearning:
+  mq:
+    #cms客户端监控的队列名称（不同的客户端监控的队列不能重复）
+    queue: queue_cms_postpage_01
+    routingKey: 5cf4c016d0e8bf2c3ce72645  #此routingKey为门户站点ID
+    
+
+    
+###服务名称(服务注册到eureka名称)  
+
+###服务注册到eureka地址
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9001/eureka
+###集群地址
+#eureka:
+#  client:
+#    service-url:
+#           defaultZone: http://localhost:8101/eureka,http://localhost:8102/eureka    
+#    register-with-eureka: true
+#    fetch-registry: true
+#    registry-fetch-interval-seconds: 30
+# 心跳检测检测与续约时间
+# 测试时将值设置设置小些，保证服务关闭后注册中心能及时踢出服务
+  instance:
+###Eureka客户端向服务端发送心跳的时间间隔，单位为秒（客户端告诉服务端自己会按照该规则）  
+    lease-renewal-interval-in-seconds: 1
+####Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己）
+    lease-expiration-duration-in-seconds: 2  
