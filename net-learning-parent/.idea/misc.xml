@@ -5,17 +5,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-utils/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-model/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-common/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-service-api/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-manage-cms/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-manage-cms-client/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-course/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-client-config/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-eureka-server-9001/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-file/pom.xml" />
-        <option value="$PROJECT_DIR$/../net-learning-server-config/pom.xml" />
       </list>
     </option>
   </component>

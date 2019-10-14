@@ -7,7 +7,7 @@ spring:
   data:
     mongodb:
       database: netlearning_file
-      uri: mongodb://root:root@127.0.0.1:27017
+      uri: mongodb://xuchang:xuchang@127.0.0.1:27017
 #SpringMVC上传文件配置
   servlet:
     multipart:

@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/../net-learning-client-config" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-common" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-course" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-eureka-server-9001" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-file" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-manage-cms" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-manage-cms-client" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-model" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-server-config" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-service-api" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../net-learning-utils" charset="UTF-8" />
   </component>
 </project>

@@ -34,12 +34,16 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-
-		<!--SpringCloud eureka-server -->
-		<!-- <dependency>
+		<!-- SpringBoot整合eureka客户端 -->
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency> -->
+		</dependency>
+		<!--监控中心-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<!-- web组件 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,6 +72,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
+
 
 	</dependencies>
 	
