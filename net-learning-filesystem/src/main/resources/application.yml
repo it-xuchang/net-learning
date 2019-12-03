@@ -24,13 +24,18 @@ spring:
       
 
 
+#netlearning:
+#  fastdfs:
+#    connect_timeout_in_seconds: 5
+#    network_timeout_in_seconds: 30
+#    charset: UTF-8
+#    tracker_servers: 134.175.30.90:22122
 netlearning:
   fastdfs:
     connect_timeout_in_seconds: 5
     network_timeout_in_seconds: 30
     charset: UTF-8
     tracker_servers: 134.175.30.90:22122
-
 ###服务名称(服务注册到eureka名称)
 ###服务注册到eureka地址
 

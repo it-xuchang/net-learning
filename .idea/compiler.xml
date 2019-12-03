@@ -6,34 +6,49 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="net-learning-file" />
-        <module name="net-learning-course" />
+        <module name="net-learning-order" />
         <module name="net-learning-manage-cms-client" />
-        <module name="net-learning-server-config" />
-        <module name="net-learning-client-config" />
+        <module name="net-learning-filesystem" />
         <module name="net-learning-eureka-server-9001" />
+        <module name="net-learning-course" />
+        <module name="net-learning-ucenter" />
+        <module name="net-learning-gateway" />
+        <module name="net-learning-media" />
+        <module name="net-learning-service-api" />
+        <module name="net-learning-common" />
+        <module name="net-learning-file" />
+        <module name="net-learning-auth" />
+        <module name="net-learning-client-config" />
+        <module name="net-learning-search" />
+        <module name="net-learning-server-config" />
+        <module name="net-learning-media-processor" />
         <module name="net-learning-model" />
         <module name="net-learning-manage-cms" />
-        <module name="net-learning-service-api" />
         <module name="net-learning-utils" />
-        <module name="net-learning-filesystem" />
-        <module name="net-learning-common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="net-learning-auth" target="1.8" />
       <module name="net-learning-client-config" target="1.8" />
       <module name="net-learning-common" target="1.8" />
       <module name="net-learning-course" target="1.8" />
       <module name="net-learning-eureka-server-9001" target="1.8" />
       <module name="net-learning-file" target="1.8" />
       <module name="net-learning-filesystem" target="1.8" />
+      <module name="net-learning-gateway" target="1.8" />
       <module name="net-learning-manage-cms" target="1.8" />
       <module name="net-learning-manage-cms-client" target="1.8" />
+      <module name="net-learning-media" target="1.8" />
+      <module name="net-learning-media-processor" target="1.8" />
       <module name="net-learning-model" target="1.8" />
+      <module name="net-learning-order" target="1.8" />
       <module name="net-learning-parent" target="1.8" />
+      <module name="net-learning-search" target="1.8" />
       <module name="net-learning-server-config" target="1.8" />
       <module name="net-learning-service-api" target="1.8" />
+      <module name="net-learning-ucenter" target="1.8" />
       <module name="net-learning-utils" target="1.8" />
+      <module name="netlearning-media" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
