@@ -33,9 +33,9 @@
 		</dependency>
 
 		<!--SpringCloud eureka-server -->
-		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId> 
+		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			</dependency> -->
-			
+
 		<!--springboot的web组件 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,6 +58,11 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<!-- 导入Eureka客户端的依赖 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<!--springdata jpa -->
 		<dependency>
@@ -93,7 +98,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
         <finalName>id-web-activity-root</finalName>
         <resources>

@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/net-learning-eureka-server-9001/net-learning-eureka-server-9001.iml" filepath="$PROJECT_DIR$/net-learning-eureka-server-9001/net-learning-eureka-server-9001.iml" />
       <module fileurl="file://$PROJECT_DIR$/net-learning-file/net-learning-file.iml" filepath="$PROJECT_DIR$/net-learning-file/net-learning-file.iml" />
       <module fileurl="file://$PROJECT_DIR$/net-learning-filesystem/net-learning-filesystem.iml" filepath="$PROJECT_DIR$/net-learning-filesystem/net-learning-filesystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/net-learning-fss/net-learning-fss.iml" filepath="$PROJECT_DIR$/net-learning-fss/net-learning-fss.iml" />
       <module fileurl="file://$PROJECT_DIR$/net-learning-gateway/net-learning-gateway.iml" filepath="$PROJECT_DIR$/net-learning-gateway/net-learning-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/net-learning-manage-cms/net-learning-manage-cms.iml" filepath="$PROJECT_DIR$/net-learning-manage-cms/net-learning-manage-cms.iml" />
       <module fileurl="file://$PROJECT_DIR$/net-learning-manage-cms-client/net-learning-manage-cms-client.iml" filepath="$PROJECT_DIR$/net-learning-manage-cms-client/net-learning-manage-cms-client.iml" />

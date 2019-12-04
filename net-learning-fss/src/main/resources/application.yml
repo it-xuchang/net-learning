@@ -1,0 +1,52 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: netlearning-fss
+#  servlet:
+#    multipart:
+#      enabled: true
+#      max-file-size: 1024mb
+#      max-request-size: 1024mb
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/netlearning-fss?characterEncoding=utf-8
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
+      initialSize: 5  #初始建立连接数量
+      minIdle: 5      #最小连接数量
+      maxActive: 20   #最大连接数量
+      maxWait: 10000  #获取连接最大等待时间，毫秒
+      testOnBorrow: true  #申请连接时检测连接是否有效
+      testOnReturn: false #归还连接时检测连接是否有效
+      timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
+      minEvictableIdleTimeMillis: 300000    #连接在连接池的最小生存时间（毫秒）
+pagehelper:
+  helper-dialect: mysql
+
+#mybatis:
+#  config-location: classpath:mybatis/*.xml
+
+###服务名称(服务注册到eureka名称)
+###服务注册到eureka地址
+
+###集群地址defaultZone以，区分
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+  # 心跳检测检测与续约时间
+  # 测试时将值设置设置小些，保证服务关闭后注册中心能及时踢出服务
+  instance:
+    ###Eureka客户端向服务端发送心跳的时间间隔，单位为秒（客户端告诉服务端自己会按照该规则）
+    lease-renewal-interval-in-seconds: 1
+    ####Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己）
+    lease-expiration-duration-in-seconds: 2
+    hostname: ${spring.cloud.client.ip-address}
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}:V@project.version@
+
+fss_file_path: D:\NetworkLearningPlatform\upload

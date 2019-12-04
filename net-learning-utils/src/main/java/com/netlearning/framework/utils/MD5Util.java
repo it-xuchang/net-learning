@@ -52,8 +52,9 @@ public class MD5Util {
             throw e;
         } finally {
             try {
-                if (fileInputStream != null)
+                if (fileInputStream != null) {
                     fileInputStream.close();
+                }
             } catch (IOException e) {
                 throw e;
             }
@@ -152,6 +153,6 @@ public class MD5Util {
         long endTime = System.currentTimeMillis();
         System.out.println("MD5:" + md5 + "\n time:" + ((endTime - beginTime)) + "ms");
 
-        System.out.println(getStringMD5("111111"));
+        System.out.println(getStringMD5("440923201801010001"));
     }
 }
