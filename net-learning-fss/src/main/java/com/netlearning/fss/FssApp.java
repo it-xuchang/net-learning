@@ -1,5 +1,6 @@
 package com.netlearning.fss;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,6 +20,7 @@ import javax.servlet.MultipartConfigElement;
  */
 @EnableEurekaClient
 @SpringBootApplication
+@MapperScan("com.netlearning.fss.mapper")
 @EntityScan("com.netlearning.framework.domain.fss")//model
 @ComponentScan(basePackages={"com.netlearning.api"})//api
 @ComponentScan(basePackages={"com.netlearning.fss"})//扫描本项目

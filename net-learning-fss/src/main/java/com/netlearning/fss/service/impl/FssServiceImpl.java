@@ -106,8 +106,8 @@ public class FssServiceImpl implements FssService {
         FileUploadResult fileUploadResult = FileClientPool.upload(file, null);
 
         //将数据写入数据库
-        FileRecord fileRecord = new FileRecord();
-        fileRecordMapper.insert(fileRecord);
+//        FileRecord fileRecord = new FileRecord();
+//        fileRecordMapper.insert(fileRecord);
         System.out.println(fileUploadResult);
     }
 }

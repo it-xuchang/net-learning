@@ -3,6 +3,7 @@ package com.netlearning.api.course;
 import com.netlearning.framework.domain.course.Category;
 import com.netlearning.framework.domain.course.CourseBase;
 import com.netlearning.framework.domain.course.Teachplan;
+import com.netlearning.framework.domain.course.ext.CourseInfo;
 import com.netlearning.framework.domain.course.ext.TeachplanNode;
 import com.netlearning.framework.domain.course.request.CourseListRequest;
 import com.netlearning.framework.model.response.QueryResponseResult;
@@ -24,14 +25,11 @@ public interface CourseControllerApi {
 
 	// 查询课程列表
 	@ApiOperation("查询教师课程列表，我的课程列表")
-	public QueryResponseResult<M> findCourseList(int page, int size, CourseListRequest courseListRequest);
+	public QueryResponseResult<CourseInfo> findCourseList(int page, int size, CourseListRequest courseListRequest);
 
 	// 查询课程分类
 	@ApiOperation("查询课程分类")
 	public Category findCategorylist();
-
-
-
 
 
 	// 添加课程基础信息
@@ -48,7 +46,7 @@ public interface CourseControllerApi {
 
 	// 查询课程图片
 	@ApiOperation("查询课程图片")
-	public QueryResponseResult<M> findCoursePicList(String courseId);
+	public QueryResponseResult findCoursePicList(String courseId);
 
 	// 删除课程图片
 	@ApiOperation("删除课程图片")
