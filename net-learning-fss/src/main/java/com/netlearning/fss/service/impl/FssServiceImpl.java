@@ -8,6 +8,7 @@ import com.netlearning.framework.domain.fss.response.AccessTokenResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
+import com.netlearning.framework.utils.SnowflakeIdWorker;
 import com.netlearning.fss.fastdfs.FastDFSFile;
 import com.netlearning.fss.fastdfs.FileClientPool;
 import com.netlearning.fss.fastdfs.FileUploadResult;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -43,6 +45,8 @@ public class FssServiceImpl implements FssService {
     public String createGeneralCode() {
         return String.valueOf(this.sequenceService.nextValue(null));
     }
+
+    private final static SnowflakeIdWorker idWorker = new SnowflakeIdWorker(1, 1);
     @Value("{fss_file_path}")
     private String FILE_PATH ;
     @Autowired
@@ -66,16 +70,17 @@ public class FssServiceImpl implements FssService {
 
         //获取上传的文件数组
         //创建线程池
-        ExecutorService executorService = new ThreadPoolExecutor(5, 5,0L, TimeUnit.MILLISECONDS,
-                new SynchronousQueue<Runnable>(),
-                Executors.defaultThreadFactory(),
-                new RejectedExecutionHandler(){
-                    @Override
-                    public void rejectedExecution(Runnable r,ThreadPoolExecutor executor) {
-                        throw new RejectedExecutionException("自定义拒绝策略： " + r.toString() + " rejected from "
-                        );
-                    }
-                });
+//        ExecutorService executorService = new ThreadPoolExecutor(5, 5,0L, TimeUnit.MILLISECONDS,
+//                new SynchronousQueue<Runnable>(),
+//                Executors.defaultThreadFactory(),
+//                new RejectedExecutionHandler(){
+//                    @Override
+//                    public void rejectedExecution(Runnable r,ThreadPoolExecutor executor) {
+//                        throw new RejectedExecutionException("自定义拒绝策略： " + r.toString() + " rejected from "
+//                        );
+//                    }
+//                });
+        ExecutorService executorService = Executors.newCachedThreadPool();
         //执行上传
         for (MultipartFile file : files) {
 
@@ -83,7 +88,7 @@ public class FssServiceImpl implements FssService {
                 @Override
                 public void run() {
                     try {
-                        uploadFile(file,userId);
+                        uploadFile(file,userId,tokenKey);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -93,7 +98,7 @@ public class FssServiceImpl implements FssService {
         }
         return CommonResult.success(true);
     }
-    private void uploadFile(MultipartFile multipartFile,String userId) throws IOException {
+    private FileRecord uploadFile(MultipartFile multipartFile,String userId,String tokenKey) throws IOException {
 
         byte[] bytes = multipartFile.getBytes();
         String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."),multipartFile.getOriginalFilename().length());
@@ -106,8 +111,20 @@ public class FssServiceImpl implements FssService {
         FileUploadResult fileUploadResult = FileClientPool.upload(file, null);
 
         //将数据写入数据库
-//        FileRecord fileRecord = new FileRecord();
-//        fileRecordMapper.insert(fileRecord);
+        FileRecord fileRecord = new FileRecord();
+        fileRecord.setId(this.createGeneralCode());
+//        fileRecord.setId(String.valueOf(idWorker.nextId()));
+        fileRecord.setContentType(multipartFile.getContentType());
+        fileRecord.setCteateTime(new Date());
+        fileRecord.setGroupName(fileUploadResult.getGroupName());
+        fileRecord.setFileAbsolutePath(fileUploadResult.getFileAbsolutePath());
+        fileRecord.setRemoteFileName(fileUploadResult.getRemoteFileName());
+        fileRecord.setUserId(userId);
+        fileRecord.setUniqueId(tokenKey);
+        fileRecord.setOrigFileName(multipartFile.getOriginalFilename());
+        fileRecord.setFileSize(multipartFile.getSize());
+        fileRecordMapper.insert(fileRecord);
         System.out.println(fileUploadResult);
+        return fileRecord;
     }
 }

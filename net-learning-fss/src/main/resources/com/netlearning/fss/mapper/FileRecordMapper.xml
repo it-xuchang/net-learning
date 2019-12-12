@@ -3,15 +3,270 @@
 
 <mapper namespace="com.netlearning.fss.mapper.FileRecordMapper">
 
-    <update id="update" parameterType="com.netlearning.framework.domain.fss.FileRecord">
+    <resultMap id="fileRecordResultMap" type="com.netlearning.framework.domain.fss.FileRecord">
+        <result column="id"                     property="id"                   jdbcType="VARCHAR" />
+        <result column="content_type"           property="contentType"                   jdbcType="VARCHAR" />
+        <result column="from_system_id"         property="fromSystemId"                   jdbcType="VARCHAR" />
+        <result column="file_size"              property="fileSize"                   jdbcType="BIGINT" />
+        <result column="unique_id"              property="uniqueId"                   jdbcType="VARCHAR" />
+        <result column="remark"                 property="remark"                   jdbcType="VARCHAR" />
+        <result column="orig_file_name"         property="origFileName"                   jdbcType="VARCHAR" />
+        <result column="create_time"            property="cteateTime"                   jdbcType="TIMESTAMP" />
+        <result column="update_time"            property="updateTime"                   jdbcType="TIMESTAMP" />
+        <result column="group_name"             property="groupName"                   jdbcType="VARCHAR" />
+        <result column="remote_file_name"       property="remoteFileName"                   jdbcType="VARCHAR" />
+        <result column="file_absolute_path"     property="fileAbsolutePath"                   jdbcType="VARCHAR" />
+        <result column="user_id"                property="userId"                   jdbcType="VARCHAR" />
+    </resultMap>
 
+    <sql id="fileRecordParam">
+      `id`,
+      `content_type`,
+      `from_system_id`,
+      `file_size`,
+      `unique_id`,
+      `remark`,
+      `orig_file_name`,
+      `create_time`,
+      `update_time`,
+      `group_name`,
+      `remote_file_name`,
+      `file_absolute_path`,
+      `user_id`
+    </sql>
+
+    <select id="get" resultMap="fileRecordResultMap" parameterType="com.netlearning.framework.domain.fss.FileRecord">
+        select
+          <include refid="fileRecordParam"></include>
+        from
+          `fss_record`
+        <where>
+            <if test="id != null and id != ''">
+                and `id` = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="contentType != null and contentType != ''">
+                and `content_type` = #{contentType,jdbcType=VARCHAR}
+            </if>
+            <if test="fromSystemId != null and fromSystemId != ''">
+                and `from_system_id` =  #{fromSystemId,jdbcType=VARCHAR}
+            </if>
+            <if test="fileSize != null">
+                and `file_size` =  #{fileSize,jdbcType=BIGINT}
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                and unique_id` = #{uniqueId,jdbcType=VARCHAR}
+            </if>
+            <if test="remark != null and remark != ''">
+                and `remark` =  #{remark,jdbcType=VARCHAR}
+            </if>
+            <if test="origFileName != null and origFileName != ''">
+                and `orig_file_name` = #{origFileName,jdbcType=VARCHAR}
+            </if>
+            <if test="cteateTime != null">
+                and `create_time` = #{cteateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null ">
+                and `update_time` =  #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="groupName != null and groupName != ''">
+                and `group_name` = #{groupName,jdbcType=VARCHAR}
+            </if>
+            <if test="remoteFileName != null and remoteFileName != ''">
+                and `remote_file_name` = #{remoteFileName,jdbcType=VARCHAR}
+            </if>
+            <if test="fileAbsolutePath != null and fileAbsolutePath != ''">
+                and `file_absolute_path` =  #{fileAbsolutePath,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null and userId != ''">
+                and `user_id` =  #{userId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="query" resultMap="fileRecordResultMap" parameterType="com.netlearning.framework.domain.fss.FileRecord">
+        select
+        <include refid="fileRecordParam"></include>
+        from
+        `fss_record`
+        <where>
+            <if test="id != null and id != ''">
+                and `id` = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="contentType != null and contentType != ''">
+                and `content_type` = #{contentType,jdbcType=VARCHAR}
+            </if>
+            <if test="fromSystemId != null and fromSystemId != ''">
+                and `from_system_id` =  #{fromSystemId,jdbcType=VARCHAR}
+            </if>
+            <if test="fileSize != null">
+                and `file_size` =  #{fileSize,jdbcType=BIGINT}
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                and unique_id` = #{uniqueId,jdbcType=VARCHAR}
+            </if>
+            <if test="remark != null and remark != ''">
+                and `remark` like concat('%',#{remark,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="origFileName != null and origFileName != ''">
+                and `orig_file_name` = #{origFileName,jdbcType=VARCHAR}
+            </if>
+            <if test="cteateTime != null">
+                and `create_time` = #{cteateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null ">
+                and `update_time` =  #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="groupName != null and groupName != ''">
+                and `group_name` like concat('%',#{groupName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="remoteFileName != null and remoteFileName != ''">
+                and `remote_file_name` like concat('%',#{remoteFileName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="fileAbsolutePath != null and fileAbsolutePath != ''">
+                and `file_absolute_path` =  #{fileAbsolutePath,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null and userId != ''">
+                and `user_id` =  #{userId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <update id="update" parameterType="com.netlearning.framework.domain.fss.FileRecord">
+        update
+          `fss_record`
+        <trim prefix="set"  suffixOverrides=",">
+            <if test="contentType != null and contentType != ''">
+                `content_type` = #{contentType,jdbcType=VARCHAR},
+            </if>
+            <if test="fromSystemId != null and fromSystemId != ''">
+                `from_system_id` =  #{fromSystemId,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                `file_size` =  #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                unique_id` = #{uniqueId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null and remark != ''">
+                `remark` =  #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="origFileName != null and origFileName != ''">
+                `orig_file_name` = #{origFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="cteateTime != null">
+                `create_time` = #{cteateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null ">
+                `update_time` =  #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="groupName != null and groupName != ''">
+                `group_name` = #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="remoteFileName != null and remoteFileName != ''">
+                `remote_file_name` = #{remoteFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileAbsolutePath != null and fileAbsolutePath != ''">
+                `file_absolute_path` =  #{fileAbsolutePath,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null and userId != ''">
+                `user_id` =  #{userId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        where `id` = #{id,jdbcType=VARCHAR}
     </update>
 
     <insert id="insert" parameterType="com.netlearning.framework.domain.fss.FileRecord">
-
+        INSERT INTO `fss_record`
+         <trim prefix="(" suffix=")" suffixOverrides=",">
+             <if test="id != null and id != ''">
+                 `id`,
+             </if>
+             <if test="contentType != null and contentType != ''">
+                 `content_type`,
+             </if>
+             <if test="fromSystemId != null and fromSystemId != ''">
+                 `from_system_id`,
+             </if>
+             <if test="fileSize != null">
+                 `file_size`,
+             </if>
+             <if test="uniqueId != null and uniqueId != ''">
+                 `unique_id`,
+             </if>
+             <if test="remark != null and remark != ''">
+                 `remark`,
+             </if>
+             <if test="origFileName != null and origFileName != ''">
+                 `orig_file_name`,
+             </if>
+             <if test="cteateTime != null">
+                 `create_time`,
+             </if>
+             <if test="updateTime != null ">
+                 `update_time`,
+             </if>
+             <if test="groupName != null and groupName != ''">
+                 `group_name`,
+             </if>
+             <if test="remoteFileName != null and remoteFileName != ''">
+                 `remote_file_name`,
+             </if>
+             <if test="fileAbsolutePath != null and fileAbsolutePath != ''">
+                 `file_absolute_path`,
+             </if>
+             <if test="userId != null and userId != ''">
+                 `user_id`,
+             </if>
+         </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="contentType != null and contentType != ''">
+                #{contentType,jdbcType=VARCHAR},
+            </if>
+            <if test="fromSystemId != null and fromSystemId != ''">
+                #{fromSystemId,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                #{uniqueId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null and remark != ''">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="origFileName != null and origFileName != ''">
+                #{origFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="cteateTime != null">
+                #{cteateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null ">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="groupName != null and groupName != ''">
+                #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="remoteFileName != null and remoteFileName != ''">
+                #{remoteFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileAbsolutePath != null and fileAbsolutePath != ''">
+                #{fileAbsolutePath,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null and userId != ''">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+        </trim>
     </insert>
 
     <delete id="delete" parameterType="com.netlearning.framework.domain.fss.FileRecord">
-
+    DELETE
+    FROM
+      `fss_record`
+    WHERE `id` = #{id,jdbcType=VARCHAR}
     </delete>
 </mapper>

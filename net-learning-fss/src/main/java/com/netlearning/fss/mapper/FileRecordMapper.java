@@ -3,6 +3,8 @@ package com.netlearning.fss.mapper;
 import com.netlearning.framework.domain.fss.FileRecord;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @program: net-learning
  * @description:
@@ -17,4 +19,8 @@ public interface FileRecordMapper {
     void delete(FileRecord fileRecord);
 
     void update(FileRecord fileRecord);
+
+    List<FileRecord> get(FileRecord fileRecord);
+
+    List<FileRecord> query(FileRecord fileRecord);
 }

@@ -31,8 +31,8 @@ public class FssController {
 
     @PostMapping("/upload")
     public CommonResult upload(MultipartFile[] files,
-                               @RequestParam("userId") String userId ,
-                               @RequestParam("tokenKey") String tokenKey){
+                               @RequestParam(value = "userId" ,required = false) String userId ,
+                               @RequestParam(value = "tokenKey",required = false) String tokenKey){
         return fssService.upload(files,userId,tokenKey);
     }
 

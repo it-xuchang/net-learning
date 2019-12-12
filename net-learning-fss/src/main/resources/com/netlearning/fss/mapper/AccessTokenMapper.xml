@@ -51,14 +51,53 @@
     </select>
 
     <update id="update">
-
+        UPDATE
+          `fss_access_token`
+        SET
+        <trim suffixOverrides=",">
+            <if test="fileAccessToken != null and fileAccessToken != ''">
+                `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                `unique_id` = #{uniqueId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != ''">
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        WHERE `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR};
     </update>
 
     <insert id="insert">
-
+        INSERT INTO `fss_access_token`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileAccessToken != null and fileAccessToken != ''">
+                `file_access_token`,
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                `unique_id`,
+            </if>
+            <if test="type != null and type != ''">
+                `type`,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="fileAccessToken != null and fileAccessToken != ''">
+                #{fileAccessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="uniqueId != null and uniqueId != ''">
+                #{uniqueId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != ''">
+                #{type,jdbcType=VARCHAR},
+            </if>
+        </trim>
     </insert>
 
     <delete id="delete">
-
+    DELETE
+    FROM
+      `fss_access_token`
+    WHERE `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR};
     </delete>
 </mapper>
