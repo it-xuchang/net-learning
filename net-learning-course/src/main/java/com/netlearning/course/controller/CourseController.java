@@ -41,22 +41,22 @@ public class CourseController implements CourseControllerApi {
 
 	@Override
 	@GetMapping("/coursebase/list/{page}/{size}")
-	public QueryResponseResult findCourseList(@PathVariable("page") int page,@PathVariable("size") int size, CourseListRequest courseListRequest) {
-		
+	public QueryResponseResult<M> findCourseList(@PathVariable("page") int page, @PathVariable("size") int size, CourseListRequest courseListRequest) {
+
 		return courseService.findCourseList(page,size,courseListRequest);
 	}
 
 	@Override
 	@GetMapping("/category/list")
 	public Category findCategorylist() {
-		
+
 		return courseService.findCategorylist();
 	}
 
 	@Override
 	@PostMapping("/coursebase/add")
 	public ResponseResult addCourseBase(CourseBase courseBase) {
-		
+
 		return courseService.addCourseBase(courseBase);
 	}
 
@@ -74,8 +74,8 @@ public class CourseController implements CourseControllerApi {
 
 	@Override
 	@GetMapping("/coursepic/list/{courseId}")
-	public QueryResponseResult findCoursePicList(@PathVariable("courseId") String courseId) {
-		
+	public QueryResponseResult<M> findCoursePicList(@PathVariable("courseId") String courseId) {
+
 		return courseService.findCoursePicList(courseId);
 	}
 

@@ -51,7 +51,7 @@ public class CmsPageServiceImpl implements CmsPageService{
 
     @Autowired
     private CmsPageRepository cmsPageRepository;
-    
+
     @Autowired
     private CmsConfigRepository cmsConfigRepository;
 
@@ -60,16 +60,16 @@ public class CmsPageServiceImpl implements CmsPageService{
 
     @Autowired
     private CmsTemplateRepository cmsTemplateRepository;
-    
+
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
     @Autowired
     private GridFSBucket gridFSBucket;
-    
+
     @Autowired
     RabbitTemplate rabbitTemplate;
-    
+
     /**
      * 	页面查询方法
      * @param page 页码，从1开始记数
@@ -78,7 +78,7 @@ public class CmsPageServiceImpl implements CmsPageService{
      * @return
      */
 	@Override
-	public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest) {
+	public QueryResponseResult<M> findList(int page, int size, QueryPageRequest queryPageRequest) {
 		if(queryPageRequest == null){
             queryPageRequest = new QueryPageRequest();
         }
@@ -115,13 +115,13 @@ public class CmsPageServiceImpl implements CmsPageService{
         QueryResult<CmsPage> queryResult = new QueryResult<CmsPage>();
         queryResult.setList(all.getContent());//数据列表
         queryResult.setTotal(all.getTotalElements());//数据总记录数
-        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);
+        QueryResponseResult<M> queryResponseResult = new QueryResponseResult<M>(CommonCode.SUCCESS,queryResult);
         return queryResponseResult;
 	}
 
 	@Override
 	public CmsPageResult add(CmsPage cmsPage) {
-		
+
 		if(cmsPage == null){//抛出异常，非法参数异常..指定异常信息的内容
         }
         //校验页面名称、站点Id、页面webpath的唯一性
@@ -139,7 +139,7 @@ public class CmsPageServiceImpl implements CmsPageService{
         return new CmsPageResult(CommonCode.SUCCESS,cmsPage);
 	}
 
-	
+
 
 	/* (non-Javadoc)
 	 * 页面删除
@@ -147,7 +147,7 @@ public class CmsPageServiceImpl implements CmsPageService{
 	 */
 	@Override
 	public ResponseResult delete(String id) {
-		
+
 		//Optional 操作 返回数据
 		Optional<CmsPage> optional = cmsPageRepository.findById(id);
         if(optional.isPresent()){
@@ -160,12 +160,12 @@ public class CmsPageServiceImpl implements CmsPageService{
 	@Override
 	public CmsPage findById(String id) {
 		Optional<CmsPage> optional =  cmsPageRepository.findById(id);
-		
+
 		if (optional.isPresent()) {
 			 CmsPage cmsPage = optional.get();
 	            return cmsPage;
 		}
-		
+
 		return null;
 	}
 
@@ -389,6 +389,6 @@ public class CmsPageServiceImpl implements CmsPageService{
 
 
 
-    
-    
+
+
 }

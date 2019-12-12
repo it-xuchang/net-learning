@@ -24,15 +24,15 @@ public interface CourseControllerApi {
 
 	// 查询课程列表
 	@ApiOperation("查询教师课程列表，我的课程列表")
-	public QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest);
+	public QueryResponseResult<M> findCourseList(int page, int size, CourseListRequest courseListRequest);
 
 	// 查询课程分类
 	@ApiOperation("查询课程分类")
 	public Category findCategorylist();
-	
-	
-	
-	
+
+
+
+
 
 	// 添加课程基础信息
 	@ApiOperation("添加课程基础信息")
@@ -48,13 +48,13 @@ public interface CourseControllerApi {
 
 	// 查询课程图片
 	@ApiOperation("查询课程图片")
-	public QueryResponseResult findCoursePicList(String courseId);
+	public QueryResponseResult<M> findCoursePicList(String courseId);
 
 	// 删除课程图片
 	@ApiOperation("删除课程图片")
 	public ResponseResult deleteCoursePic(String courseId);
 
-	
+
 
 	//预览课程
 

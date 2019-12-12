@@ -14,7 +14,7 @@ public interface CourseService {
 
 	ResponseResult addTeachplan(Teachplan teachplan);
 
-	QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest);
+	QueryResponseResult<M> findCourseList(int page, int size, CourseListRequest courseListRequest);
 
 	Category findCategorylist();
 
@@ -24,7 +24,7 @@ public interface CourseService {
 
 	ResponseResult addCoursePic(String courseId, String pic);
 
-	QueryResponseResult findCoursePicList(String courseId);
+	QueryResponseResult<M> findCoursePicList(String courseId);
 
 	ResponseResult deleteCoursePic(String courseId);
 

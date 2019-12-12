@@ -30,11 +30,12 @@ public class FssController {
     private FssService fssService;
 
     @PostMapping("/upload")
-    public CommonResult upload(@RequestParam MultipartFile[] files){
-
-
-        return fssService.upload(files);
+    public CommonResult upload(MultipartFile[] files,
+                               @RequestParam("userId") String userId ,
+                               @RequestParam("tokenKey") String tokenKey){
+        return fssService.upload(files,userId,tokenKey);
     }
+
     @PostMapping("/uploadToken")
     public String applyUploadToken(){
 

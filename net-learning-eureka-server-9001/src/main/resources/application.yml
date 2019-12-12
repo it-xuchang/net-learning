@@ -1,6 +1,6 @@
 ###eureka 服务端口号
 server:
-  port: 9001
+  port: ${PORT:9001}
 ###服务注册名称
 eureka:
   instance:

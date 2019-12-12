@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="net-learning-manage-cms-client" />
         <module name="net-learning-order" />
+        <module name="net-learning-manage-cms-client" />
+        <module name="net-learning-filesystem" />
         <module name="net-learning-eureka-server-9001" />
         <module name="net-learning-course" />
         <module name="net-learning-ucenter" />
@@ -19,7 +20,6 @@
         <module name="net-learning-gateway" />
         <module name="net-learning-file" />
         <module name="net-learning-client-config" />
-        <module name="net-learning-filesystem" />
         <module name="net-learning-search" />
         <module name="net-learning-server-config" />
         <module name="net-learning-media-processor" />
@@ -61,11 +61,18 @@
       <module name="net-learning-eureka-server-9001" options="-parameters" />
       <module name="net-learning-file" options="-parameters" />
       <module name="net-learning-filesystem" options="-parameters" />
+      <module name="net-learning-fss" options="-parameters" />
+      <module name="net-learning-gateway" options="-parameters" />
       <module name="net-learning-manage-cms" options="-parameters" />
       <module name="net-learning-manage-cms-client" options="-parameters" />
+      <module name="net-learning-media" options="-parameters" />
+      <module name="net-learning-media-processor" options="-parameters" />
       <module name="net-learning-model" options="-parameters" />
+      <module name="net-learning-order" options="-parameters" />
+      <module name="net-learning-search" options="-parameters" />
       <module name="net-learning-server-config" options="-parameters" />
       <module name="net-learning-service-api" options="-parameters" />
+      <module name="net-learning-ucenter" options="-parameters" />
       <module name="net-learning-utils" options="-parameters" />
     </option>
   </component>

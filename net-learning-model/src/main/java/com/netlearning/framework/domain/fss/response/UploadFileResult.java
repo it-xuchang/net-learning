@@ -1,6 +1,6 @@
 package com.netlearning.framework.domain.fss.response;
 
-import com.netlearning.framework.domain.fss.FileSystem;
+import com.netlearning.framework.domain.filesystem.FileSystem;
 import com.netlearning.framework.model.response.ResponseResult;
 import com.netlearning.framework.model.response.ResultCode;
 import io.swagger.annotations.ApiModelProperty;

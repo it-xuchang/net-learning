@@ -19,17 +19,17 @@ public interface CmsPageControllerApi {
             @ApiImplicitParam(name="page",value = "页码",required=true,paramType="path",dataType="int"),
             @ApiImplicitParam(name="size",value = "每页记录数",required=true,paramType="path",dataType="int")
     })
-    public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
-    
+    public QueryResponseResult<M> findList(int page, int size, QueryPageRequest queryPageRequest);
+
     @ApiOperation("添加")
     public CmsPageResult add(CmsPage cmsPage);
-    
+
     @ApiOperation("修改")
     public  CmsPageResult  edit(String id, CmsPage cmsPage);
-    
+
     @ApiOperation("删除")
     public ResponseResult delete(String id);
-    
+
     @ApiOperation("根据id查找")
     public CmsPage findById(String id);
 

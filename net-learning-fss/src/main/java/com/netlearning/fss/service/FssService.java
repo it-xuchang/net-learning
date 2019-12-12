@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
  * @time: 2019/12/4 14:22
  */
 public interface FssService {
-    CommonResult upload(MultipartFile[] files);
+    CommonResult upload(MultipartFile[] files, String userId, String tokenKey);
 }

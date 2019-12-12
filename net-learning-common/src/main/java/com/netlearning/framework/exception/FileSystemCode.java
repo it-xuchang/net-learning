@@ -1,4 +1,4 @@
-package com.netlearning.framework.domain.fss.response;
+package com.netlearning.framework.exception;
 
 import com.google.common.collect.ImmutableMap;
 import com.netlearning.framework.model.response.ResultCode;

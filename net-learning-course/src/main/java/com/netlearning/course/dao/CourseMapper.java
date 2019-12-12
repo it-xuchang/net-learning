@@ -20,8 +20,8 @@ public interface CourseMapper {
 	public Page<CourseBase> findCourseList();
 
 	// 查询课程分类
-	public QueryResponseResult findCategorylist();
+	public QueryResponseResult<M> findCategorylist();
 
 	// 查询课程图片
-	public QueryResponseResult findCoursePicList(String courseId);
+	public QueryResponseResult<M> findCoursePicList(String courseId);
 }

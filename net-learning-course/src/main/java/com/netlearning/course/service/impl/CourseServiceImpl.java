@@ -103,7 +103,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest) {
+	public QueryResponseResult<M> findCourseList(int page, int size, CourseListRequest courseListRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -143,7 +143,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public QueryResponseResult findCoursePicList(String courseId) {
+	public QueryResponseResult<M> findCoursePicList(String courseId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
