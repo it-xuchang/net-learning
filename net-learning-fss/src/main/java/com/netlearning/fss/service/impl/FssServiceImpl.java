@@ -9,6 +9,7 @@ import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.SnowflakeIdWorker;
+import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.fss.fastdfs.FastDFSFile;
 import com.netlearning.fss.fastdfs.FileClientPool;
 import com.netlearning.fss.fastdfs.FileUploadResult;
@@ -58,14 +59,23 @@ public class FssServiceImpl implements FssService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
     public CommonResult upload(MultipartFile[] files, String userId, String tokenKey) {
-        //校验文件上传格式
-        //检验userID
+        //校验
+        if (!StringUtils.isEmpty(userId)){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE003.code,ExceptionCode.FssCode.CODE003.message);
+        }
+        if (!StringUtils.isEmpty(tokenKey)){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE004.code,ExceptionCode.FssCode.CODE004.message);
+        }
+        if (files.length <= 0){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE005.code,ExceptionCode.FssCode.CODE005.message);
+        }
+
         AccessToken accessToken = new AccessToken();
         accessToken.setUniqueId(tokenKey);
         accessToken.setType(FileConstants.FileRequestType.UPLOAD.getCode());
         List<AccessTokenResult> accessTokenResults =  accessTokenMapper.get(accessToken);
         if (CollectionUtils.isEmpty(accessTokenResults)){
-            CommonResult.fail(ExceptionCode.FssCode.CODE002.code,ExceptionCode.FssCode.CODE002.message);
+            return CommonResult.fail(ExceptionCode.FssCode.CODE002.code,ExceptionCode.FssCode.CODE002.message);
         }
 
         //获取上传的文件数组
@@ -98,6 +108,27 @@ public class FssServiceImpl implements FssService {
         }
         return CommonResult.success(true);
     }
+
+    @Override
+    public CommonResult applyUploadToken(String userId, String type) {
+        //校验
+        if (!StringUtils.isEmpty(userId)){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE003.code,ExceptionCode.FssCode.CODE003.message);
+        }
+        if (!StringUtils.isEmpty(type)){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE004.code,ExceptionCode.FssCode.CODE004.message);
+        }
+
+        if(!FileConstants.FileRequestType.FileTypeList().contains(type)){
+            return CommonResult.fail(ExceptionCode.FssCode.CODE006.code,ExceptionCode.FssCode.CODE006.message);
+        }
+        AccessToken accessToken  = new AccessToken();
+        accessToken.setType(type);
+        accessTokenMapper.insert(accessToken);
+
+        return null;
+    }
+
     private FileRecord uploadFile(MultipartFile multipartFile,String userId,String tokenKey) throws IOException {
 
         byte[] bytes = multipartFile.getBytes();

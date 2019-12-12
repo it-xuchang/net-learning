@@ -1,5 +1,8 @@
 package com.netlearning.framework.em;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @program: net-learning
  * @description:
@@ -25,6 +28,14 @@ public interface FileConstants {
 
         public String getMessage() {
             return this.message;
+        }
+
+        public static List<String> FileTypeList() {
+            List<String> typeList = new ArrayList<>();
+            for (FileRequestType v : FileRequestType.values()) {
+                typeList.add(v.code);
+            }
+            return typeList;
         }
     }
 }

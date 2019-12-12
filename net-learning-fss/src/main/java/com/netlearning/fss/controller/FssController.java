@@ -37,9 +37,10 @@ public class FssController {
     }
 
     @PostMapping("/uploadToken")
-    public String applyUploadToken(){
+    public CommonResult applyUploadToken(@RequestParam(value = "userId" ,required = false) String userId ,
+                                   @RequestParam(value = "type",required = false) String type){
 
-        return null;
+        return fssService.applyUploadToken(userId,type);
     }
     @PostMapping("/download")
     public CommonResult download(){

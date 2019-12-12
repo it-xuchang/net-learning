@@ -11,4 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FssService {
     CommonResult upload(MultipartFile[] files, String userId, String tokenKey);
+
+    CommonResult applyUploadToken(String userId, String type);
 }
