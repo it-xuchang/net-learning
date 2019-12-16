@@ -4,7 +4,7 @@ server:
     context-path: /api
 spring:
   application:
-    name: net-learning-govern-gateway
+    name: net-learning-gateway
   redis:
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
@@ -17,37 +17,52 @@ spring:
         maxWait: -1 #连接池最大等行时间 -1没有限制
 zuul:
   routes:
-    manage-course:
+    net-learning-course:
       path: /course/**
-      serviceId: xc-service-manage-course #微服务名称，网关会从eureka中获取该服务名称下的服务实例的地址
+      serviceId: net-learning-course #微服务名称，网关会从eureka中获取该服务名称下的服务实例的地址
       # 例子：将请求转发到http://localhost:31200/course
       #url: http://www.baidu.com #也可指定url，此url也可以是外网地址\
       strip-prefix: false #true：代理转发时去掉前缀，false:代理转发时不去掉前缀
       sensitiveHeaders:  #默认zuul会屏蔽cookie，cookie不会传到下游服务，这里设置为空则取消默认的黑名单，如果设置了具体的头信息则不会传到下游服务
       #   ignoredHeaders: 默认为空表示不过虑任何头
-    xc-service-learning:  #路由名称，名称任意，保持所有路由名称唯一
+    net-learning-learning:  #路由名称，名称任意，保持所有路由名称唯一
       path: /learning/**
-      serviceId: xc-service-learning #指定服务id，从Eureka中找到服务的ip和端口
+      serviceId: net-learning-learning #指定服务id，从Eureka中找到服务的ip和端口
       strip-prefix: false
       sensitiveHeaders:
-    manage-cms:
+    net-learning-manage-cms:
       path: /cms/**
-      serviceId: xc-service-manage-cms
+      serviceId: net-learning-manage-cms
       strip-prefix: false
       sensitiveHeaders:
-    manage-sys:
-      path: /sys/**
-      serviceId: xc-service-manage-cms
+    net-learning-search:
+      path: /search/**
+      serviceId: net-learning-search
       strip-prefix: false
       sensitiveHeaders:
-    service-ucenter:
+    net-learning-ucenter:
       path: /ucenter/**
-      serviceId: xc-service-ucenter
+      serviceId: net-learning-ucenter
       sensitiveHeaders:
       strip-prefix: false
-    xc-service-manage-order:
-      path: /order/**
-      serviceId: xc-service-manage-order
+    net-learning-media:
+      path: /media/**
+      serviceId: net-learning-media
+      sensitiveHeaders:
+      strip-prefix: false
+    net-learning-fss:
+      path: /fss/**
+      serviceId: net-learning-fss
+      sensitiveHeaders:
+      strip-prefix: false
+    net-learning-filesystem:
+      path: /filesystem/**
+      serviceId: net-learning-filesystem
+      sensitiveHeaders:
+      strip-prefix: false
+    net-learning-auth:
+      path: /auth/**
+      serviceId: net-learning-auth
       sensitiveHeaders:
       strip-prefix: false
 eureka:

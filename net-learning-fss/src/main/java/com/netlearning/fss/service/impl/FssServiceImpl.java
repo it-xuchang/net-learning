@@ -60,10 +60,10 @@ public class FssServiceImpl implements FssService {
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
     public CommonResult upload(MultipartFile[] files, String userId, String tokenKey) {
         //校验
-        if (!StringUtils.isEmpty(userId)){
+        if (StringUtils.isEmpty(userId)){
             return CommonResult.fail(ExceptionCode.FssCode.CODE003.code,ExceptionCode.FssCode.CODE003.message);
         }
-        if (!StringUtils.isEmpty(tokenKey)){
+        if (StringUtils.isEmpty(tokenKey)){
             return CommonResult.fail(ExceptionCode.FssCode.CODE004.code,ExceptionCode.FssCode.CODE004.message);
         }
         if (files.length <= 0){
@@ -126,7 +126,7 @@ public class FssServiceImpl implements FssService {
         accessToken.setType(type);
         accessTokenMapper.insert(accessToken);
 
-        return null;
+        return CommonResult.success(accessToken);
     }
 
     private FileRecord uploadFile(MultipartFile multipartFile,String userId,String tokenKey) throws IOException {
@@ -144,7 +144,6 @@ public class FssServiceImpl implements FssService {
         //将数据写入数据库
         FileRecord fileRecord = new FileRecord();
         fileRecord.setId(this.createGeneralCode());
-//        fileRecord.setId(String.valueOf(idWorker.nextId()));
         fileRecord.setContentType(multipartFile.getContentType());
         fileRecord.setCteateTime(new Date());
         fileRecord.setGroupName(fileUploadResult.getGroupName());

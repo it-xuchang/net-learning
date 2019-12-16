@@ -2,7 +2,7 @@ server:
   port: 31200
 spring:
   application:
-    name: netlearning-course
+    name: net-learning-course
   datasource:
     druid:
       url: jdbc:mysql://localhost:3306/netlearning?characterEncoding=utf-8
@@ -19,10 +19,10 @@ spring:
       minEvictableIdleTimeMillis: 300000    #连接在连接池的最小生存时间（毫秒）
 pagehelper:
   helper-dialect: mysql
-  
+
 #mybatis:
 #  config-location: classpath:mybatis/*.xml
-  
+
 ###服务名称(服务注册到eureka名称)
 ###服务注册到eureka地址
 

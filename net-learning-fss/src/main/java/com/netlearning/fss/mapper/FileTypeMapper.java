@@ -1,6 +1,10 @@
 package com.netlearning.fss.mapper;
 
+import com.netlearning.framework.domain.fss.FileType;
+import com.netlearning.framework.domain.fss.response.FileTypeResult;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @program: net-learning
@@ -10,9 +14,14 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FileTypeMapper {
-    void insert();
 
-    void delete();
+    List<FileTypeResult> get(FileType fileType);
 
-    void update();
+    List<FileTypeResult> query(FileType fileType);
+
+    void insert(FileType fileType);
+
+    void delete(FileType fileType);
+
+    void update(FileType fileType);
 }

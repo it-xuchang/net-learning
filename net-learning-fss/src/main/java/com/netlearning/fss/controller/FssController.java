@@ -1,5 +1,6 @@
 package com.netlearning.fss.controller;
 
+import com.netlearning.api.fss.FssControllerApi;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.fss.service.FssService;
 import org.slf4j.Logger;
@@ -23,12 +24,13 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/fss")
-public class FssController {
+public class FssController implements FssControllerApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FssController.class);
     @Autowired
     private FssService fssService;
 
+    @Override
     @PostMapping("/upload")
     public CommonResult upload(MultipartFile[] files,
                                @RequestParam(value = "userId" ,required = false) String userId ,
@@ -36,12 +38,14 @@ public class FssController {
         return fssService.upload(files,userId,tokenKey);
     }
 
-    @PostMapping("/uploadToken")
+    @Override
+    @GetMapping("/uploadToken")
     public CommonResult applyUploadToken(@RequestParam(value = "userId" ,required = false) String userId ,
-                                   @RequestParam(value = "type",required = false) String type){
+                                         @RequestParam(value = "type",required = false) String type){
 
         return fssService.applyUploadToken(userId,type);
     }
+    @Override
     @PostMapping("/download")
     public CommonResult download(){
         return null;

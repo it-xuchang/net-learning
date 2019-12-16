@@ -2,7 +2,7 @@ server:
   port: 31001
 spring:
   application:
-    name: netlearning-service-manage-cms
+    name: net-learning-manage-cms
   cloud:
     inetutils:
       ## 设置网络超时

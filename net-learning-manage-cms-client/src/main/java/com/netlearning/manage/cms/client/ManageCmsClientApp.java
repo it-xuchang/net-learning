@@ -17,7 +17,7 @@ public class ManageCmsClientApp {
 	public static void main(String[] args) {
 		SpringApplication.run(ManageCmsClientApp.class, args);
 	}
-	
+
 
 }
 

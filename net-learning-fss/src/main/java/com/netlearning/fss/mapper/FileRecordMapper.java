@@ -1,6 +1,7 @@
 package com.netlearning.fss.mapper;
 
 import com.netlearning.framework.domain.fss.FileRecord;
+import com.netlearning.framework.domain.fss.response.FileRecordResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface FileRecordMapper {
 
     void update(FileRecord fileRecord);
 
-    List<FileRecord> get(FileRecord fileRecord);
+    List<FileRecordResult> get(FileRecord fileRecord);
 
-    List<FileRecord> query(FileRecord fileRecord);
+    List<FileRecordResult> query(FileRecord fileRecord);
 }

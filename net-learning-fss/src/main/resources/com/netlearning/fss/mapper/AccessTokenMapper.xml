@@ -4,22 +4,28 @@
 <mapper namespace="com.netlearning.fss.mapper.AccessTokenMapper">
 
     <resultMap id="accessTokenResultMap" type="com.netlearning.framework.domain.fss.response.AccessTokenResult">
+        <result column="id"                                    property="id"                   jdbcType="VARCHAR" />
         <result column="file_access_token"                     property="fileAccessToken"                   jdbcType="VARCHAR" />
         <result column="unique_id"                             property="uniqueId"                   jdbcType="VARCHAR" />
         <result column="type"                                  property="type"                   jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="accessTokenParam">
+      `id`,
       `file_access_token`,
       `unique_id`,
       `type`
     </sql>
+
     <select id="query" parameterType="com.netlearning.framework.domain.fss.AccessToken" resultMap="accessTokenResultMap">
         SELECT
           <include refid="accessTokenParam"></include>
         FROM
           `fss_access_token`
         <where>
+            <if test="id != null and id != ''">
+                AND `id` = #{id,jdbcType=VARCHAR}
+            </if>
             <if test="fileAccessToken != null and fileAccessToken != ''">
                 AND `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR}
             </if>
@@ -38,6 +44,9 @@
         FROM
         `fss_access_token`
         <where>
+            <if test="id != null and id != ''">
+                AND `id` = #{id,jdbcType=VARCHAR}
+            </if>
             <if test="fileAccessToken != null and fileAccessToken != ''">
                 AND `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR}
             </if>
@@ -50,7 +59,7 @@
         </where>
     </select>
 
-    <update id="update">
+    <update id="update" parameterType="com.netlearning.framework.domain.fss.AccessToken">
         UPDATE
           `fss_access_token`
         SET
@@ -65,12 +74,15 @@
                 `type` = #{type,jdbcType=VARCHAR},
             </if>
         </trim>
-        WHERE `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR};
+        WHERE `id` = #{id,jdbcType=VARCHAR}
     </update>
 
-    <insert id="insert">
+    <insert id="insert" parameterType="com.netlearning.framework.domain.fss.AccessToken">
         INSERT INTO `fss_access_token`
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                `id`,
+            </if>
             <if test="fileAccessToken != null and fileAccessToken != ''">
                 `file_access_token`,
             </if>
@@ -82,6 +94,9 @@
             </if>
         </trim>
         <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id,jdbcType=VARCHAR},
+            </if>
             <if test="fileAccessToken != null and fileAccessToken != ''">
                 #{fileAccessToken,jdbcType=VARCHAR},
             </if>
@@ -98,6 +113,6 @@
     DELETE
     FROM
       `fss_access_token`
-    WHERE `file_access_token` = #{fileAccessToken,jdbcType=VARCHAR};
+    WHERE `id` = #{id,jdbcType=VARCHAR}
     </delete>
 </mapper>

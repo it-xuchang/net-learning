@@ -3,7 +3,7 @@
 
 <mapper namespace="com.netlearning.fss.mapper.FileRecordMapper">
 
-    <resultMap id="fileRecordResultMap" type="com.netlearning.framework.domain.fss.FileRecord">
+    <resultMap id="fileRecordResultMap" type="com.netlearning.framework.domain.fss.response.FileRecordResult">
         <result column="id"                     property="id"                   jdbcType="VARCHAR" />
         <result column="content_type"           property="contentType"                   jdbcType="VARCHAR" />
         <result column="from_system_id"         property="fromSystemId"                   jdbcType="VARCHAR" />

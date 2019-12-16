@@ -2,7 +2,7 @@ server:
   port: 31400
 spring:
   application:
-    name: xc-service-manage-media
+    name: net-learning-media
   data:
     mongodb:
       uri:  mongodb://xuchang:xuchang@localhost:27017
