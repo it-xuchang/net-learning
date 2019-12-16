@@ -10,19 +10,18 @@ import java.io.Serializable;
 @Data
 @ToString
 @Entity
-@Table(name="xc_teacher")
-@GenericGenerator(name = "jpa-assigned", strategy = "assigned")
-public class NetLearningTeacher implements Serializable {
+@Table(name="company_user")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+public class CompanyUser implements Serializable {
     private static final long serialVersionUID = -916357110051689786L;
     @Id
-    @GeneratedValue(generator = "jpa-assigned")
+    @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 32)
     private String id;
-    private String name;
-    private String pic;
-    private String intro;
-    private String resume;
+    @Column(name="company_id")
+    private String companyId;
     @Column(name="user_id")
     private String userId;
+
 
 }

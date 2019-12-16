@@ -55,6 +55,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="net-learning-auth" options="-parameters" />
       <module name="net-learning-client-config" options="-parameters" />
       <module name="net-learning-common" options="-parameters" />
       <module name="net-learning-course" options="-parameters" />

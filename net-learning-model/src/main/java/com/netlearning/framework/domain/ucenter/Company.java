@@ -10,9 +10,9 @@ import java.io.Serializable;
 @Data
 @ToString
 @Entity
-@Table(name="xc_company")
+@Table(name="company")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-public class NetLearningCompany implements Serializable {
+public class Company implements Serializable {
     private static final long serialVersionUID = -916357110051689786L;
     @Id
     @GeneratedValue(generator = "jpa-uuid")

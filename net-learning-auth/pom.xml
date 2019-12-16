@@ -3,15 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gitboy</groupId>
+    <artifactId>net-learning-auth</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>com.gitboy</groupId>
         <artifactId>net-learning-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../net-learning-parent/pom.xml</relativePath>
     </parent>
-    <groupId>com.gitboy</groupId>
-    <artifactId>net-learning-auth</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <dependencies>
         <!--内部依赖 -->
         <dependency>
@@ -33,6 +34,25 @@
             <groupId>com.gitboy</groupId>
             <artifactId>net-learning-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+            <version>8.18.0</version>
         </dependency>
         <!--springboot的web组件 -->
         <dependency>
@@ -56,6 +76,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
+        </dependency>
+        <!-- 导入Eureka客户端的依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <!--springdata jpa -->
         <dependency>

@@ -37,7 +37,7 @@ auth:
   cookieMaxAge: -1
 encrypt:
   key-store:
-    location: classpath:/xc.keystore
+    location: classpath:/netlearning.keystore
     secret: xuechengkeystore
     alias: xckey
     password: xuecheng

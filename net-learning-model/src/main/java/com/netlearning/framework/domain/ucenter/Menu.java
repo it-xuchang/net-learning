@@ -6,29 +6,31 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
-
 @Data
 @ToString
 @Entity
-@Table(name="xc_user")
+@Table(name="menu")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-public class NetLearningUser {
+public class Menu {
 
     @Id
     @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 32)
     private String id;
-    private String username;
-    private String password;
-    private String salt;
-    private String name;
-    private String utype;
-    private String birthday;
-    private String userpic;
-    private String sex;
-    private String email;
-    private String phone;
+    private String code;
+    @Column(name="p_code")
+    private String pCode;
+    @Column(name="p_id")
+    private String pId;
+    @Column(name="menu_name")
+    private String menuName;
+    private String url;
+    @Column(name="is_menu")
+    private String isMenu;
+    private Integer level;
+    private Integer sort;
     private String status;
+    private String icon;
     @Column(name="create_time")
     private Date createTime;
     @Column(name="update_time")
