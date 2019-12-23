@@ -88,7 +88,6 @@ public class LoginFilter extends ZuulFilter {
         return null;
     }
 
-
     //拒绝访问
     private void access_denied(){
         RequestContext requestContext = RequestContext.getCurrentContext();

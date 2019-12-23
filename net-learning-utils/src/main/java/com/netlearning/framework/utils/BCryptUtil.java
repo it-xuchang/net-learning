@@ -3,7 +3,11 @@ package com.netlearning.framework.utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ */
 public class BCryptUtil {
     public static String encode(String password){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

@@ -4,22 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
- 
-/**   
-*    
-* 项目名称：driverschool-admins   
-* 类名称：FileOperateUtils   
-* 类描述：   复制、删除、剪切文件封装的工具类
-* 创建人：No   
-* 创建时间：2019年3月31日 上午9:17:07   
-* 作者：No   
-* @version    
-*    
-*/
+
+/**
+ * @program: net-learning
+ * @description:复制、删除、剪切文件封装的工具类
+ * @author: XUCHANG
+ */
 public class FileOperateUtils {
 	/**
 	 * 复制文件或文件夹
-	 * 
+	 *
 	 * @param srcPath
 	 * @param destDir
 	 *            目标文件所在的目录
@@ -39,13 +33,13 @@ public class FileOperateUtils {
 			System.out.println("下面进行文件夹复制!");
 			flag = copyDirectory(srcPath, destDir);
 		}
- 
+
 		return flag;
 	}
- 
+
 	/**
 	 * 复制文件
-	 * 
+	 *
 	 * @param srcPath
 	 *            源文件绝对路径
 	 * @param destDir
@@ -54,7 +48,7 @@ public class FileOperateUtils {
 	 */
 	private static boolean copyFile(String srcPath, String destDir) {
 		boolean flag = false;
- 
+
 		File srcFile = new File(srcPath);
 		if (!srcFile.exists()) { // 源文件不存在
 			System.out.println("源文件不存在");
@@ -77,7 +71,7 @@ public class FileOperateUtils {
 			System.out.println("目标目录下已有同名文件!");
 			return false;
 		}
- 
+
 		File destFileDir = new File(destDir);
 		destFileDir.mkdirs();
 		try {
@@ -90,21 +84,21 @@ public class FileOperateUtils {
 			}
 			fis.close();
 			fos.close();
- 
+
 			flag = true;
 		} catch (IOException e) {
 			//
 		}
- 
+
 		if (flag) {
 			System.out.println("复制文件成功!");
 		}
- 
+
 		return flag;
 	}
- 
+
 	/**
-	 * 
+	 *
 	 * @param srcPath
 	 *            源文件夹路径
 	 * @param destDir
@@ -114,7 +108,7 @@ public class FileOperateUtils {
 	private static boolean copyDirectory(String srcPath, String destDir) {
 		System.out.println("复制文件夹开始!");
 		boolean flag = false;
- 
+
 		File srcFile = new File(srcPath);
 		if (!srcFile.exists()) { // 源文件夹不存在
 			System.out.println("源文件夹不存在");
@@ -125,7 +119,7 @@ public class FileOperateUtils {
 		// 目标文件夹的完整路径
 		String destPath = destDir + File.separator + dirName;
 		// System.out.println("目标文件夹的完整路径为：" + destPath);
- 
+
 		if (destPath.equals(srcPath)) {
 			System.out.println("目标文件夹与源文件夹重复");
 			return false;
@@ -136,7 +130,7 @@ public class FileOperateUtils {
 			return false;
 		}
 		destDirFile.mkdirs(); // 生成目录
- 
+
 		File[] fileList = srcFile.listFiles(); // 获取源文件夹下的子文件和子文件夹
 		if (fileList.length == 0) { // 如果源文件夹为空目录则直接设置flag为true，这一步非常隐蔽，debug了很久
 			flag = true;
@@ -152,17 +146,17 @@ public class FileOperateUtils {
 				}
 			}
 		}
- 
+
 		if (flag) {
 			System.out.println("复制文件夹成功!");
 		}
- 
+
 		return flag;
 	}
- 
+
 	/**
 	 * 获取待复制文件夹的文件夹名
-	 * 
+	 *
 	 * @param dir
 	 * @return String
 	 */
@@ -172,49 +166,49 @@ public class FileOperateUtils {
 		}
 		return dir.substring(dir.lastIndexOf(File.separator) + 1);
 	}
- 
+
 	/**
 	 * 删除文件或文件夹
-	 * 
+	 *
 	 * @param path
 	 *            待删除的文件的绝对路径
 	 * @return boolean
 	 */
 	public static boolean deleteGeneralFile(String path) {
 		boolean flag = false;
- 
+
 		File file = new File(path);
 		if (!file.exists()) { // 文件不存在
 			System.out.println("要删除的文件不存在！");
 		}
- 
+
 		if (file.isDirectory()) { // 如果是目录，则单独处理
 			flag = deleteDirectory(file.getAbsolutePath());
 		} else if (file.isFile()) {
 			flag = deleteFile(file);
 		}
- 
+
 		if (flag) {
 			System.out.println("删除文件或文件夹成功!");
 		}
- 
+
 		return flag;
 	}
- 
+
 	/**
 	 * 删除文件
-	 * 
+	 *
 	 * @param file
 	 * @return boolean
 	 */
 	private static boolean deleteFile(File file) {
 		return file.delete();
 	}
- 
+
 	/**
 	 * 删除目录及其下面的所有子文件和子文件夹，注意一个目录下如果还有其他文件或文件夹
 	 * 则直接调用delete方法是不行的，必须待其子文件和子文件夹完全删除了才能够调用delete
-	 * 
+	 *
 	 * @param path
 	 *            path为该目录的路径
 	 */
@@ -239,10 +233,10 @@ public class FileOperateUtils {
 		flag = dirFile.delete(); // 删除空目录
 		return flag;
 	}
- 
+
 	/**
 	 * 由上面方法延伸出剪切方法：复制+删除
-	 * 
+	 *
 	 * @param destDir
 	 *            同上
 	 */
@@ -255,11 +249,11 @@ public class FileOperateUtils {
 			System.out.println("删除源文件(文件夹)失败导致剪切失败!");
 			return false;
 		}
- 
+
 		System.out.println("剪切成功!");
 		return true;
 	}
- 
+
 	public static void main(String[] args) {
 		copyGeneralFile("E://Assemble.txt", "E://New.txt"); // 复制文件
 		copyGeneralFile("E://hello", "E://world"); // 复制文件夹

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 此文件用于视频文件处理，步骤如下：
- * 1、生成mp4
- * 2、生成m3u8
- *
+ * @program: net-learning
+ * @description:
+ * * 此文件用于视频文件处理，步骤如下：
+ *  1、生成mp4
+ *  2、生成m3u8
+ * @author: XUCHANG
  */
 public class HlsVideoUtil extends  VideoUtil {
 

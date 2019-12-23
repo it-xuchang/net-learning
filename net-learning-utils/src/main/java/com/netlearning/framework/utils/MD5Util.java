@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ */
 public class MD5Util {
 
     /**

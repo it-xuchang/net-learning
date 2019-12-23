@@ -1,5 +1,5 @@
 server:
-  port: 50201
+  port: 6000
   servlet:
     context-path: /api
 spring:
@@ -63,6 +63,11 @@ zuul:
     net-learning-auth:
       path: /auth/**
       serviceId: net-learning-auth
+      sensitiveHeaders:
+      strip-prefix: false
+    net-learning-user-auth:
+      path: /user-auth/**
+      serviceId: net-learning-user-auth
       sensitiveHeaders:
       strip-prefix: false
 eureka:

@@ -6,26 +6,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="net-learning-order" />
         <module name="net-learning-manage-cms-client" />
-        <module name="net-learning-filesystem" />
+        <module name="net-learning-order" />
+        <module name="net-learning-search" />
         <module name="net-learning-eureka-server-9001" />
         <module name="net-learning-course" />
         <module name="net-learning-ucenter" />
-        <module name="net-learning-fss" />
-        <module name="net-learning-model" />
         <module name="net-learning-media" />
         <module name="net-learning-service-api" />
-        <module name="net-learning-utils" />
+        <module name="net-learning-common" />
         <module name="net-learning-gateway" />
         <module name="net-learning-file" />
+        <module name="net-learning-auth" />
         <module name="net-learning-client-config" />
-        <module name="net-learning-search" />
+        <module name="net-learning-filesystem" />
+        <module name="net-learning-fss" />
         <module name="net-learning-server-config" />
         <module name="net-learning-media-processor" />
-        <module name="net-learning-common" />
+        <module name="net-learning-user-auth" />
+        <module name="net-learning-model" />
         <module name="net-learning-manage-cms" />
-        <module name="net-learning-auth" />
+        <module name="net-learning-utils" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -49,6 +50,7 @@
       <module name="net-learning-server-config" target="1.8" />
       <module name="net-learning-service-api" target="1.8" />
       <module name="net-learning-ucenter" target="1.8" />
+      <module name="net-learning-user-auth" target="1.8" />
       <module name="net-learning-utils" target="1.8" />
       <module name="netlearning-media" target="1.8" />
     </bytecodeTargetLevel>
@@ -74,6 +76,7 @@
       <module name="net-learning-server-config" options="-parameters" />
       <module name="net-learning-service-api" options="-parameters" />
       <module name="net-learning-ucenter" options="-parameters" />
+      <module name="net-learning-user-auth" options="-parameters" />
       <module name="net-learning-utils" options="-parameters" />
     </option>
   </component>

@@ -5,7 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ */
 public class CookieUtil {
 
     /**
@@ -31,7 +35,6 @@ public class CookieUtil {
     /**
      * 根据cookie名称读取cookie
      * @param request
-     * @param cookieName1,cookieName2
      * @return map<cookieName,cookieValue>
      */
 

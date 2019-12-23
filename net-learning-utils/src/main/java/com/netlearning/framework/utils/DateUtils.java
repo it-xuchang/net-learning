@@ -8,8 +8,10 @@ import java.util.GregorianCalendar;
 import java.util.SimpleTimeZone;
 
 /**
- * @author
- *
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ * @time: 2019/12/12 14:17
  */
 public final class DateUtils {
 
@@ -17,11 +19,15 @@ public final class DateUtils {
 
 	private static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+	private static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
+
 	private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 
 	private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
+
+	private static SimpleDateFormat datePattern = new SimpleDateFormat(DATETIME_FORMAT);
 
 
 	private DateUtils() {
@@ -122,11 +128,7 @@ public final class DateUtils {
 		return calendar.getTime();
 	}
 
-	/**
-	 * @author king
-	 * @create 2008-1-21 下午02:16:21
-	 * @return
-	 */
+
 	public static Timestamp getNow() {
 		return new Timestamp(System.currentTimeMillis());
 	}
@@ -165,6 +167,9 @@ public final class DateUtils {
 			if (dateString.length() <= 10) {
                 return dateFormat.parse(dateString);
             } else {
+				if(dateString.length() == 14){
+					return dateTimeFormat.parse(dateString);
+				}
 				return dateTimeFormat.parse(dateString);
 			}
 		} catch (Exception e) {
@@ -438,7 +443,7 @@ public final class DateUtils {
 	 *
 	 * @modify Dec 28, 2006 5:30:30 PM
 	 * @param date
-	 * @param day
+	 * @param week
 	 *            0～6，分别取周日到周六
 	 * @return
 	 */
@@ -539,7 +544,7 @@ public final class DateUtils {
 	 *
 	 * @modify Dec 28, 2006 4:00:42 PM
 	 * @param date
-	 * @param type
+	 * @param field
 	 * @param amount
 	 * @return
 	 */

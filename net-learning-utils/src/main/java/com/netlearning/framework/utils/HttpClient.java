@@ -26,10 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * http请求客户端
- * 
- * @author Administrator
- * 
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
  */
 public class HttpClient {
 	private String url;

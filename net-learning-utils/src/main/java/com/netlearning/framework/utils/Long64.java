@@ -1,8 +1,9 @@
 package com.netlearning.framework.utils;
 
 /**
- * 长整数与64进制数据互换
- *
+ * @program: net-learning
+ * @description:长整数与64进制数据互换
+ * @author: XUCHANG
  */
 public class Long64 {
 	private final static char[] CHARS64 = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',

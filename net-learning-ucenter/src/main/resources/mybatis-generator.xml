@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <classPathEntry location="C:\JavaBase\apache-maven-repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
+  <context id="context1">
+  	<commentGenerator>
+        <property name="suppressAllComments" value="true" />
+    </commentGenerator>
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/netlearning-user"
+    driverClass="com.mysql.jdbc.Driver" password="root" userId="root" />
+    <javaModelGenerator targetPackage="com.netlearning.ucenter.pojo" targetProject="src/main/java" />
+    <sqlMapGenerator targetPackage="com.netlearning.ucenter.mapper" targetProject="src/main/java" />
+    <javaClientGenerator targetPackage="com.netlearning.ucenter.mapper" targetProject="src/main/java" type="XMLMAPPER" />
+
+    <table tableName="menu" domainObjectName="Menu" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+  </context>
+</generatorConfiguration>

@@ -2,7 +2,11 @@ package com.netlearning.framework.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ */
 public class GenerateOrderNum {
     /**
      * 锁对象，可以为任意对象

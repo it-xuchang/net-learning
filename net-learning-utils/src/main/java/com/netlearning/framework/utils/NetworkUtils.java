@@ -9,11 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * ClassName: NetworkUtils <br/>
- * Description: 网络工具类
- * Date: 2019/03/07 11:07
- *
- * @author liyanhui
+ * @program: net-learning
+ * @description:网络工具类
+ * @author: XUCHANG
  */
 public class NetworkUtils {
 

@@ -7,13 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 /**
- * 描述: Twitter的分布式自增ID雪花算法snowflake (Java版)
- *
- * @author yanpenglei
- * @create 2018-03-13 12:37
- * https://github.com/souyunku/SnowFlake
- **/
+ * @program: net-learning
+ * @description:Twitter的分布式自增ID雪花算法snowflake (Java版)
+ * @author: XUCHANG
+ */
 public class SnowFlake {
 
     /**

@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ */
 public class IOUtils {
 	private final static int CRYPTED_BYTES = 1024;
 	private final static String HEAD = "V1";

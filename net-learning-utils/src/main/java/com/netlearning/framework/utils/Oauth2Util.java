@@ -8,8 +8,11 @@ import org.springframework.security.jwt.JwtHelper;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+
 /**
- * Created by mrt on 2018/5/25.
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
  */
 public class Oauth2Util {
 
