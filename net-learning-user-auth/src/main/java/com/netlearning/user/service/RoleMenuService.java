@@ -16,7 +16,7 @@ public interface RoleMenuService {
 
     CommonResult<List<MenuItem>> tree(RoleTreeParam roleTreeParam);
 
-    CommonResult<Boolean> add(RoleMenu roleMenu);
+    CommonResult<Boolean> add(RoleMenuRequest roleMenu);
 
     CommonResult<Boolean> edit(RoleMenu roleMenu);
 

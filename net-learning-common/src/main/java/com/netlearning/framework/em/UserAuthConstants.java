@@ -67,4 +67,33 @@ public interface UserAuthConstants {
             return typeList;
         }
     }
+    enum SystemDefaultRole {
+        SYSTEM_DEFAULT_ADMIN(101L, "超级管理员"),
+        SYSTEM_DEFAULT_TEACHER(100L, "普通教师"),
+        ;
+
+        private Long code;
+        private String message;
+
+        private SystemDefaultRole(Long code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public Long getCode() {
+            return this.code;
+        }
+
+        public String getMessage() {
+            return this.message;
+        }
+
+        public static List<Long> defaultRoleList() {
+            List<Long> typeList = new ArrayList<>();
+            for (SystemDefaultRole v : SystemDefaultRole.values()) {
+                typeList.add(v.code);
+            }
+            return typeList;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.MenuItem;
 import com.netlearning.framework.domain.userAuth.RoleMenu;
+import com.netlearning.framework.domain.userAuth.RoleMenuRequest;
 import com.netlearning.framework.domain.userAuth.RoleMenuResult;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public interface RoleMenuControllerApi {
     public CommonResult<List<MenuItem>> tree(@RequestParam(value = "roleId",required = false) Long roleId,
                                              @RequestParam(value = "menuParentId",required = false) Long menuParentId);
 
-    public CommonResult<Boolean> add(@RequestBody RoleMenu roleMenu);
+    public CommonResult<Boolean> add(@RequestBody RoleMenuRequest roleMenu);
 
     public CommonResult<Boolean> edit(@RequestBody RoleMenu roleMenu);
 

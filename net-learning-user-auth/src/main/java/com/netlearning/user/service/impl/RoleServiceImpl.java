@@ -5,18 +5,22 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.RoleMapper;
-import com.netlearning.framework.domain.userAuth.Role;
-import com.netlearning.framework.domain.userAuth.RoleExample;
-import com.netlearning.framework.domain.userAuth.RoleParam;
+import com.netlearning.user.mapper.RoleMenuMapper;
 import com.netlearning.user.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +34,12 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+
     @Autowired
     private SequenceService sequenceService;
+
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
 
     @Override
     public CommonResult<List<Role>> query(RoleParam roleParam) {
@@ -77,11 +85,24 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public CommonResult<Boolean> add(Role role) {
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
+    public CommonResult<Boolean> add(RoleAddRequest roleAddRequest) {
         try {
-            role.setRoleId(sequenceService.nextValue(null));
+            Role role = new Role();
+            Long roleId = sequenceService.nextValue(null);
+            BeanCopyUtils.copyProperties(roleAddRequest,role);
+            role.setRoleId(roleId);
             role.setCreateTime(new Date());
             roleMapper.insertSelective(role);
+            List<RoleMenu> roleMenus = new ArrayList<>();
+            for (Long menuId : roleAddRequest.getMenuIds()){
+                RoleMenu menu = new RoleMenu();
+                menu.setRoleId(roleId);
+                menu.setMenuId(menuId);
+                roleMenus.add(menu);
+            }
+            roleMenuMapper.mutipartInsertSelective(roleMenus);
+
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE002.message);
@@ -89,10 +110,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public CommonResult<Boolean> edit(Role role) {
+    @Transactional(propagation = Propagation.SUPPORTS,rollbackFor = {Exception.class})
+    public CommonResult<Boolean> edit(RoleEditRequest roleEditRequest) {
         try {
-            role.setModifyTime(new Date());
-            roleMapper.updateByPrimaryKeySelective(role);
+            Role record = new Role();
+            BeanCopyUtils.copyProperties(roleEditRequest,record);
+            record.setModifyTime(new Date());
+
+            roleMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE003.message);
@@ -100,9 +125,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long roleId) {
+    @Transactional(propagation = Propagation.SUPPORTS,rollbackFor = {Exception.class})
+    public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest) {
         try {
-            roleMapper.deleteByPrimaryKey(roleId);
+            roleMapper.deleteByPrimaryKey(roleDeleteRequest.getRoleId());
+            if (!CollectionUtils.isEmpty(roleDeleteRequest.getMenuIds())){
+                RoleMenuExample example = new RoleMenuExample();
+                example.createCriteria().andRoleIdEqualTo(roleDeleteRequest.getRoleId()).andMenuIdIn(roleDeleteRequest.getMenuIds());
+                roleMenuMapper.deleteByExample(example);
+            }
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);

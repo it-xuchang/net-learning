@@ -3,8 +3,7 @@ package com.netlearning.user.service;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
-import com.netlearning.framework.domain.userAuth.Role;
-import com.netlearning.framework.domain.userAuth.RoleParam;
+import com.netlearning.framework.domain.userAuth.*;
 
 import java.util.List;
 
@@ -19,9 +18,9 @@ public interface RoleService {
 
     CommonResult<CommonPageResult<Role>> page(RoleParam roleParam, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(Role role);
+    CommonResult<Boolean> add(RoleAddRequest role);
 
-    CommonResult<Boolean> edit(Role role);
+    CommonResult<Boolean> edit(RoleEditRequest roleEditRequest);
 
-    CommonResult<Boolean> delete(Long roleId);
+    CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest);
 }

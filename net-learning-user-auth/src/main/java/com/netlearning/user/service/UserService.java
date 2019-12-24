@@ -4,6 +4,7 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.User;
+import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.domain.userAuth.UserParam;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface UserService {
 
     CommonResult<CommonPageResult<User>> page(UserParam userParam, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(User user);
+    CommonResult<Boolean> add(UserAddRequest user);
 
     CommonResult<Boolean> edit(User user);
 

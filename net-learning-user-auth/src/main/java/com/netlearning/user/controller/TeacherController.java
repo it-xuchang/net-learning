@@ -4,6 +4,7 @@ import com.netlearning.api.userAuth.TeacherControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -95,7 +96,7 @@ public class TeacherController implements TeacherControllerApi {
 
     @Override
     @PostMapping("add")
-    public CommonResult<Boolean> add(@RequestBody Teacher teacher){
+    public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher){
         if (StringUtils.isEmpty(teacher.getTeacherName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }

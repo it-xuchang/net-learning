@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -26,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 @ComponentScan(basePackages={"com.netlearning.user"})//扫描本项目下的所有类
 @ComponentScan(basePackages={"com.netlearning.framework"})
 @SpringBootApplication
+@EnableTransactionManagement
 public class UserAuthApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(UserAuthApplication.class, args);

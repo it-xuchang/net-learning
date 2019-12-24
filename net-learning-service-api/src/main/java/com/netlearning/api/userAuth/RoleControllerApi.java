@@ -3,6 +3,9 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Role;
+import com.netlearning.framework.domain.userAuth.RoleAddRequest;
+import com.netlearning.framework.domain.userAuth.RoleDeleteRequest;
+import com.netlearning.framework.domain.userAuth.RoleEditRequest;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +35,9 @@ public interface RoleControllerApi {
                                                      @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                      @RequestParam(value = "pageSize",required = false) Integer pageSize);
 
-    public CommonResult<Boolean> add(@RequestBody Role role);
+    public CommonResult<Boolean> add(@RequestBody RoleAddRequest role);
 
-    public CommonResult<Boolean> edit(@RequestBody Role role);
+    public CommonResult<Boolean> edit(@RequestBody RoleEditRequest roleEditRequest);
 
-    public CommonResult<Boolean> delete(Long roleId);
+    public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest);
 }

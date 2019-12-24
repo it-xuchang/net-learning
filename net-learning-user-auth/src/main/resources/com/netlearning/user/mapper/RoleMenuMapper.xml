@@ -110,6 +110,29 @@
       </if>
     </trim>
   </insert>
+  <insert id="mutipartInsertSelective">
+    <if test="records != null">
+      <foreach collection="records" index="index" item="item" separator=";">
+        insert into t_role_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="item.roleId != null">
+            ROLE_ID,
+          </if>
+          <if test="item.menuId != null">
+            MENU_ID,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="item.roleId != null">
+            #{item.roleId,jdbcType=BIGINT},
+          </if>
+          <if test="item.menuId != null">
+            #{item.menuId,jdbcType=BIGINT},
+          </if>
+        </trim>
+      </foreach>
+    </if>
+  </insert>
   <select id="countByExample" parameterType="com.netlearning.framework.domain.userAuth.RoleMenuExample" resultType="java.lang.Long">
     select count(*) from t_role_menu
     <if test="_parameter != null">

@@ -3,6 +3,7 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.User;
+import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +46,7 @@ public interface UserControllerApi {
                                                      @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                      @RequestParam(value = "pageSize",required = false) Integer pageSize);
 
-    public CommonResult<Boolean> add(@RequestBody User user);
+    public CommonResult<Boolean> add(@RequestBody UserAddRequest user);
 
     public CommonResult<Boolean> edit(@RequestBody User user);
 

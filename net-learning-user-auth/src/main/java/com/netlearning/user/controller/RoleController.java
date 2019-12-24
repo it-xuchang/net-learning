@@ -4,10 +4,11 @@ import com.netlearning.api.userAuth.RoleControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.exception.ExceptionCode;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.RegexUtil;
-import com.netlearning.framework.domain.userAuth.Role;
-import com.netlearning.framework.domain.userAuth.RoleParam;
+import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -63,21 +64,35 @@ public class RoleController implements RoleControllerApi {
         return roleService.page(roleParam,commonPageInfo);
     }
 
+    /**
+     * 添加角色--绑定菜单
+     * @param role
+     * @return
+     */
     @Override
     @PostMapping("add")
-    public CommonResult<Boolean> add(@RequestBody Role role){
+    public CommonResult<Boolean> add(@RequestBody RoleAddRequest role){
+        if (StringUtils.isEmpty(role.getRemark())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
+        if (StringUtils.isEmpty(role.getRoleName())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
+        if (CollectionUtils.isEmpty(role.getMenuIds())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
         return roleService.add(role);
     }
 
     @Override
     @PostMapping("edit")
-    public CommonResult<Boolean> edit(@RequestBody Role role){
-        return roleService.edit(role);
+    public CommonResult<Boolean> edit(@RequestBody RoleEditRequest roleEditRequest){
+        return roleService.edit(roleEditRequest);
     }
 
     @Override
     @DeleteMapping("delete")
-    public CommonResult<Boolean> delete(Long roleId){
-        return roleService.delete(roleId);
+    public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest){
+        return roleService.delete(roleDeleteRequest);
     }
 }

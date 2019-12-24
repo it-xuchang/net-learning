@@ -4,6 +4,8 @@ import com.netlearning.api.userAuth.RoleMenuControllerApi;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.exception.ExceptionCode;
+import com.netlearning.framework.utils.CollectionUtils;
+import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.service.RoleMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,13 @@ public class RoleMenuController implements RoleMenuControllerApi {
 
     @Override
     @PostMapping("add")
-    public CommonResult<Boolean> add(@RequestBody RoleMenu roleMenu){
+    public CommonResult<Boolean> add(@RequestBody RoleMenuRequest roleMenu){
+        if (roleMenu.getRoleId() == null){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
+        if (CollectionUtils.isEmpty(roleMenu.getMenuIds())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
         return roleMenuService.add(roleMenu);
     }
 

@@ -113,9 +113,17 @@ public class RoleMenuServiceImpl implements RoleMenuService {
 
 
     @Override
-    public CommonResult<Boolean> add(RoleMenu roleMenu) {
+    public CommonResult<Boolean> add(RoleMenuRequest roleMenu) {
         try {
-            roleMenuMapper.insertSelective(roleMenu);
+            List<RoleMenu> roleMenus = new ArrayList<>();
+            for (Long menuId : roleMenu.getMenuIds()){
+                RoleMenu menu = new RoleMenu();
+                menu.setRoleId(roleMenu.getRoleId());
+                menu.setMenuId(menuId);
+                roleMenus.add(menu);
+            }
+
+            roleMenuMapper.mutipartInsertSelective(roleMenus);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE002.message);

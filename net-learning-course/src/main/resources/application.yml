@@ -5,7 +5,7 @@ spring:
     name: net-learning-course
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/netlearning?characterEncoding=utf-8
+      url: jdbc:mysql://localhost:3306/netlearning?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
       username: root
       password: root
       driverClassName: com.mysql.jdbc.Driver

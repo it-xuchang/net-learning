@@ -12,6 +12,8 @@ public interface RoleMenuMapper {
 
     int insert(RoleMenu record);
 
+    int mutipartInsertSelective(@Param("records") List<RoleMenu> records);
+
     int insertSelective(RoleMenu record);
 
     List<RoleMenu> selectByExample(RoleMenuExample example);

@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
@@ -12,12 +14,13 @@ import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.MD5Util;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.TeacherMapper;
-import com.netlearning.framework.domain.userAuth.Teacher;
-import com.netlearning.framework.domain.userAuth.TeacherExample;
-import com.netlearning.framework.domain.userAuth.TeacherParam;
+import com.netlearning.user.mapper.UserRoleMapper;
 import com.netlearning.user.service.TeacherService;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,8 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherMapper teacherMapper;
     @Autowired
     private SequenceService sequenceService;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public CommonResult<List<Teacher>> query(TeacherParam teacherParam) {
@@ -124,18 +129,30 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public CommonResult<Boolean> add(Teacher teacher) {
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
+    public CommonResult<Boolean> add(TeacherAddRequest teacherAddRequest) {
         try {
-            if (!UserAuthConstants.UserType.userTypeList().contains(teacher.getStatus())){
-                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
-            }
-            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacher.getSsex())){
+            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacherAddRequest.getSex()) && !StringUtils.isEmpty(teacherAddRequest.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
-            teacher.setTeacherId(sequenceService.nextValue(null));
+            Teacher teacher = new Teacher();
+            BeanCopyUtils.copyProperties(teacherAddRequest,teacher);
+            Long teacherId = sequenceService.nextValue(null);
+            teacher.setTeacherId(teacherId);
             teacher.setCreateTime(new Date());
             teacher.setStatus(UserAuthConstants.UserType.UP.getCode());
             teacher.setPassword(MD5Util.getStringMD5(teacher.getPassword()));
+            if (StringUtils.isEmpty(teacherAddRequest.getSex())){
+                teacher.setSsex(UserAuthConstants.UserSexType.NON.getCode());
+            }
+            UserRole record = new UserRole();
+            if (teacherAddRequest.getRoleId() == null){
+                record.setRoleId(UserAuthConstants.SystemDefaultRole.SYSTEM_DEFAULT_TEACHER.getCode());
+            }else {
+                record.setRoleId(teacherAddRequest.getRoleId());
+            }
+            record.setUserId(teacherId);
+            userRoleMapper.insert(record);
             teacherMapper.insertSelective(teacher);
             return CommonResult.success(true);
         }catch (Exception e){
@@ -144,6 +161,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
     public CommonResult<Boolean> edit(Teacher teacher) {
         try {
             if (!UserAuthConstants.UserType.userTypeList().contains(teacher.getStatus())){

@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
@@ -120,17 +122,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResult<Boolean> add(User user) {
+    public CommonResult<Boolean> add(UserAddRequest user) {
         try {
-            if (!UserAuthConstants.UserType.userTypeList().contains(user.getStatus())){
-                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
-            }
-            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSsex())){
+
+            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSsex()) && !StringUtils.isEmpty(user.getSsex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
-            user.setUserId(sequenceService.nextValue(null));
-            user.setCreateTime(new Date());
-            userMapper.insertSelective(user);
+            User record = new User();
+            BeanCopyUtils.copyProperties(user,record);
+            record.setUserId(sequenceService.nextValue(null));
+            record.setStatus(UserAuthConstants.UserType.UP.getCode());
+            record.setCreateTime(new Date());
+            if (StringUtils.isEmpty(user.getSsex())){
+                record.setSsex(UserAuthConstants.UserSexType.NON.getCode());
+            }
+            if (user.getRoleId() != null){
+
+            }
+            userMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE002.message);
