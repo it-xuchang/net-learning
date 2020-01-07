@@ -6,13 +6,19 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.course.param.CourseRecommendationParam;
+import com.netlearning.framework.domain.course.result.CourseBaseResult;
+import com.netlearning.framework.domain.course.result.CourseRecommendationResult;
 import com.netlearning.framework.domain.userAuth.*;
+import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.MD5Util;
 import com.netlearning.framework.utils.StringUtils;
+import com.netlearning.user.client.CourseBaseClientApi;
 import com.netlearning.user.mapper.TeacherMapper;
 import com.netlearning.user.mapper.UserRoleMapper;
 import com.netlearning.user.service.TeacherService;
@@ -22,8 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: net-learning
@@ -39,7 +44,8 @@ public class TeacherServiceImpl implements TeacherService {
     private SequenceService sequenceService;
     @Autowired
     private UserRoleMapper userRoleMapper;
-
+    @Autowired
+    private CourseBaseClientApi courseBaseClientApi;
     @Override
     public CommonResult<List<Teacher>> query(TeacherParam teacherParam) {
         TeacherExample example = new TeacherExample();
@@ -187,5 +193,91 @@ public class TeacherServiceImpl implements TeacherService {
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);
         }
+    }
+
+    @Override
+    public CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(Long size) {
+
+        CommonResult<List<CourseRecommendationResult>> courseRecommendationResult = courseBaseClientApi.queryCourseRecommendation(size);
+        List<Long> teacherIds = new ArrayList<>();
+        List<Long> couresIds = new ArrayList<>();
+        //课程id 课程用户学习量
+        Map<Long,Integer> courseRecommendationMap = new HashMap<>();
+        //教师id 教师课程信息
+        Map<Long,List<CourseBaseResult>> teacherCourseMap = new HashMap<>();
+        if (courseRecommendationResult.isSuccess()){
+            List<CourseRecommendationResult> courseRecommendationResultList = courseRecommendationResult.getData();
+            for (CourseRecommendationResult recommendationResult : courseRecommendationResultList){
+                    if (!couresIds.contains(recommendationResult.getCourseId())){
+                        couresIds.add(recommendationResult.getCourseId());
+                    }
+                    if (!courseRecommendationMap.containsKey(recommendationResult.getCourseId())){
+                        courseRecommendationMap.put(recommendationResult.getCourseId(),recommendationResult.getLearningUser());
+                    }
+            }
+            if (!CollectionUtils.isEmpty(couresIds)){
+                CommonResult<List<CourseBaseResult>> couresResult =  courseBaseClientApi.queryByCouresIds(couresIds);
+                if (couresResult.isSuccess()){
+
+                    List<CourseBaseResult> courseBaseResultList = couresResult.getData();
+                    if (!CollectionUtils.isEmpty(courseBaseResultList)){
+                        for (CourseBaseResult courseBaseResult : courseBaseResultList){
+                            if (!teacherIds.contains(courseBaseResult.getTeacherId())){
+                                teacherIds.add(courseBaseResult.getTeacherId());
+                            }
+
+                            if (teacherCourseMap.containsKey(courseBaseResult.getTeacherId())){
+                                teacherCourseMap.get(courseBaseResult.getTeacherId()).add(courseBaseResult);
+                            }else {
+                                List<CourseBaseResult> list = new ArrayList<>();
+                                list.add(courseBaseResult);
+                                teacherCourseMap.put(courseBaseResult.getTeacherId(),list);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<TeacherRecommendationResult> teacherRecommendationResults = new ArrayList<>();
+        //教师id 教师信息
+        Map<Long,Teacher> teacherMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            TeacherExample example = new TeacherExample();
+            example.createCriteria().andTeacherIdIn(teacherIds);
+            List<Teacher> teacherList = teacherMapper.selectByExample(example);
+            for (Teacher teacher : teacherList){
+                if (!teacherMap.containsKey(teacher.getTeacherId())){
+                    teacherMap.put(teacher.getTeacherId(),teacher);
+                }
+            }
+        }
+
+        for (Map.Entry<Long,List<CourseBaseResult>> entry : teacherCourseMap.entrySet()){
+            Long key = entry.getKey();
+            List<CourseBaseResult> value = entry.getValue();
+            for (CourseBaseResult courseBase : value){
+                TeacherRecommendationResult teacherRecommendationResult = new TeacherRecommendationResult();
+                if (courseRecommendationMap.containsKey(courseBase.getCourseId())){
+                    teacherRecommendationResult.setLearningUser(courseRecommendationMap.get(courseBase.getCourseId()));
+                }else {
+                    teacherRecommendationResult.setLearningUser(0);
+                }
+
+                if (teacherMap.containsKey(key)){
+                    Teacher teacher = teacherMap.get(key);
+                    teacherRecommendationResult.setTeacherId(key);
+                    teacherRecommendationResult.setTeacherName(teacher.getTeacherName());
+                    teacherRecommendationResult.setAvatar(teacher.getAvatar());
+                    teacherRecommendationResult.setCourseName(courseBase.getCourseName());
+                    //调用文件系统是微服务
+                    teacherRecommendationResult.setTeacherImageUrl("");
+                    teacherRecommendationResults.add(teacherRecommendationResult);
+                }
+
+            }
+
+        }
+
+        return CommonResult.success(teacherRecommendationResults);
     }
 }

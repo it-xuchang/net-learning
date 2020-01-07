@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <classPathEntry location="C:\JavaBase\apache-maven-repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
+  <context id="context1">
+  	<commentGenerator>
+        <property name="suppressAllComments" value="true" />
+    </commentGenerator>
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/netlearning-system"
+    driverClass="com.mysql.jdbc.Driver" password="root" userId="root" />
+    <javaModelGenerator targetPackage="com.netlearning.course.pojo" targetProject="src/main/java" />
+    <sqlMapGenerator targetPackage="com.netlearning.course.mapper" targetProject="src/main/java" />
+    <javaClientGenerator targetPackage="com.netlearning.course.mapper" targetProject="src/main/java" type="XMLMAPPER" />
+
+    <table tableName="t_system_nav" domainObjectName="SystemNav" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_course_quzi" domainObjectName="CourseQuzi" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+    <table tableName="t_frequently_asked_question" domainObjectName="FrequentlyAskedQuestion" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_course_assessment" domainObjectName="CourseAssessment" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+    <table tableName="t_category" domainObjectName="Category" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_course_base" domainObjectName="CourseBase" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_learning_course" domainObjectName="LearningCourse" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_teachplan" domainObjectName="TeachPlan" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="t_teachplan_media" domainObjectName="TeachPlanMedia" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+
+    <table tableName="fss_record" domainObjectName="FssRecord" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+  </context>
+</generatorConfiguration>

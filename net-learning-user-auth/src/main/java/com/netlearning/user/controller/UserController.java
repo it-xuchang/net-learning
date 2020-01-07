@@ -23,14 +23,15 @@ import java.util.List;
  * @time: 2019/12/20 14:44
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController implements UserControllerApi {
     @Autowired
     private UserService userService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<User>> query(@RequestParam(value = "userId",required = false) Long userId,
+                                          @RequestParam(value = "userIds",required = false) List<Long> userIds,
                                           @RequestParam(value = "username",required = false) String username,
                                           @RequestParam(value = "email",required = false) String email,
                                           @RequestParam(value = "password",required = false) String password,
@@ -55,6 +56,7 @@ public class UserController implements UserControllerApi {
         userParam.setStatus(status);
         userParam.setUserId(userId);
         userParam.setUsername(username);
+        userParam.setUserIds(userIds);
         return userService.query(userParam);
     }
     @Override
@@ -130,5 +132,12 @@ public class UserController implements UserControllerApi {
     @DeleteMapping("delete")
     public CommonResult<Boolean> delete(Long userId){
         return userService.delete(userId);
+    }
+
+    @GetMapping("/query/detail")
+    public CommonResult<List<User>> queryByUserIds(@RequestParam(value = "userIds",required = false) List<Long> userIds){
+        UserParam userParam = new UserParam();
+        userParam.setUserIds(userIds);
+        return userService.query(userParam);
     }
 }

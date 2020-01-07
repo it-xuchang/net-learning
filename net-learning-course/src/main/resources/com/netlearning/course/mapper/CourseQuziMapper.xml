@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netlearning.course.mapper.CourseQuziMapper">
+  <resultMap id="BaseResultMap" type="com.netlearning.framework.domain.course.CourseQuzi">
+    <id column="course_quzi_id" jdbcType="BIGINT" property="courseQuziId" />
+    <result column="course_quzi_title" jdbcType="VARCHAR" property="courseQuziTitle" />
+    <result column="course_quzi_content" jdbcType="VARCHAR" property="courseQuziContent" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_over_head" jdbcType="CHAR" property="isOverHead" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="course_quzi_type" jdbcType="CHAR" property="courseQuziType" />
+    <result column="is_show" jdbcType="CHAR" property="isShow" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    course_quzi_id, course_quzi_title, course_quzi_content, create_time, is_over_head,
+    course_id, update_time, course_quzi_type, is_show
+  </sql>
+  <select id="selectByExample" parameterType="com.netlearning.framework.domain.course.CourseQuziExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_course_quzi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_course_quzi
+    where course_quzi_id = #{courseQuziId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_course_quzi
+    where course_quzi_id = #{courseQuziId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.netlearning.framework.domain.course.CourseQuziExample">
+    delete from t_course_quzi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.netlearning.framework.domain.course.CourseQuzi">
+    insert into t_course_quzi (course_quzi_id, course_quzi_title, course_quzi_content,
+      create_time, is_over_head, course_id,
+      update_time, course_quzi_type, is_show
+      )
+    values (#{courseQuziId,jdbcType=BIGINT}, #{courseQuziTitle,jdbcType=VARCHAR}, #{courseQuziContent,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{isOverHead,jdbcType=CHAR}, #{courseId,jdbcType=BIGINT},
+      #{updateTime,jdbcType=TIMESTAMP}, #{courseQuziType,jdbcType=CHAR}, #{isShow,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.netlearning.framework.domain.course.CourseQuzi">
+    insert into t_course_quzi
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courseQuziId != null">
+        course_quzi_id,
+      </if>
+      <if test="courseQuziTitle != null">
+        course_quzi_title,
+      </if>
+      <if test="courseQuziContent != null">
+        course_quzi_content,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isOverHead != null">
+        is_over_head,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="courseQuziType != null">
+        course_quzi_type,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courseQuziId != null">
+        #{courseQuziId,jdbcType=BIGINT},
+      </if>
+      <if test="courseQuziTitle != null">
+        #{courseQuziTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseQuziContent != null">
+        #{courseQuziContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOverHead != null">
+        #{isOverHead,jdbcType=CHAR},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseQuziType != null">
+        #{courseQuziType,jdbcType=CHAR},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.netlearning.framework.domain.course.CourseQuziExample" resultType="java.lang.Long">
+    select count(*) from t_course_quzi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_course_quzi
+    <set>
+      <if test="record.courseQuziId != null">
+        course_quzi_id = #{record.courseQuziId,jdbcType=BIGINT},
+      </if>
+      <if test="record.courseQuziTitle != null">
+        course_quzi_title = #{record.courseQuziTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseQuziContent != null">
+        course_quzi_content = #{record.courseQuziContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isOverHead != null">
+        is_over_head = #{record.isOverHead,jdbcType=CHAR},
+      </if>
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.courseQuziType != null">
+        course_quzi_type = #{record.courseQuziType,jdbcType=CHAR},
+      </if>
+      <if test="record.isShow != null">
+        is_show = #{record.isShow,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_course_quzi
+    set course_quzi_id = #{record.courseQuziId,jdbcType=BIGINT},
+      course_quzi_title = #{record.courseQuziTitle,jdbcType=VARCHAR},
+      course_quzi_content = #{record.courseQuziContent,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      is_over_head = #{record.isOverHead,jdbcType=CHAR},
+      course_id = #{record.courseId,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      course_quzi_type = #{record.courseQuziType,jdbcType=CHAR},
+      is_show = #{record.isShow,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.netlearning.framework.domain.course.CourseQuzi">
+    update t_course_quzi
+    <set>
+      <if test="courseQuziTitle != null">
+        course_quzi_title = #{courseQuziTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseQuziContent != null">
+        course_quzi_content = #{courseQuziContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isOverHead != null">
+        is_over_head = #{isOverHead,jdbcType=CHAR},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseQuziType != null">
+        course_quzi_type = #{courseQuziType,jdbcType=CHAR},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=CHAR},
+      </if>
+    </set>
+    where course_quzi_id = #{courseQuziId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.CourseQuzi">
+    update t_course_quzi
+    set course_quzi_title = #{courseQuziTitle,jdbcType=VARCHAR},
+      course_quzi_content = #{courseQuziContent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_over_head = #{isOverHead,jdbcType=CHAR},
+      course_id = #{courseId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      course_quzi_type = #{courseQuziType,jdbcType=CHAR},
+      is_show = #{isShow,jdbcType=CHAR}
+    where course_quzi_id = #{courseQuziId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -6,15 +6,25 @@
   	<commentGenerator>
         <property name="suppressAllComments" value="true" />
     </commentGenerator>
-    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/netlearning-fss"
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/netlearning-system"
     driverClass="com.mysql.jdbc.Driver" password="root" userId="root" />
     <javaModelGenerator targetPackage="com.netlearning.fss.pojo" targetProject="src/main/java" />
-    <sqlMapGenerator targetPackage="com.netlearning.fss.mapper.test" targetProject="src/main/java" />
-    <javaClientGenerator targetPackage="com.netlearning.fss.mapper.test" targetProject="src/main/java" type="XMLMAPPER" />
+    <sqlMapGenerator targetPackage="com.netlearning.fss.mapper" targetProject="src/main/java" />
+    <javaClientGenerator targetPackage="com.netlearning.fss.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
-    <table tableName="fss_record" domainObjectName="FileRecord" enableCountByExample="false"
-           enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-           selectByExampleQueryId="false">
+<!--    <table tableName="t_file_record" domainObjectName="FileRecord" enableCountByExample="true"-->
+<!--           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--           selectByExampleQueryId="true">-->
+<!--    </table>-->
+
+<!--    <table tableName="t_file_record_images" domainObjectName="FileRecordImages" enableCountByExample="true"-->
+<!--           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--           selectByExampleQueryId="true">-->
+<!--    </table>-->
+
+    <table tableName="t_file_record_resources" domainObjectName="FileRecordResources" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
     </table>
 
   </context>

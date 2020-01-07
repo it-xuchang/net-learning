@@ -9,7 +9,7 @@ import com.netlearning.framework.model.response.ResponseResult;
 
 public interface CmsPageService {
 
-	public QueryResponseResult<M> findList(int page, int size, QueryPageRequest queryPageRequest);
+	public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
 
 	public CmsPageResult add(CmsPage cmsPage);
 

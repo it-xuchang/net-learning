@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netlearning.course.mapper.TeachPlanMediaMapper">
+  <resultMap id="BaseResultMap" type="com.netlearning.framework.domain.course.TeachPlanMedia">
+    <id column="teachplan_media_id" jdbcType="BIGINT" property="teachplanMediaId" />
+    <result column="media_id" jdbcType="BIGINT" property="mediaId" />
+    <result column="media_fileoriginal_name" jdbcType="VARCHAR" property="mediaFileoriginalName" />
+    <result column="media_url" jdbcType="VARCHAR" property="mediaUrl" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+    <result column="teachplan_id" jdbcType="BIGINT" property="teachplanId" />
+    <result column="record_id" jdbcType="BIGINT" property="recordId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    teachplan_media_id, media_id, media_fileoriginal_name, media_url, course_id, teachplan_id,
+    record_id
+  </sql>
+  <select id="selectByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_teachplan_media
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teachplan_media
+    where teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_teachplan_media
+    where teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaExample">
+    delete from t_teachplan_media
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.netlearning.framework.domain.course.TeachPlanMedia">
+    insert into t_teachplan_media (teachplan_media_id, media_id, media_fileoriginal_name,
+      media_url, course_id, teachplan_id,
+      record_id)
+    values (#{teachplanMediaId,jdbcType=BIGINT}, #{mediaId,jdbcType=BIGINT}, #{mediaFileoriginalName,jdbcType=VARCHAR},
+      #{mediaUrl,jdbcType=VARCHAR}, #{courseId,jdbcType=BIGINT}, #{teachplanId,jdbcType=BIGINT},
+      #{recordId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.netlearning.framework.domain.course.TeachPlanMedia">
+    insert into t_teachplan_media
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teachplanMediaId != null">
+        teachplan_media_id,
+      </if>
+      <if test="mediaId != null">
+        media_id,
+      </if>
+      <if test="mediaFileoriginalName != null">
+        media_fileoriginal_name,
+      </if>
+      <if test="mediaUrl != null">
+        media_url,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="teachplanId != null">
+        teachplan_id,
+      </if>
+      <if test="recordId != null">
+        record_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teachplanMediaId != null">
+        #{teachplanMediaId,jdbcType=BIGINT},
+      </if>
+      <if test="mediaId != null">
+        #{mediaId,jdbcType=BIGINT},
+      </if>
+      <if test="mediaFileoriginalName != null">
+        #{mediaFileoriginalName,jdbcType=VARCHAR},
+      </if>
+      <if test="mediaUrl != null">
+        #{mediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="teachplanId != null">
+        #{teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="recordId != null">
+        #{recordId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaExample" resultType="java.lang.Long">
+    select count(*) from t_teachplan_media
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_teachplan_media
+    <set>
+      <if test="record.teachplanMediaId != null">
+        teachplan_media_id = #{record.teachplanMediaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mediaId != null">
+        media_id = #{record.mediaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mediaFileoriginalName != null">
+        media_fileoriginal_name = #{record.mediaFileoriginalName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mediaUrl != null">
+        media_url = #{record.mediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.teachplanId != null">
+        teachplan_id = #{record.teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_teachplan_media
+    set teachplan_media_id = #{record.teachplanMediaId,jdbcType=BIGINT},
+      media_id = #{record.mediaId,jdbcType=BIGINT},
+      media_fileoriginal_name = #{record.mediaFileoriginalName,jdbcType=VARCHAR},
+      media_url = #{record.mediaUrl,jdbcType=VARCHAR},
+      course_id = #{record.courseId,jdbcType=BIGINT},
+      teachplan_id = #{record.teachplanId,jdbcType=BIGINT},
+      record_id = #{record.recordId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.netlearning.framework.domain.course.TeachPlanMedia">
+    update t_teachplan_media
+    <set>
+      <if test="mediaId != null">
+        media_id = #{mediaId,jdbcType=BIGINT},
+      </if>
+      <if test="mediaFileoriginalName != null">
+        media_fileoriginal_name = #{mediaFileoriginalName,jdbcType=VARCHAR},
+      </if>
+      <if test="mediaUrl != null">
+        media_url = #{mediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="teachplanId != null">
+        teachplan_id = #{teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="recordId != null">
+        record_id = #{recordId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.TeachPlanMedia">
+    update t_teachplan_media
+    set media_id = #{mediaId,jdbcType=BIGINT},
+      media_fileoriginal_name = #{mediaFileoriginalName,jdbcType=VARCHAR},
+      media_url = #{mediaUrl,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=BIGINT},
+      teachplan_id = #{teachplanId,jdbcType=BIGINT},
+      record_id = #{recordId,jdbcType=BIGINT}
+    where teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT}
+  </update>
+</mapper>

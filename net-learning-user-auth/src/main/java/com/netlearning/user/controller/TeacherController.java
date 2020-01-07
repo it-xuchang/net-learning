@@ -5,6 +5,7 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
+import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -23,13 +24,13 @@ import java.util.List;
  * @time: 2019/12/20 17:14
  */
 @RestController
-@RequestMapping("teacher")
+@RequestMapping("/teacher")
 public class TeacherController implements TeacherControllerApi {
     @Autowired
     private TeacherService teacherService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<Teacher>> query(@RequestParam(value = "teacherId",required = false) Long teacherId,
                                              @RequestParam(value = "teacherName",required = false) String teacherName,
                                              @RequestParam(value = "email",required = false) String email,
@@ -58,7 +59,7 @@ public class TeacherController implements TeacherControllerApi {
         return teacherService.query(teacherParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Teacher>> page(@RequestParam(value = "teacherId",required = false) Long teacherId,
                                                         @RequestParam(value = "teacherName",required = false) String teacherName,
                                                         @RequestParam(value = "email",required = false) String email,
@@ -95,7 +96,7 @@ public class TeacherController implements TeacherControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher){
         if (StringUtils.isEmpty(teacher.getTeacherName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -110,7 +111,7 @@ public class TeacherController implements TeacherControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody Teacher teacher){
         if (teacher.getTeacherId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -128,9 +129,15 @@ public class TeacherController implements TeacherControllerApi {
     }
 
     @Override
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public CommonResult<Boolean> delete(Long teacherId){
         return teacherService.delete(teacherId);
+    }
+
+    @GetMapping("/query/teacher/recommendation")
+    public CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(@RequestParam(value = "size",required = false) Long size){
+
+        return teacherService.queryTeacherRecommendation(size);
     }
 
 }

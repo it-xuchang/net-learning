@@ -1,28 +1,63 @@
 package com.netlearning.framework.domain.course;
 
-import lombok.Data;
-import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+public class Category {
+    private Long categoryId;
 
-import javax.persistence.*;
-import java.io.Serializable;
-//@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-@Data
-@ToString
-@Entity
-@Table(name="category")
-@GenericGenerator(name = "jpa-assigned", strategy = "assigned")
-public class Category implements Serializable {
-    private static final long serialVersionUID = -906357110051689484L;
-    @Id
-    @GeneratedValue(generator = "jpa-assigned")
-    @Column(length = 32)
-    private String id;
-    private String name;
+    private String categoryName;
+
     private String label;
-    private String parentid;
-    private String isshow;
-    private Integer orderby;
-    private String isleaf;
 
+    private Long parentId;
+
+    private String isShow;
+
+    private String isLeaf;
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(String isShow) {
+        this.isShow = isShow;
+    }
+
+    public String getIsLeaf() {
+        return isLeaf;
+    }
+
+    public void setIsLeaf(String isLeaf) {
+        this.isLeaf = isLeaf;
+    }
 }

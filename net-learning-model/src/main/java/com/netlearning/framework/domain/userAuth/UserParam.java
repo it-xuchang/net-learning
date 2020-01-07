@@ -3,6 +3,7 @@ package com.netlearning.framework.domain.userAuth;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class UserParam {
@@ -29,5 +30,7 @@ public class UserParam {
     private String description;
 
     private String avatar;
+
+    private List<Long> userIds;
 
 }

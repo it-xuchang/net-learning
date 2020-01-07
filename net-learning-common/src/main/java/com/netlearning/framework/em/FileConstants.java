@@ -38,4 +38,36 @@ public interface FileConstants {
             return typeList;
         }
     }
+    enum FileType {
+        IMAGES("0", "图片"),
+        DOCUMENT("1", "文档"),
+        MEDIA("2", "视频"),
+        OTHER("3", "其他"),
+        ;
+
+        private String code;
+        private String message;
+
+        private FileType(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode() {
+            return this.code;
+        }
+
+        public String getMessage() {
+            return this.message;
+        }
+
+        public static List<String> FileTypeList() {
+            List<String> typeList = new ArrayList<>();
+            for (FileType v : FileType.values()) {
+                typeList.add(v.code);
+            }
+            return typeList;
+        }
+    }
+
 }

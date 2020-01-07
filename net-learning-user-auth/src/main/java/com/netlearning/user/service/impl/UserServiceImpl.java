@@ -10,6 +10,7 @@ import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.UserMapper;
@@ -42,6 +43,9 @@ public class UserServiceImpl implements UserService {
         UserExample.Criteria criteria = example.createCriteria();
         if (userParam.getUserId() != null){
             criteria.andUserIdEqualTo(userParam.getUserId());
+        }
+        if (!CollectionUtils.isEmpty(userParam.getUserIds())){
+            criteria.andUserIdIn(userParam.getUserIds());
         }
         if (!StringUtils.isEmpty(userParam.getUsername())){
             criteria.andUsernameLike(userParam.getUsername());

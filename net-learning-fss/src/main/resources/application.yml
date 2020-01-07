@@ -9,7 +9,7 @@ spring:
       max-request-size: 200MB
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/netlearning-fss?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+      url: jdbc:mysql://localhost:3306/netlearning-system?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
       username: root
       password: root
       driverClassName: com.mysql.jdbc.Driver
@@ -38,8 +38,8 @@ sequence:
   enable: true
   type: snowflake
   generate: random
-#mybatis:
-#  config-location: classpath:com.netlearning.fss.mapper/*.xml
+mybatis:
+  config-location: classpath:com.netlearning.fss.mapper/*.xml
 
 ###服务名称(服务注册到eureka名称)
 ###服务注册到eureka地址
@@ -56,3 +56,6 @@ eureka:
     instance-id: ${spring.application.name}:${server.port} #指定实例id
 
 fss_file_path: D:\NetworkLearningPlatform\upload
+
+secretId: AKIDqFTZF0JjUuATGexY1eoS0UnU2aIAlhIh
+secretKey: OS7NSSN8XjlFYhK6haRZHtkeNkwk8OUX

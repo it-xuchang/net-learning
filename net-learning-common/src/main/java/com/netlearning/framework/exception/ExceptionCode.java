@@ -66,4 +66,33 @@ public class ExceptionCode {
             return message;
         }
     }
+    public enum CourseCode{
+        CODE001("CODE001" , "系统内部错误"),
+        CODE002("CODE002" , "添加失败"),
+        CODE003("CODE003" , "修改失败"),
+        CODE004("CODE004" , "删除失败"),
+        CODE005("CODE005" , "分页参数错误"),
+        CODE006("CODE006" , "日期格式错误"),
+        CODE007("CODE007" , "参数输入有误"),
+        CODE008("CODE008" , "课程不存在"),
+        CODE009("CODE009" , "课程id输入有误"),
+        CODE010("CODE010" , "课程暂无教学计划"),
+
+        ;
+        public final String code;
+        public final String message;
+
+        CourseCode(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 }

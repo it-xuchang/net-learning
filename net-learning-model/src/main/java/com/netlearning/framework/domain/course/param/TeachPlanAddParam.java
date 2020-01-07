@@ -1,0 +1,27 @@
+package com.netlearning.framework.domain.course.param;
+
+import lombok.Data;
+
+@Data
+public class TeachPlanAddParam {
+    private String courseId;
+
+    private String teachplanName;
+
+    private Long parentId;
+
+    private String grade;
+
+    private String teachplanType;
+
+    private String description;
+
+    private Double timeLength;
+
+    private String orderby;
+
+    private String status;
+
+    private String tryLearn;
+
+}

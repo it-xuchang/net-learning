@@ -7,26 +7,24 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="net-learning-manage-cms-client" />
-        <module name="net-learning-order" />
+        <module name="net-learning-filesystem" />
         <module name="net-learning-search" />
-        <module name="net-learning-eureka-server-9001" />
         <module name="net-learning-course" />
         <module name="net-learning-ucenter" />
+        <module name="net-learning-eureka-server" />
+        <module name="net-learning-model" />
         <module name="net-learning-media" />
         <module name="net-learning-service-api" />
-        <module name="net-learning-common" />
+        <module name="net-learning-utils" />
         <module name="net-learning-gateway" />
-        <module name="net-learning-file" />
-        <module name="net-learning-auth" />
+        <module name="net-learning-user-auth" />
         <module name="net-learning-client-config" />
-        <module name="net-learning-filesystem" />
         <module name="net-learning-fss" />
         <module name="net-learning-server-config" />
         <module name="net-learning-media-processor" />
-        <module name="net-learning-user-auth" />
-        <module name="net-learning-model" />
+        <module name="net-learning-common" />
         <module name="net-learning-manage-cms" />
-        <module name="net-learning-utils" />
+        <module name="net-learning-auth" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -34,7 +32,7 @@
       <module name="net-learning-client-config" target="1.8" />
       <module name="net-learning-common" target="1.8" />
       <module name="net-learning-course" target="1.8" />
-      <module name="net-learning-eureka-server-9001" target="1.8" />
+      <module name="net-learning-eureka-server" target="1.8" />
       <module name="net-learning-file" target="1.8" />
       <module name="net-learning-filesystem" target="1.8" />
       <module name="net-learning-fss" target="1.8" />
@@ -61,7 +59,7 @@
       <module name="net-learning-client-config" options="-parameters" />
       <module name="net-learning-common" options="-parameters" />
       <module name="net-learning-course" options="-parameters" />
-      <module name="net-learning-eureka-server-9001" options="-parameters" />
+      <module name="net-learning-eureka-server" options="-parameters" />
       <module name="net-learning-file" options="-parameters" />
       <module name="net-learning-filesystem" options="-parameters" />
       <module name="net-learning-fss" options="-parameters" />

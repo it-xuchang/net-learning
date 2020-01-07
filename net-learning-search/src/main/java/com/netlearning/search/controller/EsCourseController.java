@@ -1,6 +1,5 @@
 package com.netlearning.search.controller;
 
-import com.netlearning.api.search.EsCourseControllerApi;
 import com.netlearning.framework.domain.course.CoursePub;
 import com.netlearning.framework.domain.course.TeachplanMediaPub;
 import com.netlearning.framework.domain.search.CourseSearchParam;

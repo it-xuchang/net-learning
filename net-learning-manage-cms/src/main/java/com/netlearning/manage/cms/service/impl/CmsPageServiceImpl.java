@@ -78,7 +78,7 @@ public class CmsPageServiceImpl implements CmsPageService{
      * @return
      */
 	@Override
-	public QueryResponseResult<M> findList(int page, int size, QueryPageRequest queryPageRequest) {
+	public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest) {
 		if(queryPageRequest == null){
             queryPageRequest = new QueryPageRequest();
         }
@@ -115,7 +115,7 @@ public class CmsPageServiceImpl implements CmsPageService{
         QueryResult<CmsPage> queryResult = new QueryResult<CmsPage>();
         queryResult.setList(all.getContent());//数据列表
         queryResult.setTotal(all.getTotalElements());//数据总记录数
-        QueryResponseResult<M> queryResponseResult = new QueryResponseResult<M>(CommonCode.SUCCESS,queryResult);
+        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);
         return queryResponseResult;
 	}
 
@@ -199,6 +199,7 @@ public class CmsPageServiceImpl implements CmsPageService{
 	}
 
 	//根据id查询cmsConfig
+    @Override
     public CmsConfig getConfigById(String id){
         Optional<CmsConfig> optional = cmsConfigRepository.findById(id);
         if(optional.isPresent()){
@@ -215,6 +216,7 @@ public class CmsPageServiceImpl implements CmsPageService{
      *	 静态化程序获取页面的模板信息
      * 	执行页面静态化
      */
+    @Override
     public String getPageHtml(String pageId){
 
         //获取数据模型

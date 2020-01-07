@@ -1,27 +1,30 @@
 package com.netlearning.fss.mapper;
 
 import com.netlearning.framework.domain.fss.FileRecord;
-import com.netlearning.framework.domain.fss.response.FileRecordResult;
-import org.springframework.stereotype.Repository;
-
+import com.netlearning.framework.domain.fss.FileRecordExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-/**
- * @program: net-learning
- * @description:
- * @author: XUCHANG
- * @time: 2019/12/4 19:07
- */
-@Repository
 public interface FileRecordMapper {
+    long countByExample(FileRecordExample example);
 
-    void insert(FileRecord fileRecord);
+    int deleteByExample(FileRecordExample example);
 
-    void delete(FileRecord fileRecord);
+    int deleteByPrimaryKey(Long recordId);
 
-    void update(FileRecord fileRecord);
+    int insert(FileRecord record);
 
-    List<FileRecordResult> get(FileRecord fileRecord);
+    int insertSelective(FileRecord record);
 
-    List<FileRecordResult> query(FileRecord fileRecord);
+    List<FileRecord> selectByExample(FileRecordExample example);
+
+    FileRecord selectByPrimaryKey(Long recordId);
+
+    int updateByExampleSelective(@Param("record") FileRecord record, @Param("example") FileRecordExample example);
+
+    int updateByExample(@Param("record") FileRecord record, @Param("example") FileRecordExample example);
+
+    int updateByPrimaryKeySelective(FileRecord record);
+
+    int updateByPrimaryKey(FileRecord record);
 }

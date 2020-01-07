@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netlearning.course.mapper.CourseAssessmentMapper">
+  <resultMap id="BaseResultMap" type="com.netlearning.framework.domain.course.CourseAssessment">
+    <id column="course_assessment_id" jdbcType="BIGINT" property="courseAssessmentId" />
+    <result column="course_assessment_title" jdbcType="VARCHAR" property="courseAssessmentTitle" />
+    <result column="course_assessment_content" jdbcType="VARCHAR" property="courseAssessmentContent" />
+    <result column="course_assessment_grade" jdbcType="DOUBLE" property="courseAssessmentGrade" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    course_assessment_id, course_assessment_title, course_assessment_content, course_assessment_grade,
+    create_time, course_id, user_id, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.netlearning.framework.domain.course.CourseAssessmentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_course_assessment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_course_assessment
+    where course_assessment_id = #{courseAssessmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_course_assessment
+    where course_assessment_id = #{courseAssessmentId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.netlearning.framework.domain.course.CourseAssessmentExample">
+    delete from t_course_assessment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.netlearning.framework.domain.course.CourseAssessment">
+    insert into t_course_assessment (course_assessment_id, course_assessment_title,
+      course_assessment_content, course_assessment_grade,
+      create_time, course_id, user_id,
+      update_time)
+    values (#{courseAssessmentId,jdbcType=BIGINT}, #{courseAssessmentTitle,jdbcType=VARCHAR},
+      #{courseAssessmentContent,jdbcType=VARCHAR}, #{courseAssessmentGrade,jdbcType=DOUBLE},
+      #{createTime,jdbcType=TIMESTAMP}, #{courseId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.netlearning.framework.domain.course.CourseAssessment">
+    insert into t_course_assessment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courseAssessmentId != null">
+        course_assessment_id,
+      </if>
+      <if test="courseAssessmentTitle != null">
+        course_assessment_title,
+      </if>
+      <if test="courseAssessmentContent != null">
+        course_assessment_content,
+      </if>
+      <if test="courseAssessmentGrade != null">
+        course_assessment_grade,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courseAssessmentId != null">
+        #{courseAssessmentId,jdbcType=BIGINT},
+      </if>
+      <if test="courseAssessmentTitle != null">
+        #{courseAssessmentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseAssessmentContent != null">
+        #{courseAssessmentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="courseAssessmentGrade != null">
+        #{courseAssessmentGrade,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.netlearning.framework.domain.course.CourseAssessmentExample" resultType="java.lang.Long">
+    select count(*) from t_course_assessment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_course_assessment
+    <set>
+      <if test="record.courseAssessmentId != null">
+        course_assessment_id = #{record.courseAssessmentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.courseAssessmentTitle != null">
+        course_assessment_title = #{record.courseAssessmentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseAssessmentContent != null">
+        course_assessment_content = #{record.courseAssessmentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseAssessmentGrade != null">
+        course_assessment_grade = #{record.courseAssessmentGrade,jdbcType=DOUBLE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_course_assessment
+    set course_assessment_id = #{record.courseAssessmentId,jdbcType=BIGINT},
+      course_assessment_title = #{record.courseAssessmentTitle,jdbcType=VARCHAR},
+      course_assessment_content = #{record.courseAssessmentContent,jdbcType=VARCHAR},
+      course_assessment_grade = #{record.courseAssessmentGrade,jdbcType=DOUBLE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      course_id = #{record.courseId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.netlearning.framework.domain.course.CourseAssessment">
+    update t_course_assessment
+    <set>
+      <if test="courseAssessmentTitle != null">
+        course_assessment_title = #{courseAssessmentTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseAssessmentContent != null">
+        course_assessment_content = #{courseAssessmentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="courseAssessmentGrade != null">
+        course_assessment_grade = #{courseAssessmentGrade,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where course_assessment_id = #{courseAssessmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.CourseAssessment">
+    update t_course_assessment
+    set course_assessment_title = #{courseAssessmentTitle,jdbcType=VARCHAR},
+      course_assessment_content = #{courseAssessmentContent,jdbcType=VARCHAR},
+      course_assessment_grade = #{courseAssessmentGrade,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      course_id = #{courseId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where course_assessment_id = #{courseAssessmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -19,6 +19,7 @@ import java.util.List;
 @Api(value = "用户管理",description = "用户管理")
 public interface UserControllerApi {
     public CommonResult<List<User>> query(@RequestParam(value = "userId",required = false) Long userId,
+                                          @RequestParam(value = "userIds",required = false) List<Long> userIds,
                                           @RequestParam(value = "username",required = false) String username,
                                           @RequestParam(value = "email",required = false) String email,
                                           @RequestParam(value = "password",required = false) String password,

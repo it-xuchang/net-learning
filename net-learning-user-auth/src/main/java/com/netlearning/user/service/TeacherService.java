@@ -6,6 +6,7 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Teacher;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.domain.userAuth.TeacherParam;
+import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface TeacherService {
     CommonResult<Boolean> edit(Teacher teacher);
 
     CommonResult<Boolean> delete(Long teacherId);
+
+    CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(Long size);
 }

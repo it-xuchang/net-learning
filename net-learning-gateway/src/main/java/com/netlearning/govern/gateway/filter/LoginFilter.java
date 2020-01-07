@@ -67,21 +67,21 @@ public class LoginFilter extends ZuulFilter {
         String tokenFromCookie = authService.getTokenFromCookie(request);
         if(StringUtils.isEmpty(tokenFromCookie)){
             //拒绝访问
-            access_denied();
+            accessDenied();
             return null;
         }
         //从header中取jwt
         String jwtFromHeader = authService.getJwtFromHeader(request);
         if(StringUtils.isEmpty(jwtFromHeader)){
             //拒绝访问
-            access_denied();
+            accessDenied();
             return null;
         }
         //从redis取出jwt的过期时间
         long expire = authService.getExpire(tokenFromCookie);
         if(expire<0){
             //拒绝访问
-            access_denied();
+            accessDenied();
             return null;
         }
 
@@ -89,7 +89,7 @@ public class LoginFilter extends ZuulFilter {
     }
 
     //拒绝访问
-    private void access_denied(){
+    private void accessDenied(){
         RequestContext requestContext = RequestContext.getCurrentContext();
         //得到response
         HttpServletResponse response = requestContext.getResponse();
