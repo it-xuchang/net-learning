@@ -48,18 +48,7 @@ sequence:
   enable: true
   type: snowflake
   generate: random
-auth:
-  tokenValiditySeconds: 1200  #token存储到redis的过期时间
-  clientId: XcWebApp
-  clientSecret: XcWebApp
-  cookieDomain: xuecheng.com
-  cookieMaxAge: -1
-encrypt:
-  key-store:
-    location: classpath:/xc.keystore
-    secret: xuechengkeystore
-    alias: xckey
-    password: xuecheng
+
 eureka:
   client:
     registerWithEureka: true #服务注册开关
@@ -88,6 +77,8 @@ hystrix:
       execution:
         timeout:
           enabled: false
+
+tokenExpireTime: 30
 
 
 

@@ -70,6 +70,8 @@ public class ExceptionCode {
     public enum AuthCode{
         CODE001("CODE001" , "系统内部错误"),
         CODE002("CODE002" , "添加失败"),
+        CODE003("CODE003" , "账号或密码错误"),
+        CODE004("CODE004" , "用户账号锁定"),
         ;
         public final String code;
         public final String message;

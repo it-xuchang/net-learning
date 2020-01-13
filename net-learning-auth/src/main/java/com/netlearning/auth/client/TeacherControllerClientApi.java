@@ -27,8 +27,8 @@ public interface TeacherControllerClientApi {
                                                           @RequestParam(value = "password",required = false) String password);
 
     @GetMapping("/query")
-    public CommonResult<List<TeacherResult>> queryByMobile(@RequestParam(value = "password",required = false) String password,
-                                                          @RequestParam(value = "mobile",required = false) String mobile);
+    public CommonResult<List<TeacherResult>> queryByMobile(@RequestParam(value = "mobile",required = false) String mobile,
+                                                           @RequestParam(value = "password",required = false) String password);
 
     @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher);

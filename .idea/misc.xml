@@ -28,6 +28,7 @@
         <option value="$PROJECT_DIR$/net-learning-fss/pom.xml" />
         <option value="$PROJECT_DIR$/net-learning-auth/pom.xml" />
         <option value="$PROJECT_DIR$/net-learning-user-auth/pom.xml" />
+        <option value="$PROJECT_DIR$/net-learning-eureka-server/pom.xml" />
       </list>
     </option>
   </component>
