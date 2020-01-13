@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Date;
-
+/**
+ * @program: net-learning
+ * @description:
+ * @author: XUCHANG
+ * @time: 2019/12/20 14:44
+ */
 public class User {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;

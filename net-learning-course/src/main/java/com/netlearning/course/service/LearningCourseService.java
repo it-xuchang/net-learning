@@ -17,6 +17,8 @@ import java.util.List;
  * @time: 2019/12/25 22:26
  */
 public interface LearningCourseService {
+    CommonResult<UserLearningCourseResult> query(LearningCourseQueryParam param);
+
     CommonResult<CommonPageResult<UserLearningCourseResult>> page(LearningCourseQueryParam param, CommonPageInfo commonPageInfo);
 
     CommonResult<Boolean> add(LearningCourseAddParam request);

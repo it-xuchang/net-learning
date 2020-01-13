@@ -2,13 +2,16 @@ package com.netlearning.user.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
+import com.netlearning.user.client.FileRecordControllerClientApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
-import com.netlearning.framework.domain.course.param.CourseRecommendationParam;
 import com.netlearning.framework.domain.course.result.CourseBaseResult;
 import com.netlearning.framework.domain.course.result.CourseRecommendationResult;
+import com.netlearning.framework.domain.fss.result.FileRecordResult;
 import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.em.UserAuthConstants;
@@ -19,10 +22,10 @@ import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.MD5Util;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.client.CourseBaseClientApi;
+import com.netlearning.user.client.FileRecordImagesControllerClientApi;
 import com.netlearning.user.mapper.TeacherMapper;
 import com.netlearning.user.mapper.UserRoleMapper;
 import com.netlearning.user.service.TeacherService;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,8 +49,12 @@ public class TeacherServiceImpl implements TeacherService {
     private UserRoleMapper userRoleMapper;
     @Autowired
     private CourseBaseClientApi courseBaseClientApi;
+    @Autowired
+    private FileRecordControllerClientApi fileRecordControllerClientApi;
+    @Autowired
+    private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
     @Override
-    public CommonResult<List<Teacher>> query(TeacherParam teacherParam) {
+    public CommonResult<List<TeacherResult>> query(TeacherParam teacherParam) {
         TeacherExample example = new TeacherExample();
         example.setOrderByClause("CREATE_TIME desc");
         TeacherExample.Criteria criteria = example.createCriteria();
@@ -86,11 +93,42 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         List<Teacher> result = teacherMapper.selectByExample(example);
-        return CommonResult.success(result);
+        List<TeacherResult> teacherResults = new ArrayList<>();
+        List<Long> teacherIds = new ArrayList<>();
+
+        for (Teacher teacher : result){
+            if (!teacherIds.contains(teacher.getTeacherId())){
+                teacherIds.add(teacher.getTeacherId());
+            }
+        }
+        //教师id --文件资源信息
+        Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            //调用文件系统是微服务
+            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds);
+            List<FileRecordImagesResult> fileRecordResultList = fileRecordImagesResult.getData();
+            for (FileRecordImagesResult fileRecord : fileRecordResultList){
+                if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())){
+                    fileRecordResultMap.put(fileRecord.getRecord().getFromSystemId(),fileRecord.getRecord());
+                }
+            }
+        }
+        for (Teacher teacher : result){
+            TeacherResult teacherResult = new TeacherResult();
+            BeanCopyUtils.copyProperties(teacher,teacherResult);
+            if (fileRecordResultMap.containsKey(teacher.getTeacherId())){
+                teacherResult.setTeacherImageUrl(fileRecordResultMap.get(teacher.getTeacherId()).getFileAbsolutePath());
+            }else {
+                teacherResult.setTeacherImageUrl("");
+            }
+            teacherResults.add(teacherResult);
+        }
+
+        return CommonResult.success(teacherResults);
     }
 
     @Override
-    public CommonResult<CommonPageResult<Teacher>> page(TeacherParam teacherParam, CommonPageInfo commonPageInfo) {
+    public CommonResult<CommonPageResult<TeacherResult>> page(TeacherParam teacherParam, CommonPageInfo commonPageInfo) {
         TeacherExample example = new TeacherExample();
         example.setOrderByClause("CREATE_TIME desc");
         TeacherExample.Criteria criteria = example.createCriteria();
@@ -130,7 +168,38 @@ public class TeacherServiceImpl implements TeacherService {
 
         PageHelper.startPage(commonPageInfo.getPageNum(),commonPageInfo.getPageSize());
         Page<Teacher> result = (Page<Teacher>) teacherMapper.selectByExample(example);
-        CommonPageResult<Teacher> pageResult = CommonPageResult.build(result.getResult(),commonPageInfo,result.getTotal());
+
+        List<TeacherResult> teacherResults = new ArrayList<>();
+        List<Long> teacherIds = new ArrayList<>();
+
+        for (Teacher teacher : result.getResult()){
+            if (!teacherIds.contains(teacher.getTeacherId())){
+                teacherIds.add(teacher.getTeacherId());
+            }
+        }
+        //教师id --文件资源信息
+        Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            //调用文件系统是微服务
+            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds);
+            List<FileRecordImagesResult> fileRecordResultList = fileRecordImagesResult.getData();
+            for (FileRecordImagesResult fileRecord : fileRecordResultList){
+                if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())){
+                    fileRecordResultMap.put(fileRecord.getRecord().getFromSystemId(),fileRecord.getRecord());
+                }
+            }
+        }
+        for (Teacher teacher : result.getResult()){
+            TeacherResult teacherResult = new TeacherResult();
+            BeanCopyUtils.copyProperties(teacher,teacherResult);
+            if (fileRecordResultMap.containsKey(teacher.getTeacherId())){
+                teacherResult.setTeacherImageUrl(fileRecordResultMap.get(teacher.getTeacherId()).getFileAbsolutePath());
+            }else {
+                teacherResult.setTeacherImageUrl("");
+            }
+            teacherResults.add(teacherResult);
+        }
+        CommonPageResult<TeacherResult> pageResult = CommonPageResult.build(teacherResults,commonPageInfo,result.getTotal());
         return CommonResult.success(pageResult);
     }
 
@@ -251,6 +320,20 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
         }
+        //教师id --文件资源信息
+        Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            //调用文件系统是微服务
+//            CommonResult<List<FileRecordResult>> fileRecordResult = fileRecordControllerClientApi.queryByFromSystemIds(teacherIds);
+            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds);
+            List<FileRecordImagesResult> fileRecordResultList = fileRecordImagesResult.getData();
+            for (FileRecordImagesResult fileRecord : fileRecordResultList){
+                if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())){
+                    fileRecordResultMap.put(fileRecord.getRecord().getFromSystemId(),fileRecord.getRecord());
+                }
+            }
+        }
+
 
         for (Map.Entry<Long,List<CourseBaseResult>> entry : teacherCourseMap.entrySet()){
             Long key = entry.getKey();
@@ -269,8 +352,12 @@ public class TeacherServiceImpl implements TeacherService {
                     teacherRecommendationResult.setTeacherName(teacher.getTeacherName());
                     teacherRecommendationResult.setAvatar(teacher.getAvatar());
                     teacherRecommendationResult.setCourseName(courseBase.getCourseName());
-                    //调用文件系统是微服务
-                    teacherRecommendationResult.setTeacherImageUrl("");
+
+                    if (fileRecordResultMap.containsKey(key)){
+                        teacherRecommendationResult.setTeacherImageUrl(fileRecordResultMap.get(key).getFileAbsolutePath());
+                    }else {
+                        teacherRecommendationResult.setTeacherImageUrl("");
+                    }
                     teacherRecommendationResults.add(teacherRecommendationResult);
                 }
 

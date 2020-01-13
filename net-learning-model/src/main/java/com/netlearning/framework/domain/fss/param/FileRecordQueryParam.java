@@ -3,6 +3,7 @@ package com.netlearning.framework.domain.fss.param;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class FileRecordQueryParam {
@@ -31,5 +32,9 @@ public class FileRecordQueryParam {
     private Long fromSystemId;
 
     private String fileType;
+
+    private List<Long> recordIds;
+
+    private List<Long> fromSystemIds;
 
 }

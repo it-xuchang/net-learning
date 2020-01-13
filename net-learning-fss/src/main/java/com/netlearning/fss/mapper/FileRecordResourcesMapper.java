@@ -4,7 +4,9 @@ import com.netlearning.framework.domain.fss.FileRecordResources;
 import com.netlearning.framework.domain.fss.FileRecordResourcesExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FileRecordResourcesMapper {
     long countByExample(FileRecordResourcesExample example);
 

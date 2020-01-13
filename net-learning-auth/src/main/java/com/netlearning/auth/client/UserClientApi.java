@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @time: 2019/12/16 14:55
  */
 @FeignClient(value = NetLearningServiceList.NET_LEARNING_UCENTER)
-public interface UserClient {
+public interface UserClientApi {
     //根据账号查询用户信息
     @GetMapping("/ucenter/getuserext")
     public UserExt getUserext(@RequestParam("username") String username);

@@ -16,7 +16,8 @@ public interface FileClientConfig extends Serializable {
 
     public static final String SEPARATOR = "/";
 
-    public static final String TRACKER_NGNIX_ADDR = "192.168.0.233";
+//    public static final String TRACKER_NGNIX_ADDR = "192.168.0.233";
+    public static final String TRACKER_NGNIX_ADDR = "134.175.30.90";
 
     public static final String TRACKER_NGNIX_PORT = "";
 

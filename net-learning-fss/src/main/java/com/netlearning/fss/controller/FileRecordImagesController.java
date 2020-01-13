@@ -3,6 +3,7 @@ package com.netlearning.fss.controller;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.fss.param.FileRecordImagesQueryParam;
+import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.fss.service.FileRecordImagesService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @program: net-learning
@@ -21,15 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/file/record/images")
 public class FileRecordImagesController {
+
     @Autowired
     private FileRecordImagesService fileRecordImagesService;
+
     @GetMapping("/query")
-    public CommonResult query(@RequestParam(value = "recordImageId",required = false) Long recordImageId,
-                              @RequestParam(value = "recordId",required = false) Long recordId,
-                              @RequestParam(value = "fromSystemId",required = false) Long fromSystemId,
-                              @RequestParam(value = "userId",required = false) Long userId,
-                              @RequestParam(value = "isDefault",required = false) String isDefault,
-                              @RequestParam(value = "isDefaultIcon",required = false) String isDefaultIcon){
+    public CommonResult<List<FileRecordImagesResult>> query(@RequestParam(value = "recordImageId",required = false) Long recordImageId,
+                                                            @RequestParam(value = "recordId",required = false) Long recordId,
+                                                            @RequestParam(value = "fromSystemId",required = false) Long fromSystemId,
+                                                            @RequestParam(value = "fromSystemIds",required = false) List<Long> fromSystemIds,
+                                                            @RequestParam(value = "userId",required = false) Long userId,
+                                                            @RequestParam(value = "userIds",required = false) List<Long> userIds,
+                                                            @RequestParam(value = "isDefault",required = false) String isDefault,
+                                                            @RequestParam(value = "isDefaultIcon",required = false) String isDefaultIcon){
+
         FileRecordImagesQueryParam param = new FileRecordImagesQueryParam();
         param.setFromSystemId(fromSystemId);
         param.setIsDefault(isDefault);
@@ -37,6 +45,8 @@ public class FileRecordImagesController {
         param.setRecordImageId(recordImageId);
         param.setUserId(userId);
         param.setIsDefaultIcon(isDefaultIcon);
+        param.setFromSystemIds(fromSystemIds);
+        param.setUserIds(userIds);
         return fileRecordImagesService.query(param);
     }
 
@@ -49,6 +59,7 @@ public class FileRecordImagesController {
                               @RequestParam(value = "isDefaultIcon",required = false) String isDefaultIcon,
                               @RequestParam(value = "pageNum",required = false) Integer pageNum,
                               @RequestParam(value = "pageSize",required = false) Integer pageSize){
+
         if (pageNum == null ||  pageSize == null || !RegexUtil.checkPositiveNum(pageNum) || !RegexUtil.checkPositiveNum(pageSize)){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE005.code,ExceptionCode.UserAuthCode.CODE005.message);
         }

@@ -6,7 +6,7 @@ import lombok.Data;
 public class FileRecordImagesResult {
     private Long recordImageId;
 
-    private Long recordId;
+    private FileRecordResult record;
 
     private Long fromSystemId;
 

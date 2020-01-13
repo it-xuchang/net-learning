@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netlearning.course.mapper.TeachPlanMediaTencentMapper">
+  <resultMap id="BaseResultMap" type="com.netlearning.framework.domain.course.TeachPlanMediaTencent">
+    <id column="teachplan_media_tencent_id" jdbcType="BIGINT" property="teachplanMediaTencentId" />
+    <result column="teachplan_media_id" jdbcType="BIGINT" property="teachplanMediaId" />
+    <result column="tencent_media_url" jdbcType="VARCHAR" property="tencentMediaUrl" />
+    <result column="tencent_fileId" jdbcType="BIGINT" property="tencentFileid" />
+    <result column="tencent_cover_url" jdbcType="VARCHAR" property="tencentCoverUrl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    teachplan_media_tencent_id, teachplan_media_id, tencent_media_url, tencent_fileId,
+    tencent_cover_url
+  </sql>
+  <select id="selectByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_teachplan_media_tencent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teachplan_media_tencent
+    where teachplan_media_tencent_id = #{teachplanMediaTencentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_teachplan_media_tencent
+    where teachplan_media_tencent_id = #{teachplanMediaTencentId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencentExample">
+    delete from t_teachplan_media_tencent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencent">
+    insert into t_teachplan_media_tencent (teachplan_media_tencent_id, teachplan_media_id,
+      tencent_media_url, tencent_fileId, tencent_cover_url
+      )
+    values (#{teachplanMediaTencentId,jdbcType=BIGINT}, #{teachplanMediaId,jdbcType=BIGINT},
+      #{tencentMediaUrl,jdbcType=VARCHAR}, #{tencentFileid,jdbcType=BIGINT}, #{tencentCoverUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencent">
+    insert into t_teachplan_media_tencent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teachplanMediaTencentId != null">
+        teachplan_media_tencent_id,
+      </if>
+      <if test="teachplanMediaId != null">
+        teachplan_media_id,
+      </if>
+      <if test="tencentMediaUrl != null">
+        tencent_media_url,
+      </if>
+      <if test="tencentFileid != null">
+        tencent_fileId,
+      </if>
+      <if test="tencentCoverUrl != null">
+        tencent_cover_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teachplanMediaTencentId != null">
+        #{teachplanMediaTencentId,jdbcType=BIGINT},
+      </if>
+      <if test="teachplanMediaId != null">
+        #{teachplanMediaId,jdbcType=BIGINT},
+      </if>
+      <if test="tencentMediaUrl != null">
+        #{tencentMediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tencentFileid != null">
+        #{tencentFileid,jdbcType=BIGINT},
+      </if>
+      <if test="tencentCoverUrl != null">
+        #{tencentCoverUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencentExample" resultType="java.lang.Long">
+    select count(*) from t_teachplan_media_tencent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_teachplan_media_tencent
+    <set>
+      <if test="record.teachplanMediaTencentId != null">
+        teachplan_media_tencent_id = #{record.teachplanMediaTencentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.teachplanMediaId != null">
+        teachplan_media_id = #{record.teachplanMediaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.tencentMediaUrl != null">
+        tencent_media_url = #{record.tencentMediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tencentFileid != null">
+        tencent_fileId = #{record.tencentFileid,jdbcType=BIGINT},
+      </if>
+      <if test="record.tencentCoverUrl != null">
+        tencent_cover_url = #{record.tencentCoverUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_teachplan_media_tencent
+    set teachplan_media_tencent_id = #{record.teachplanMediaTencentId,jdbcType=BIGINT},
+      teachplan_media_id = #{record.teachplanMediaId,jdbcType=BIGINT},
+      tencent_media_url = #{record.tencentMediaUrl,jdbcType=VARCHAR},
+      tencent_fileId = #{record.tencentFileid,jdbcType=BIGINT},
+      tencent_cover_url = #{record.tencentCoverUrl,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencent">
+    update t_teachplan_media_tencent
+    <set>
+      <if test="teachplanMediaId != null">
+        teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT},
+      </if>
+      <if test="tencentMediaUrl != null">
+        tencent_media_url = #{tencentMediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tencentFileid != null">
+        tencent_fileId = #{tencentFileid,jdbcType=BIGINT},
+      </if>
+      <if test="tencentCoverUrl != null">
+        tencent_cover_url = #{tencentCoverUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where teachplan_media_tencent_id = #{teachplanMediaTencentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.TeachPlanMediaTencent">
+    update t_teachplan_media_tencent
+    set teachplan_media_id = #{teachplanMediaId,jdbcType=BIGINT},
+      tencent_media_url = #{tencentMediaUrl,jdbcType=VARCHAR},
+      tencent_fileId = #{tencentFileid,jdbcType=BIGINT},
+      tencent_cover_url = #{tencentCoverUrl,jdbcType=VARCHAR}
+    where teachplan_media_tencent_id = #{teachplanMediaTencentId,jdbcType=BIGINT}
+  </update>
+</mapper>

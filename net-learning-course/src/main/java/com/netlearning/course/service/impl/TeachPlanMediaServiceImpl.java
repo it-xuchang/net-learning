@@ -42,7 +42,9 @@ public class TeachPlanMediaServiceImpl implements TeachPlanMediaService {
         try {
             TeachPlanMedia record = new TeachPlanMedia();
             BeanCopyUtils.copyProperties(request,record);
-            record.setTeachplanMediaId(sequenceService.nextValue(null));
+            if (request.getTeachplanMediaId() == null){
+                record.setTeachplanMediaId(sequenceService.nextValue(null));
+            }
             teachPlanMediaMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){

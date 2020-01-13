@@ -1,10 +1,10 @@
 package com.netlearning.fss.service;
 
 import com.netlearning.framework.base.CommonResult;
-import com.netlearning.framework.domain.fss.param.FileRecordApplyTokenParam;
-import com.netlearning.framework.domain.fss.param.FileRecordDowmloadParam;
-import com.netlearning.framework.domain.fss.param.FileRecordRemoveParam;
-import com.netlearning.framework.domain.fss.param.FileRecordUploadParam;
+import com.netlearning.framework.domain.fss.param.*;
+import com.netlearning.framework.domain.fss.result.FileRecordResult;
+
+import java.util.List;
 
 /**
  * @program: net-learning
@@ -13,6 +13,8 @@ import com.netlearning.framework.domain.fss.param.FileRecordUploadParam;
  * @time: 2019/12/28 23:18
  */
 public interface FileRecordService {
+    CommonResult<List<FileRecordResult>> query(FileRecordQueryParam param);
+
     CommonResult upload(FileRecordUploadParam param);
 
     CommonResult mulitipartUpload(FileRecordUploadParam param);
@@ -22,4 +24,6 @@ public interface FileRecordService {
     CommonResult download(FileRecordDowmloadParam param);
 
     CommonResult remove(FileRecordRemoveParam param);
+
+    CommonResult uploadMedia(FileRecordUploadMediaParam param);
 }

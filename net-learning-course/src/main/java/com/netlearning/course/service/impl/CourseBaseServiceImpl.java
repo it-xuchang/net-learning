@@ -2,6 +2,8 @@ package com.netlearning.course.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.netlearning.course.client.FileRecordControllerClientApi;
+import com.netlearning.course.client.FileRecordImagesControllerClientApi;
 import com.netlearning.course.client.TeacherControllerClientApi;
 import com.netlearning.course.mapper.*;
 import com.netlearning.course.service.CourseBaseService;
@@ -15,12 +17,15 @@ import com.netlearning.framework.domain.course.param.CourseBaseDeleteParam;
 import com.netlearning.framework.domain.course.param.CourseBaseEditParam;
 import com.netlearning.framework.domain.course.param.CourseBaseQueryParam;
 import com.netlearning.framework.domain.course.result.*;
+import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
+import com.netlearning.framework.domain.fss.result.FileRecordResult;
 import com.netlearning.framework.domain.userAuth.Teacher;
 import com.netlearning.framework.em.CourseConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.StringUtils;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +56,10 @@ public class CourseBaseServiceImpl implements CourseBaseService {
     private CourseAssessmentMapper courseAssessmentMapper;
     @Autowired
     private TeacherControllerClientApi teacherControllerClientApi;
+    @Autowired
+    private FileRecordControllerClientApi fileRecordControllerClientApi;
+    @Autowired
+    private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
     @Override
     public CommonResult<List<CourseBaseResult>> query(CourseBaseQueryParam param) {
         CourseBaseExample example = new CourseBaseExample();
@@ -151,8 +160,23 @@ public class CourseBaseServiceImpl implements CourseBaseService {
             }
             countMap.put(courseRecommendation.getCourseId(),courseRecommendation.getCount());
         }
+        //课程id 文件系统的图片信息
+        Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
+
         List<CourseRecommendationResult> recommendationResults = new ArrayList<>();
         if (!CollectionUtils.isEmpty(courseIds)){
+            //调用文件系统的微服务 根据课程id
+//            CommonResult<List<FileRecordResult>> fileRecordResult = fileRecordControllerClientApi.queryByFromSystemIds(courseIds);
+            CommonResult<List<FileRecordImagesResult>> fileRecordResult =  fileRecordImagesControllerClientApi.query(courseIds);
+            if (fileRecordResult.isSuccess()){
+                for (FileRecordImagesResult fileRecord : fileRecordResult.getData()){
+                    if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())
+                            && fileRecord.getRecord().getFromSystemId() != null
+                            && fileRecord.getRecord() != null){
+                        fileRecordResultMap.put(fileRecord.getRecord().getFromSystemId(),fileRecord.getRecord());
+                    }
+                }
+            }
             CourseBaseExample example = new CourseBaseExample();
             example.createCriteria().andCourseIdIn(courseIds).andStatusEqualTo(CourseConstants.CourseType.RELEASE.getCode());
             List<CourseBase> courseBaseList = courseBaseMapper.selectByExample(example);
@@ -164,8 +188,12 @@ public class CourseBaseServiceImpl implements CourseBaseService {
                 if (countMap.containsKey(courseBase.getCourseId())){
                     recommendationResult.setLearningUser(countMap.get(courseBase.getCourseId()));
                 }
-                //调用文件系统的微服务 根据课程id
-                recommendationResult.setCourseImageUrl("");
+
+                if (fileRecordResultMap.containsKey(courseBase.getCourseId())){
+                    recommendationResult.setCourseImageUrl(fileRecordResultMap.get(courseBase.getCourseId()).getFileAbsolutePath());
+                }else {
+                    recommendationResult.setCourseImageUrl("");
+                }
                 recommendationResults.add(recommendationResult);
             }
         }
@@ -178,6 +206,11 @@ public class CourseBaseServiceImpl implements CourseBaseService {
 
     @Override
     public CommonResult<List<RecommendedCourseDirectionResult>> queryRecommendedCourseDirection(Long size, Long categoryId, String grade) {
+
+       if (size == null || size == 0){
+           return CommonResult.fail("","size输入有误");
+       }
+
         CategoryExample categoryExample = new CategoryExample();
         CategoryExample.Criteria categoryExampleCriteria = categoryExample.createCriteria();
         categoryExampleCriteria.andIsShowEqualTo(CourseConstants.CategoryType.SHOW.getCode());
@@ -211,6 +244,21 @@ public class CourseBaseServiceImpl implements CourseBaseService {
             }
         }
         List<CourseRecommendation> courseRecommendationList = learningCourseMapper.countCourseByHotSize(courseIds);
+
+        //课程id 文件系统的图片信息
+        Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(courseIds)){
+            //调用文件系统的微服务 根据课程id
+//            CommonResult<List<FileRecordResult>> fileRecordResult = fileRecordControllerClientApi.queryByFromSystemIds(courseIds);
+            CommonResult<List<FileRecordImagesResult>> fileRecordResult =  fileRecordImagesControllerClientApi.query(courseIds);
+            if (fileRecordResult.isSuccess()){
+                for (FileRecordImagesResult fileRecord : fileRecordResult.getData()){
+                    if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId()) && fileRecord.getRecord().getFromSystemId() != null){
+                        fileRecordResultMap.put(fileRecord.getRecord().getFromSystemId(),fileRecord.getRecord());
+                    }
+                }
+            }
+        }
         //课程id 统计
         Map<Long,Integer> countMap = new HashMap<>();
         for (CourseRecommendation courseRecommendation : courseRecommendationList){
@@ -221,12 +269,22 @@ public class CourseBaseServiceImpl implements CourseBaseService {
         for (Map.Entry<String,List<CourseBase>> entry : categoryCourseMap.entrySet()){
             String key = entry.getKey();
             List<CourseBase> value = entry.getValue();
+            List<CourseBase> courseBases = new ArrayList<>();
+            if (value.size() >= size && size != null){
+                courseBases = value.subList(0, Math.toIntExact(size));
+            }else {
+                courseBases.addAll(value);
+            }
             List<CourseDirectionResult> courseDirectionResults = new ArrayList<>();
-            for (CourseBase course : value){
+            for (CourseBase course : courseBases){
                 CourseDirectionResult courseDirection = new CourseDirectionResult();
                 courseDirection.setCourseGrdle(course.getGrade());
                 courseDirection.setCourseId(course.getCourseId());
-                courseDirection.setCourseImageUrl("");
+                if (fileRecordResultMap.containsKey(course.getCourseId())){
+                    courseDirection.setCourseImageUrl(fileRecordResultMap.get(course.getCourseId()).getFileAbsolutePath());
+                }else {
+                    courseDirection.setCourseImageUrl("");
+                }
                 courseDirection.setCourseName(course.getCourseName());
                 if (countMap.containsKey(course.getCourseId())){
                     courseDirection.setLearningUser(countMap.get(course.getCourseId()));

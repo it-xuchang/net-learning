@@ -14,6 +14,7 @@ public class ExceptionCode {
         CODE004("CODE004" , "上传token不允许为空"),
         CODE005("CODE005" , "上传文件不允许为空"),
         CODE006("CODE006" , "操作类型有误"),
+        CODE007("CODE007" , "文件上传失败"),
 
         ;
         public final String code;
@@ -54,6 +55,26 @@ public class ExceptionCode {
         public final String message;
 
         UserAuthCode(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+    public enum AuthCode{
+        CODE001("CODE001" , "系统内部错误"),
+        CODE002("CODE002" , "添加失败"),
+        ;
+        public final String code;
+        public final String message;
+
+        AuthCode(String code, String message) {
             this.code = code;
             this.message = message;
         }

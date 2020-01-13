@@ -1,5 +1,7 @@
 package com.netlearning.course.client;
 
+import com.netlearning.api.ucenter.UserControllerApi;
+import com.netlearning.api.userAuth.TeacherControllerApi;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
 import com.netlearning.framework.domain.userAuth.User;
@@ -24,4 +26,5 @@ import java.util.List;
 public interface UserControllerClientApi {
     @GetMapping(value = "/user/query/detail",produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     public CommonResult<List<User>> queryByUserIds(@RequestParam(value = "userIds",required = false) List<Long> userIds);
+
 }

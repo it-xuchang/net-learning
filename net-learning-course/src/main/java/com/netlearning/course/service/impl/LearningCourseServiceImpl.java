@@ -43,6 +43,87 @@ public class LearningCourseServiceImpl implements LearningCourseService {
     private SequenceService sequenceService;
 
     @Override
+    public CommonResult<UserLearningCourseResult> query(LearningCourseQueryParam param) {
+        List<Long> courseIds = new ArrayList<>();
+        if (param.getTeacherId() != null){
+            CourseBaseExample courseBaseExample = new CourseBaseExample();
+            courseBaseExample.createCriteria().andTeacherIdEqualTo(param.getTeacherId());
+            List<CourseBase> courseBaseList = courseBaseMapper.selectByExample(courseBaseExample);
+            for (CourseBase courseBase : courseBaseList){
+                if (!courseIds.contains(courseBase.getCourseId())){
+                    courseIds.add(courseBase.getCourseId());
+                }
+            }
+        }
+        if (param.getCourseId() != null && !courseIds.contains(param.getCourseId())){
+            courseIds.add(param.getCourseId());
+        }
+
+        LearningCourseExample learningCourseExample = new LearningCourseExample();
+        LearningCourseExample.Criteria learningCourseExampleCriteria = learningCourseExample.createCriteria();
+        if (!CollectionUtils.isEmpty(courseIds)){
+            learningCourseExampleCriteria.andCourseIdIn(courseIds);
+        }
+        if (param.getUserId() != null){
+            learningCourseExampleCriteria.andUserIdEqualTo(param.getUserId());
+        }
+        if (param.getLearningId() != null){
+            learningCourseExampleCriteria.andLearningIdEqualTo(param.getLearningId());
+        }
+        if (!StringUtils.isEmpty(param.getCreateTime()) && !StringUtils.isEmpty(param.getEndTime())){
+            learningCourseExampleCriteria.andCreateTimeBetween(DateUtils.parseDate(param.getCreateTime()),
+                    DateUtils.parseDate(param.getEndTime()));
+        }
+
+        List<LearningCourse>  learningCourseList = learningCourseMapper.selectByExample(learningCourseExample);
+        if (!CollectionUtils.isEmpty(learningCourseList)
+                && param.getTeacherId() == null
+                && param.getCourseId() == null){
+            for (LearningCourse learningCourse  : learningCourseList){
+                if (!courseIds.contains(learningCourse.getCourseId())){
+                    courseIds.add(learningCourse.getCourseId());
+                }
+            }
+
+        }
+        Map<Long, CourseBaseResult> courseBaseMap = new HashMap<>();
+        CourseBaseExample courseBaseExample = new CourseBaseExample();
+        if (!CollectionUtils.isEmpty(courseIds)){
+            courseBaseExample.createCriteria().andCourseIdIn(courseIds);
+        }
+        List<CourseBase> courseBaseList = courseBaseMapper.selectByExample(courseBaseExample);
+        for (CourseBase courseBase : courseBaseList){
+            CourseBaseResult baseResult = new CourseBaseResult();
+            BeanCopyUtils.copyProperties(courseBase,baseResult);
+            courseBaseMap.put(courseBase.getCourseId(),baseResult);
+        }
+
+        List<LearningCourseResult> learningCourseResults = BeanCopyUtils.copy(learningCourseList,LearningCourseResult.class);
+
+        //userId -- List<LearningCourseResult>
+        Map<Long,List<LearningCourseResult>> learningCourseMap = new HashMap<>();
+        for (LearningCourseResult learningCourseResult : learningCourseResults){
+            if (courseBaseMap.containsKey(learningCourseResult.getCourseId())){
+                learningCourseResult.setCourseBaseResult(courseBaseMap.get(learningCourseResult.getCourseId()));
+            }
+
+            if (learningCourseMap.containsKey(learningCourseResult.getUserId())){
+                learningCourseMap.get(learningCourseResult.getUserId()).add(learningCourseResult);
+            }else {
+                List<LearningCourseResult>  list = new ArrayList<>();
+                list.add(learningCourseResult);
+                learningCourseMap.put(learningCourseResult.getUserId(),list);
+            }
+        }
+        UserLearningCourseResult userLearningCourseResult = new UserLearningCourseResult();
+        for (Map.Entry<Long,List<LearningCourseResult>> entry : learningCourseMap.entrySet()){
+            userLearningCourseResult.setUserId(entry.getKey());
+            userLearningCourseResult.setLearningCourseResults(entry.getValue());
+        }
+        return CommonResult.success(userLearningCourseResult);
+    }
+
+    @Override
     public CommonResult<CommonPageResult<UserLearningCourseResult>> page(LearningCourseQueryParam param, CommonPageInfo commonPageInfo) {
 
         List<Long> courseIds = new ArrayList<>();

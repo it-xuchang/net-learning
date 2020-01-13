@@ -13,6 +13,10 @@ public class RegexUtil {
 
     private final static String POSIT_NUMBER_PATTERN = "^[0-9]\\d*$";
 
+    private final static String MOBILE_NUMBER_PATTERN = "^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$ ";
+
+    private final static String EMAIL_NUMBER_PATTERN = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$ ";
+
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 
@@ -51,6 +55,36 @@ public class RegexUtil {
         String rexp = "^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))";
         Pattern patternDate = Pattern.compile(rexp);
         Matcher matcherDate = patternDate.matcher(date);
+        boolean dateType = matcherDate.matches();
+        return dateType;
+    }
+
+    /**
+     * 校验手机号码
+     * @param mobile
+     * @return
+     */
+    public static boolean checkMobilePattern(String mobile){
+        if (StringUtils.isEmpty(mobile)){
+            return false;
+        }
+        Pattern patternDate = Pattern.compile(MOBILE_NUMBER_PATTERN);
+        Matcher matcherDate = patternDate.matcher(mobile);
+        boolean dateType = matcherDate.matches();
+        return dateType;
+    }
+
+    /**
+     * 校验邮箱
+     * @param email
+     * @return
+     */
+    public static boolean checkEmailPattern(String email){
+        if (StringUtils.isEmpty(email)){
+            return false;
+        }
+        Pattern patternDate = Pattern.compile(EMAIL_NUMBER_PATTERN);
+        Matcher matcherDate = patternDate.matcher(email);
         boolean dateType = matcherDate.matches();
         return dateType;
     }

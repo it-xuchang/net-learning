@@ -3,6 +3,21 @@ server:
 spring:
   application:
     name: CourseCenter
+  data:
+    mongodb:
+      uri:  mongodb://xuchang:xuchang@localhost:27017
+      #uri:  mongodb://localhost:27017
+      database: netlearning_cms
+    freemarker:
+      cache: false  #关闭模板缓存，方便测试
+      settings:
+        template_update_delay: 0
+    rabbitmq:
+      host: 127.0.0.1
+      port: 5672
+      username: guest
+      password: guest
+      virtualHost: /
   redis:
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}

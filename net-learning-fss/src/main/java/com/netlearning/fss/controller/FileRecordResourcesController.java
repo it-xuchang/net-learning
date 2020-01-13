@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @time: 2019/12/28 23:13
  */
 @RestController
-@RequestMapping("/file/record/images")
+@RequestMapping("/file/record/resources")
 public class FileRecordResourcesController {
     @Autowired
     private FileRecordResourcesService fileRecordResourcesService;

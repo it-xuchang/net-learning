@@ -2,6 +2,8 @@ package com.netlearning.framework.domain.fss.param;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class FileRecordImagesQueryParam {
     private Long recordImageId;
@@ -15,5 +17,9 @@ public class FileRecordImagesQueryParam {
     private String isDefault;
 
     private String isDefaultIcon;
+
+    private List<Long> userIds;
+
+    private List<Long> fromSystemIds;
 
 }

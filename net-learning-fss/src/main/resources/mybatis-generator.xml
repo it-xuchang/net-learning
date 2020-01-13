@@ -12,15 +12,15 @@
     <sqlMapGenerator targetPackage="com.netlearning.fss.mapper" targetProject="src/main/java" />
     <javaClientGenerator targetPackage="com.netlearning.fss.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
-<!--    <table tableName="t_file_record" domainObjectName="FileRecord" enableCountByExample="true"-->
-<!--           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
-<!--           selectByExampleQueryId="true">-->
-<!--    </table>-->
+    <table tableName="t_file_record" domainObjectName="FileRecord" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
 
-<!--    <table tableName="t_file_record_images" domainObjectName="FileRecordImages" enableCountByExample="true"-->
-<!--           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
-<!--           selectByExampleQueryId="true">-->
-<!--    </table>-->
+    <table tableName="t_file_record_images" domainObjectName="FileRecordImages" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
 
     <table tableName="t_file_record_resources" domainObjectName="FileRecordResources" enableCountByExample="true"
            enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"

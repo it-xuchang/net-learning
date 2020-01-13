@@ -70,4 +70,33 @@ public interface FileConstants {
         }
     }
 
+    enum IsUseType {
+        USE("0", "使用"),
+        NON_USE("1", "不使用");
+
+        private String code;
+        private String message;
+
+        private IsUseType(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode() {
+            return this.code;
+        }
+
+        public String getMessage() {
+            return this.message;
+        }
+
+        public static List<String> isUseTypeList() {
+            List<String> typeList = new ArrayList<>();
+            for (IsUseType v : IsUseType.values()) {
+                typeList.add(v.code);
+            }
+            return typeList;
+        }
+    }
+
 }

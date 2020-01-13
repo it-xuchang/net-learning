@@ -6,6 +6,7 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -31,18 +32,18 @@ public class TeacherController implements TeacherControllerApi {
 
     @Override
     @GetMapping("/query")
-    public CommonResult<List<Teacher>> query(@RequestParam(value = "teacherId",required = false) Long teacherId,
-                                             @RequestParam(value = "teacherName",required = false) String teacherName,
-                                             @RequestParam(value = "email",required = false) String email,
-                                             @RequestParam(value = "password",required = false) String password,
-                                             @RequestParam(value = "mobile",required = false) String mobile,
-                                             @RequestParam(value = "status",required = false) String status,
-                                             @RequestParam(value = "startCreateTime",required = false) String startCreateTime,
-                                             @RequestParam(value = "endCreateTime",required = false) String endCreateTime,
-                                             @RequestParam(value = "sex",required = false) String sex,
-                                             @RequestParam(value = "description",required = false) String description,
-                                             @RequestParam(value = "avatar",required = false) String avatar,
-                                             @RequestParam(value = "deptId",required = false) Long deptId){
+    public CommonResult<List<TeacherResult>> query(@RequestParam(value = "teacherId",required = false) Long teacherId,
+                                                   @RequestParam(value = "teacherName",required = false) String teacherName,
+                                                   @RequestParam(value = "email",required = false) String email,
+                                                   @RequestParam(value = "password",required = false) String password,
+                                                   @RequestParam(value = "mobile",required = false) String mobile,
+                                                   @RequestParam(value = "status",required = false) String status,
+                                                   @RequestParam(value = "startCreateTime",required = false) String startCreateTime,
+                                                   @RequestParam(value = "endCreateTime",required = false) String endCreateTime,
+                                                   @RequestParam(value = "sex",required = false) String sex,
+                                                   @RequestParam(value = "description",required = false) String description,
+                                                   @RequestParam(value = "avatar",required = false) String avatar,
+                                                   @RequestParam(value = "deptId",required = false) Long deptId){
         TeacherParam teacherParam = new TeacherParam();
         teacherParam.setAvatar(avatar);
         teacherParam.setDeptId(deptId);
@@ -60,7 +61,7 @@ public class TeacherController implements TeacherControllerApi {
     }
     @Override
     @GetMapping("/page")
-    public CommonResult<CommonPageResult<Teacher>> page(@RequestParam(value = "teacherId",required = false) Long teacherId,
+    public CommonResult<CommonPageResult<TeacherResult>> page(@RequestParam(value = "teacherId",required = false) Long teacherId,
                                                         @RequestParam(value = "teacherName",required = false) String teacherName,
                                                         @RequestParam(value = "email",required = false) String email,
                                                         @RequestParam(value = "password",required = false) String password,
@@ -134,6 +135,11 @@ public class TeacherController implements TeacherControllerApi {
         return teacherService.delete(teacherId);
     }
 
+    /**
+     * 首页--名师推荐
+     * @param size
+     * @return
+     */
     @GetMapping("/query/teacher/recommendation")
     public CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(@RequestParam(value = "size",required = false) Long size){
 

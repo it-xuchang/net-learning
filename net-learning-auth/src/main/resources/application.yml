@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:5000}
+  port: ${PORT:50001}
   servlet:
     context-path: /auth
 spring:
@@ -29,6 +29,25 @@ spring:
       testOnReturn: false #归还连接时检测连接是否有效
       timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
       minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
+  data:
+    mongodb:
+      uri:  mongodb://xuchang:xuchang@localhost:27017
+      #uri:  mongodb://localhost:27017
+      database: netlearning_cms
+    freemarker:
+      cache: false  #关闭模板缓存，方便测试
+      settings:
+        template_update_delay: 0
+    rabbitmq:
+      host: 127.0.0.1
+      port: 5672
+      username: guest
+      password: guest
+      virtualHost: /
+sequence:
+  enable: true
+  type: snowflake
+  generate: random
 auth:
   tokenValiditySeconds: 1200  #token存储到redis的过期时间
   clientId: XcWebApp
@@ -58,7 +77,17 @@ ribbon:
   ConnectTimeout: 5000  #请求连接的超时时间
   ReadTimeout: 6000 #请求处理的超时时间
 
+feign:
+  hystrix:
+enabled: true
 
+#### hystrix禁止服务超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
 
 
 

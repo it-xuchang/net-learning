@@ -13,6 +13,21 @@ spring:
         maxIdle: 3
         minIdle: 1
         maxWait: -1 #连接池最大等行时间 -1没有限制
+  data:
+    mongodb:
+      uri:  mongodb://xuchang:xuchang@localhost:27017
+      #uri:  mongodb://localhost:27017
+      database: netlearning_cms
+    freemarker:
+      cache: false  #关闭模板缓存，方便测试
+      settings:
+        template_update_delay: 0
+    rabbitmq:
+      host: 127.0.0.1
+      port: 5672
+      username: guest
+      password: guest
+      virtualHost: /
   datasource:
     druid:
       url: jdbc:mysql://localhost:3306/netlearning-system?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8

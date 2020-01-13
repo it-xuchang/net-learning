@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  * @author: XUCHANG
  * @time: 2019/12/16 14:28
  */
+@Service
 public class AuthServiceImpl implements AuthService {
     @Value("${auth.tokenValiditySeconds}")
     int tokenValiditySeconds;

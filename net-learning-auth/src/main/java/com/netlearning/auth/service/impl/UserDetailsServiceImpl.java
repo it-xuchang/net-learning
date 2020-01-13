@@ -1,6 +1,6 @@
 package com.netlearning.auth.service.impl;
 
-import com.netlearning.auth.client.UserClient;
+import com.netlearning.auth.client.UserClientApi;
 import com.netlearning.auth.pojo.UserJwt;
 import com.netlearning.framework.domain.ucenter.Menu;
 import com.netlearning.framework.domain.ucenter.ext.UserExt;
@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    UserClient userClient;
+    UserClientApi userClientApi;
 
     @Autowired
     ClientDetailsService clientDetailsService;
@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
         //远程调用用户中心根据账号查询用户信息
-        UserExt userext = userClient.getUserext(username);
+        UserExt userext = userClientApi.getUserext(username);
         if(userext == null){
             //返回空给spring security表示用户不存在
             return null;

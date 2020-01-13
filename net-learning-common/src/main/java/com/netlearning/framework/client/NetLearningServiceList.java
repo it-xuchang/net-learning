@@ -6,7 +6,7 @@ public class NetLearningServiceList {
     public static final String COURSE_CENTER = "CourseCenter";
     public static final String NET_LEARNING_FILE = "net-learning-file";
     public static final String NET_LEARNING_FILESYSTEM = "net-learning-file";
-    public static final String NET_LEARNING_FSS = "net-learning-filesystem";
+    public static final String NET_LEARNING_FSS = "net-learning-fss";
     public static final String NET_LEARNING_MANAGE_CMS = "net-learning-manage-cms";
     public static final String NET_LEARNING_MEDIA = "net-learning-media";
     public static final String NET_LEARNING_ORDER = "net-learning-order";

@@ -7,6 +7,7 @@ import com.netlearning.framework.domain.userAuth.Teacher;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.domain.userAuth.TeacherParam;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 
 import java.util.List;
 
@@ -17,9 +18,9 @@ import java.util.List;
  * @time: 2019/12/20 17:14
  */
 public interface TeacherService {
-    CommonResult<List<Teacher>> query(TeacherParam teacherParam);
+    CommonResult<List<TeacherResult>> query(TeacherParam teacherParam);
 
-    CommonResult<CommonPageResult<Teacher>> page(TeacherParam teacherParam, CommonPageInfo commonPageInfo);
+    CommonResult<CommonPageResult<TeacherResult>> page(TeacherParam teacherParam, CommonPageInfo commonPageInfo);
 
     CommonResult<Boolean> add(TeacherAddRequest teacher);
 

@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class FileRecordDowmloadParam {
     private Long userId;
-    private String tokenKey;
-    private MultipartFile[] files;
+    private Long recordId;
+    private Long fromSystemId;
+    private String filType;
+    private String filePath;
 }

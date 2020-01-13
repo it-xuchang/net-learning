@@ -27,6 +27,24 @@ public class LearningCourseController {
     @Autowired
     private LearningCourseService learningCourseService;
 
+    @GetMapping("query")
+    public CommonResult<UserLearningCourseResult> query(@RequestParam(value = "userId",required = false) Long userId,
+                                                             @RequestParam(value = "teacherId",required = false) Long teacherId,
+                                                             @RequestParam(value = "learningId",required = false) Long learningId,
+                                                             @RequestParam(value = "courseId",required = false) Long courseId,
+                                                             @RequestParam(value = "createTime",required = false) String createTime,
+                                                             @RequestParam(value = "endTime",required = false) String endTime){
+
+        LearningCourseQueryParam param = new LearningCourseQueryParam();
+        param.setCourseId(courseId);
+        param.setCreateTime(createTime);
+        param.setEndTime(endTime);
+        param.setLearningId(learningId);
+        param.setUserId(userId);
+        param.setTeacherId(teacherId);
+        return learningCourseService.query(param);
+    }
+
     /**
      * 查询学生下的学习的课程
      *

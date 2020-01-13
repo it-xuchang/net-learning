@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class FileRecordRemoveParam {
     private Long userId;
-    private String tokenKey;
-    private MultipartFile[] files;
+    private Long recordId;
+    private Long fromSystemId;
+    private String filType;
 }

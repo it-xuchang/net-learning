@@ -6,23 +6,31 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
-import com.netlearning.framework.domain.userAuth.UserAddRequest;
+import com.netlearning.framework.domain.course.result.LearningCourseResult;
+import com.netlearning.framework.domain.course.result.UserLearningCourseResult;
+import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
+import com.netlearning.framework.domain.fss.result.FileRecordResult;
+import com.netlearning.framework.domain.userAuth.*;
+import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
+import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
+import com.netlearning.framework.domain.userAuth.result.UserResult;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
+import com.netlearning.framework.utils.MD5Util;
 import com.netlearning.framework.utils.StringUtils;
+import com.netlearning.user.client.FileRecordImagesControllerClientApi;
+import com.netlearning.user.client.LearningCourseControllerClientApi;
 import com.netlearning.user.mapper.UserMapper;
-import com.netlearning.framework.domain.userAuth.User;
-import com.netlearning.framework.domain.userAuth.UserExample;
-import com.netlearning.framework.domain.userAuth.UserParam;
+import com.netlearning.user.mapper.UserRoleMapper;
 import com.netlearning.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: net-learning
@@ -36,8 +44,14 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     protected SequenceService sequenceService;
+    @Autowired
+    private LearningCourseControllerClientApi learningCourseControllerClientApi;
+    @Autowired
+    private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     @Override
-    public CommonResult<List<User>> query(UserParam userParam) {
+    public CommonResult<List<UserResult>> query(UserParam userParam) {
         UserExample example = new UserExample();
         example.setOrderByClause("CREATE_TIME desc");
         UserExample.Criteria criteria = example.createCriteria();
@@ -51,7 +65,7 @@ public class UserServiceImpl implements UserService {
             criteria.andUsernameLike(userParam.getUsername());
         }
         if (!StringUtils.isEmpty(userParam.getPassword())){
-            criteria.andPasswordEqualTo(userParam.getPassword());
+            criteria.andPasswordEqualTo(MD5Util.getStringMD5(userParam.getPassword()));
         }
         if (userParam.getDeptId() != null){
             criteria.andDeptIdEqualTo(userParam.getDeptId());
@@ -78,11 +92,40 @@ public class UserServiceImpl implements UserService {
             criteria.andCreateTimeBetween(DateUtils.parseDate(userParam.getStartCreateTime()),DateUtils.parseDate(userParam.getEndCreateTime()));
         }
         List<User> result = userMapper.selectByExample(example);
-        return CommonResult.success(result);
+        List<UserResult> userResults = new ArrayList<>();
+        List<Long> userIds = new ArrayList<>();
+        for (User user : result){
+            if (!userIds.contains(user.getUserId())){
+                userIds.add(user.getUserId());
+            }
+        }
+        Map<Long, FileRecordResult> fileRecordImagesResultMap = new HashMap<>();
+        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds);
+        if (fileRecordImagesResult.isSuccess()){
+            List<FileRecordImagesResult> fileRecordImagesResultList = fileRecordImagesResult.getData();
+            for (FileRecordImagesResult fileRecordImages : fileRecordImagesResultList){
+                if (fileRecordImages.getRecord() != null){
+                    if (!fileRecordImagesResultMap.containsKey(fileRecordImages.getRecord().getFromSystemId())){
+                        fileRecordImagesResultMap.put(fileRecordImages.getRecord().getFromSystemId(),fileRecordImages.getRecord());
+                    }
+                }
+            }
+        }
+        for (User user : result){
+            UserResult userResult = new UserResult();
+            BeanCopyUtils.copyProperties(user,userResult);
+            if (fileRecordImagesResultMap.containsKey(user.getUserId())){
+                userResult.setUserImageUrl(fileRecordImagesResultMap.get(user.getUserId()).getFileAbsolutePath());
+            }else {
+                userResult.setUserImageUrl("");
+            }
+            userResults.add(userResult);
+        }
+        return CommonResult.success(userResults);
     }
 
     @Override
-    public CommonResult<CommonPageResult<User>> page(UserParam userParam, CommonPageInfo commonPageInfo) {
+    public CommonResult<CommonPageResult<UserResult>> page(UserParam userParam, CommonPageInfo commonPageInfo) {
         UserExample example = new UserExample();
         example.setOrderByClause("CREATE_TIME desc");
         UserExample.Criteria criteria = example.createCriteria();
@@ -93,7 +136,7 @@ public class UserServiceImpl implements UserService {
             criteria.andUsernameLike(userParam.getUsername());
         }
         if (!StringUtils.isEmpty(userParam.getPassword())){
-            criteria.andPasswordEqualTo(userParam.getPassword());
+            criteria.andPasswordEqualTo(MD5Util.getStringMD5(userParam.getPassword()));
         }
         if (userParam.getDeptId() != null){
             criteria.andDeptIdEqualTo(userParam.getDeptId());
@@ -121,11 +164,41 @@ public class UserServiceImpl implements UserService {
         }
         PageHelper.startPage(commonPageInfo.getPageNum(),commonPageInfo.getPageSize());
         Page<User> result = (Page<User>) userMapper.selectByExample(example);
-        CommonPageResult<User> pageResult = CommonPageResult.build(result.getResult(),commonPageInfo,result.getTotal());
+        List<UserResult> userResults = new ArrayList<>();
+        List<Long> userIds = new ArrayList<>();
+        for (User user : result.getResult()){
+            if (!userIds.contains(user.getUserId())){
+                userIds.add(user.getUserId());
+            }
+        }
+        Map<Long, FileRecordResult> fileRecordImagesResultMap = new HashMap<>();
+        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds);
+        if (fileRecordImagesResult.isSuccess()){
+            List<FileRecordImagesResult> fileRecordImagesResultList = fileRecordImagesResult.getData();
+            for (FileRecordImagesResult fileRecordImages : fileRecordImagesResultList){
+                if (fileRecordImages.getRecord() != null){
+                    if (!fileRecordImagesResultMap.containsKey(fileRecordImages.getRecord().getFromSystemId())){
+                        fileRecordImagesResultMap.put(fileRecordImages.getRecord().getFromSystemId(),fileRecordImages.getRecord());
+                    }
+                }
+            }
+        }
+        for (User user : result.getResult()){
+            UserResult userResult = new UserResult();
+            BeanCopyUtils.copyProperties(user,userResult);
+            if (fileRecordImagesResultMap.containsKey(user.getUserId())){
+                userResult.setUserImageUrl(fileRecordImagesResultMap.get(user.getUserId()).getFileAbsolutePath());
+            }else {
+                userResult.setUserImageUrl("");
+            }
+            userResults.add(userResult);
+        }
+        CommonPageResult<UserResult> pageResult = CommonPageResult.build(userResults,commonPageInfo,result.getTotal());
         return CommonResult.success(pageResult);
     }
 
     @Override
+    @Transactional
     public CommonResult<Boolean> add(UserAddRequest user) {
         try {
 
@@ -134,15 +207,22 @@ public class UserServiceImpl implements UserService {
             }
             User record = new User();
             BeanCopyUtils.copyProperties(user,record);
-            record.setUserId(sequenceService.nextValue(null));
+            Long userId = sequenceService.nextValue(null);
+            record.setUserId(userId);
             record.setStatus(UserAuthConstants.UserType.UP.getCode());
             record.setCreateTime(new Date());
             if (StringUtils.isEmpty(user.getSsex())){
                 record.setSsex(UserAuthConstants.UserSexType.NON.getCode());
             }
-            if (user.getRoleId() != null){
-
+            record.setPassword(MD5Util.getStringMD5(user.getPassword()));
+            UserRole userRole = new UserRole();
+            if (user.getRoleId() == null){
+                userRole.setRoleId(UserAuthConstants.SystemDefaultRole.SYSTEM_DEFAULT_STUDENT.getCode());
+            }else {
+                userRole.setRoleId(user.getRoleId());
             }
+            userRole.setUserId(userId);
+            userRoleMapper.insertSelective(userRole);
             userMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
@@ -174,5 +254,16 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);
         }
+    }
+
+    @Override
+    public CommonResult<MyCourseResult> queryMyCourse(MyCoursQueryParam param) {
+
+        CommonResult<UserLearningCourseResult> userLearningCourseResult = learningCourseControllerClientApi.query(param.getUserId());
+        if (userLearningCourseResult.isSuccess()){
+            List<LearningCourseResult> userLearningCourseList = userLearningCourseResult.getData().getLearningCourseResults();
+        }
+
+        return null;
     }
 }

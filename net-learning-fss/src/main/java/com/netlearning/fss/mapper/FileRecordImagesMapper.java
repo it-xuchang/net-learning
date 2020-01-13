@@ -4,7 +4,9 @@ import com.netlearning.framework.domain.fss.FileRecordImages;
 import com.netlearning.framework.domain.fss.FileRecordImagesExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FileRecordImagesMapper {
     long countByExample(FileRecordImagesExample example);
 
