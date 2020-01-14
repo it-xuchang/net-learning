@@ -2,15 +2,12 @@ package com.netlearning.user.client;
 
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
-import com.netlearning.framework.domain.course.param.CourseRecommendationParam;
 import com.netlearning.framework.domain.course.result.CourseBaseResult;
 import com.netlearning.framework.domain.course.result.CourseRecommendationResult;
-import com.netlearning.framework.domain.userAuth.Teacher;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.List;
  * @time: 2020/1/6 18:46
  */
 @Component
-@FeignClient(value=NetLearningServiceList.COURSE_CENTER)
+@FeignClient(value=NetLearningServiceList.NET_LEARNING_COURSE)
 public interface CourseBaseClientApi {
     /**
      * 查询学生学习最多的课程信息

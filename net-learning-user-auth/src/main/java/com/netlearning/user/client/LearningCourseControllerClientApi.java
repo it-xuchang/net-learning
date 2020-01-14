@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 /**
  * @program: net-learning
  * @description:
@@ -17,7 +15,7 @@ import java.util.List;
  * @time: 2020/1/8 11:05
  */
 @Component
-@FeignClient(value= NetLearningServiceList.COURSE_CENTER)
+@FeignClient(value= NetLearningServiceList.NET_LEARNING_COURSE)
 public interface LearningCourseControllerClientApi {
 
     @GetMapping("/learning/course/query")

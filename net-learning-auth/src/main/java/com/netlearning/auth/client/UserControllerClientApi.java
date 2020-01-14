@@ -2,6 +2,7 @@ package com.netlearning.auth.client;
 
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
+import com.netlearning.framework.domain.userAuth.User;
 import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,7 +21,7 @@ import java.util.List;
  * @time: 2020/1/11 15:42
  */
 @Component
-@FeignClient(value = NetLearningServiceList.USER_AUTH_CENTER)
+@FeignClient(value = NetLearningServiceList.NET_LEARNING_USER_AUTH)
 public interface UserControllerClientApi {
 
     @GetMapping("/user/query")
@@ -33,4 +34,8 @@ public interface UserControllerClientApi {
 
     @PostMapping("/user/add")
     public CommonResult<Boolean> add(@RequestBody UserAddRequest user);
+
+    @PostMapping("/user/edit")
+    public CommonResult<Boolean> edit(@RequestBody User user);
+
 }

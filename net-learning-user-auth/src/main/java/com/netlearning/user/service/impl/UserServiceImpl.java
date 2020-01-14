@@ -205,6 +205,32 @@ public class UserServiceImpl implements UserService {
             if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSsex()) && !StringUtils.isEmpty(user.getSsex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
+            //查询用户手机号-邮箱-用户名是否重复
+            if (!StringUtils.isEmpty(user.getUsername())){
+                UserExample example = new UserExample();
+                example.createCriteria().andUsernameEqualTo(user.getUsername());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE018.code,ExceptionCode.UserAuthCode.CODE018.message);
+                }
+            }
+            if (StringUtils.isEmpty(user.getMobile())){
+                UserExample example = new UserExample();
+                example.createCriteria().andMobileEqualTo(user.getMobile());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE020.code,ExceptionCode.UserAuthCode.CODE020.message);
+                }
+            }
+            if (StringUtils.isEmpty(user.getEmail())){
+                UserExample example = new UserExample();
+                example.createCriteria().andEmailEqualTo(user.getEmail());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE019.code,ExceptionCode.UserAuthCode.CODE019.message);
+                }
+            }
+
             User record = new User();
             BeanCopyUtils.copyProperties(user,record);
             Long userId = sequenceService.nextValue(null);

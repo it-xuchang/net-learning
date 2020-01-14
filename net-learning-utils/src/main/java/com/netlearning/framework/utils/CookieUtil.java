@@ -30,6 +30,12 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
+    public static void updateCookie(HttpServletRequest request,HttpServletResponse response,String domain,String path, String name,
+                                 String value, int maxAge,boolean httpOnly) {
+        deleteCookie(request.getCookies(),name);
+        addCookie(response,domain,path,name,value,maxAge,httpOnly);
+    }
+
 
 
     /**
@@ -54,5 +60,36 @@ public class CookieUtil {
             }
         return cookieMap;
 
+    }
+
+    /**
+     * 获取cookie的属性值
+     * @param cookies
+     * @param name
+     * @return
+     */
+    public static String getCookie(Cookie[] cookies,String name) {
+
+        String token = null;
+        if (cookies != null && cookies.length>0) {
+            for (Cookie cookie : cookies) {
+                String cookieName = cookie.getName();
+                if (StringUtils.equals(cookieName,name)){
+                    token = cookie.getValue();
+                }
+            }
+        }
+        return token;
+    }
+    public static void deleteCookie(Cookie[] cookies,String name) {
+
+        if (cookies != null && cookies.length>0) {
+            for (Cookie cookie : cookies) {
+                String cookieName = cookie.getName();
+                if (StringUtils.equals(cookieName,name)){
+                    cookie.setMaxAge(-1);
+                }
+            }
+        }
     }
 }

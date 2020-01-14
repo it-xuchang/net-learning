@@ -21,7 +21,7 @@ import java.util.List;
  * @time: 2020/1/10 14:35
  */
 @Component
-@FeignClient(value = NetLearningServiceList.COURSE_CENTER)
+@FeignClient(value = NetLearningServiceList.NET_LEARNING_COURSE)
 public interface TeachPlanMediaTencenControllerClientApi {
     @GetMapping("/techplan/media/tencent/query")
     public CommonResult<List<TeachPlanMediaTencentResult>> query(@RequestParam(value = "teachplanMediaTencentId",required = false) Long teachplanMediaTencentId,

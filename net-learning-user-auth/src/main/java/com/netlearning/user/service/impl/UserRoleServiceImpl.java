@@ -36,12 +36,16 @@ public class UserRoleServiceImpl implements UserRoleService {
     public CommonResult<List<UserRoleResult>> query(UserRole userRole) {
 
         UserRoleExample example =  new UserRoleExample();
-        example.createCriteria().andUserIdEqualTo(userRole.getRoleId());
+        if (userRole.getUserId() == null){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE017.code,ExceptionCode.UserAuthCode.CODE017.message);
+        }
+        example.createCriteria().andUserIdEqualTo(userRole.getUserId());
         List<UserRole> result = userRoleMapper.selectByExample(example);
         List<UserRoleResult> userRoleResults = new ArrayList<>();
         if (!CollectionUtils.isEmpty(result)){
             RoleExample roleExample = new RoleExample();
-            roleExample.createCriteria().andRoleIdEqualTo(userRole.getRoleId());
+
+            roleExample.createCriteria().andRoleIdEqualTo(result.get(0).getRoleId());
             List<Role> roleList = roleMapper.selectByExample(roleExample);
             if (!CollectionUtils.isEmpty(roleList)){
                 UserRoleResult userRoleResult = new UserRoleResult();

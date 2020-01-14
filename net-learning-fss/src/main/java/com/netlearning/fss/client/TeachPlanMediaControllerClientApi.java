@@ -18,7 +18,7 @@ import java.util.List;
  * @time: 2020/1/9 14:29
  */
 @Component
-@FeignClient(value = NetLearningServiceList.COURSE_CENTER)
+@FeignClient(value = NetLearningServiceList.NET_LEARNING_COURSE)
 public interface TeachPlanMediaControllerClientApi {
 
     @PostMapping("/techplan/media/add")

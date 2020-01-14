@@ -24,7 +24,7 @@ public class UserRoleController implements UserRoleControllerApi {
     private UserRoleService userRoleService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<UserRoleResult>> query(@RequestParam(value = "userId",required = false) Long userId){
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
@@ -32,7 +32,7 @@ public class UserRoleController implements UserRoleControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody UserRole userRole){
         if (userRole.getRoleId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -44,7 +44,7 @@ public class UserRoleController implements UserRoleControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody UserRole userRole){
         if (userRole.getRoleId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -56,7 +56,7 @@ public class UserRoleController implements UserRoleControllerApi {
     }
 
     @Override
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public CommonResult<Boolean> delete(UserRole userRole){
         return userRoleService.delete(userRole);
     }

@@ -2,6 +2,7 @@ package com.netlearning.auth.client;
 
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
+import com.netlearning.framework.domain.userAuth.Teacher;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,16 +21,20 @@ import java.util.List;
  * @time: 2020/1/11 15:59
  */
 @Component
-@FeignClient(value = NetLearningServiceList.USER_AUTH_CENTER)
+@FeignClient(value = NetLearningServiceList.NET_LEARNING_USER_AUTH)
 public interface TeacherControllerClientApi {
-    @GetMapping("/query")
+    @GetMapping("/teacher/query")
     public CommonResult<List<TeacherResult>> queryByEmail(@RequestParam(value = "email",required = false) String email,
                                                           @RequestParam(value = "password",required = false) String password);
 
-    @GetMapping("/query")
+    @GetMapping("/teacher/query")
     public CommonResult<List<TeacherResult>> queryByMobile(@RequestParam(value = "mobile",required = false) String mobile,
                                                            @RequestParam(value = "password",required = false) String password);
 
-    @PostMapping("/add")
+    @PostMapping("/teacher/add")
     public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher);
+
+    @PostMapping("/teacher/edit")
+    public CommonResult<Boolean> edit(@RequestBody Teacher teacher);
+
 }

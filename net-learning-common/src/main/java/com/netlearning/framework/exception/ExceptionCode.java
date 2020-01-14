@@ -50,6 +50,10 @@ public class ExceptionCode {
         CODE014("CODE014" , "用户不存在"),
         CODE015("CODE015" , "角色不存在"),
         CODE016("CODE016" , "用户角色不存在"),
+        CODE017("CODE017" , "用户id为空"),
+        CODE018("CODE018" , "名称已存在"),
+        CODE019("CODE019" , "邮箱已存在"),
+        CODE020("CODE020" , "手机号已存在"),
         ;
         public final String code;
         public final String message;
@@ -72,6 +76,13 @@ public class ExceptionCode {
         CODE002("CODE002" , "添加失败"),
         CODE003("CODE003" , "账号或密码错误"),
         CODE004("CODE004" , "用户账号锁定"),
+        CODE005("CODE005" , "手机号码格式错误"),
+        CODE006("CODE006" , "邮箱格式错误"),
+        CODE007("CODE007" , "用户名或密码为空"),
+        CODE008("CODE008" , "账号类型有误"),
+        CODE009("CODE009" , "用户类型有误"),
+        CODE010("CODE010" , "用户角色有误"),
+        CODE011("CODE011" , "用户角色资源有误"),
         ;
         public final String code;
         public final String message;

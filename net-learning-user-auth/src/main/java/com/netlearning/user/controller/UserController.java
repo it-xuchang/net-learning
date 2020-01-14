@@ -114,7 +114,7 @@ public class UserController implements UserControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody User user){
         if (user.getUserId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -132,7 +132,7 @@ public class UserController implements UserControllerApi {
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(Long userId){
         return userService.delete(userId);
     }

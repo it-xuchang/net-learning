@@ -13,9 +13,9 @@ public class RegexUtil {
 
     private final static String POSIT_NUMBER_PATTERN = "^[0-9]\\d*$";
 
-    private final static String MOBILE_NUMBER_PATTERN = "^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$ ";
+    private final static String MOBILE_NUMBER_PATTERN = "^[1][3,4,5,7,8][0-9]{9}$";
 
-    private final static String EMAIL_NUMBER_PATTERN = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$ ";
+    private final static String EMAIL_NUMBER_PATTERN = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 

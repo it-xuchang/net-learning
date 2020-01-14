@@ -2,7 +2,7 @@ server:
   port: 30001
 spring:
   application:
-    name: CourseCenter
+    name: net-learning-course
   data:
     mongodb:
       uri:  mongodb://xuchang:xuchang@localhost:27017

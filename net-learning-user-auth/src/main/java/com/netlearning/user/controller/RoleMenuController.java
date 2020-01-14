@@ -31,7 +31,7 @@ public class RoleMenuController implements RoleMenuControllerApi {
      * @return
      */
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<RoleMenuResult> query(@RequestParam(value = "roleId",required = false) Long roleId,
                                               @RequestParam(value = "menuParentId",required = false) Long menuParentId){
         if (roleId == null){
@@ -44,7 +44,7 @@ public class RoleMenuController implements RoleMenuControllerApi {
     }
 
     @Override
-    @GetMapping("tree")
+    @GetMapping("/tree")
     public CommonResult<List<MenuItem>> tree(@RequestParam(value = "roleId",required = false) Long roleId,
                                              @RequestParam(value = "menuParentId",required = false) Long menuParentId){
         RoleTreeParam roleTreeParam = new RoleTreeParam();
@@ -54,7 +54,7 @@ public class RoleMenuController implements RoleMenuControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody RoleMenuRequest roleMenu){
         if (roleMenu.getRoleId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -66,13 +66,13 @@ public class RoleMenuController implements RoleMenuControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody RoleMenu roleMenu){
         return roleMenuService.edit(roleMenu);
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(RoleMenu roleMenu){
         return roleMenuService.delete(roleMenu);
     }

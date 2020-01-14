@@ -1,7 +1,7 @@
 server:
-  port: ${PORT:50001}
-  servlet:
-    context-path: /auth
+  port: 50001
+#  servlet:
+#    context-path: /auth
 spring:
   application:
     name: net-learning-auth
@@ -79,6 +79,9 @@ hystrix:
           enabled: false
 
 tokenExpireTime: 30
+cookieDomain: 127.0.0.1
+cookiePath: /
+cookieTime: 1800
 
 
 

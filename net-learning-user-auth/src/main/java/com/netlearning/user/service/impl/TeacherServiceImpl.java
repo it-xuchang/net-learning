@@ -65,7 +65,7 @@ public class TeacherServiceImpl implements TeacherService {
             criteria.andTeacherNameLike("%"+teacherParam.getTeacherName()+"%");
         }
         if (!StringUtils.isEmpty(teacherParam.getPassword())){
-            criteria.andPasswordEqualTo(teacherParam.getPassword());
+            criteria.andPasswordEqualTo(MD5Util.getStringMD5(teacherParam.getPassword()));
         }
         if (teacherParam.getDeptId() != null){
             criteria.andDeptIdEqualTo(teacherParam.getDeptId());
@@ -209,6 +209,31 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacherAddRequest.getSex()) && !StringUtils.isEmpty(teacherAddRequest.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
+            }
+            //教师名称-教师手机号-教师邮箱
+            if (!StringUtils.isEmpty(teacherAddRequest.getTeacherName())){
+                TeacherExample example = new TeacherExample();
+                example.createCriteria().andTeacherNameEqualTo(teacherAddRequest.getTeacherName());
+                List<Teacher> teacherList = teacherMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(teacherList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE018.code,ExceptionCode.UserAuthCode.CODE018.message);
+                }
+            }
+            if (!StringUtils.isEmpty(teacherAddRequest.getMobile())){
+                TeacherExample example = new TeacherExample();
+                example.createCriteria().andMobileEqualTo(teacherAddRequest.getMobile());
+                List<Teacher> teacherList = teacherMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(teacherList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE020.code,ExceptionCode.UserAuthCode.CODE020.message);
+                }
+            }
+            if (!StringUtils.isEmpty(teacherAddRequest.getEmail())){
+                TeacherExample example = new TeacherExample();
+                example.createCriteria().andEmailEqualTo(teacherAddRequest.getEmail());
+                List<Teacher> teacherList = teacherMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(teacherList)){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE019.code,ExceptionCode.UserAuthCode.CODE019.message);
+                }
             }
             Teacher teacher = new Teacher();
             BeanCopyUtils.copyProperties(teacherAddRequest,teacher);
