@@ -12,10 +12,7 @@ import com.netlearning.framework.domain.auth.param.UserAccessLoginParam;
 import com.netlearning.framework.domain.auth.param.UserAccessRegisterParam;
 import com.netlearning.framework.domain.auth.result.UserAccessLoginResult;
 import com.netlearning.framework.domain.auth.result.UserLoginResult;
-import com.netlearning.framework.domain.userAuth.RoleMenuResult;
-import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
-import com.netlearning.framework.domain.userAuth.UserAddRequest;
-import com.netlearning.framework.domain.userAuth.UserRoleResult;
+import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 import com.netlearning.framework.em.UserAuthConstants;
@@ -177,7 +174,13 @@ public class UserAccessServiceImpl implements UserAccessService {
             return CommonResult.fail(ExceptionCode.AuthCode.CODE011.code,ExceptionCode.AuthCode.CODE011.message);
         }
         //查询用户菜单
-        userLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
+        List<String> menus = new ArrayList<>();
+        for (Menu menu : roleMenuResultCommonResult.getData().getMenus()){
+            if (!menus.contains(menu.getPath()) && !StringUtils.isEmpty(menu.getPath())){
+                menus.add(menu.getPath());
+            }
+        }
+        userLoginResult.setMenus(menus);
         userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
         userAccessLoginResult.setUserId(teacher.getTeacherId());
         userLoginResult.setTokenValue(teacherId);
@@ -263,7 +266,13 @@ public class UserAccessServiceImpl implements UserAccessService {
             return CommonResult.fail(ExceptionCode.AuthCode.CODE011.code,ExceptionCode.AuthCode.CODE011.message);
         }
         //查询用户菜单
-        userLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
+        List<String> menus = new ArrayList<>();
+        for (Menu menu : roleMenuResultCommonResult.getData().getMenus()){
+            if (!menus.contains(menu.getPath()) && !StringUtils.isEmpty(menu.getPath())){
+                menus.add(menu.getPath());
+            }
+        }
+        userLoginResult.setMenus(menus);
         userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
         userAccessLoginResult.setUserId(userResult.getUserId());
         userLoginResult.setTokenValue(userId);

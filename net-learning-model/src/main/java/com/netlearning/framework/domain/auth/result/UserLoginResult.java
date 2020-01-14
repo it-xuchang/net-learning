@@ -21,5 +21,5 @@ public class UserLoginResult {
     private TeacherResult teacher;
     private UserResult user;
     private Role role;
-    private List<Menu> menus;
+    List<String> menus;
 }

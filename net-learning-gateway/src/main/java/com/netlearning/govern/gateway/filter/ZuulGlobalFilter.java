@@ -8,6 +8,7 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.auth.result.UserLoginResult;
 import com.netlearning.framework.model.response.CommonCode;
 import com.netlearning.framework.model.response.ResponseResult;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.CookieUtil;
 import com.netlearning.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ public class ZuulGlobalFilter extends ZuulFilter {
     private List<String> paths;
 
     public ZuulGlobalFilter() {
-//        super();
         paths = new ArrayList<>();
         paths.add("/ams/user/access/login");
         paths.add("/ams/user/access/register");
@@ -98,12 +98,16 @@ public class ZuulGlobalFilter extends ZuulFilter {
      * @return
      */
     private boolean checkUrl(){
-        RequestContext requestContext= RequestContext.getCurrentContext();
-        HttpServletRequest request=requestContext.getRequest();
-        String uri=request.getRequestURI();
+        String uri=this.getUrl();
         PathMatcher matcher = new AntPathMatcher();
         Optional<String> optional =paths.stream().filter(t->matcher.match(t,uri)).findFirst();
         return optional.isPresent();
+    }
+    private String getUrl(){
+        RequestContext requestContext= RequestContext.getCurrentContext();
+        HttpServletRequest request=requestContext.getRequest();
+        String uri=request.getRequestURI();
+        return uri;
     }
 
     //过虑器的内容
@@ -128,6 +132,18 @@ public class ZuulGlobalFilter extends ZuulFilter {
             this.accessDenied(currentContext,response);
             return null;
         }
+        //用户是否该接口访问的权限
+        if (CollectionUtils.isEmpty(userLoginResult.getMenus())){
+            permissionDenied(currentContext,response);
+            return null;
+        }else {
+            List<String> menus = userLoginResult.getMenus();
+            String uri=this.getUrl();
+            if (!menus.contains(uri)){
+                permissionDenied(currentContext,response);
+                return null;
+            }
+        }
         String tokenValue = userLoginResult.getTokenValue();
         //更新redis的过期时间
         redisTemplate.expire(token,tokenExpireTime, TimeUnit.MINUTES);
@@ -151,6 +167,21 @@ public class ZuulGlobalFilter extends ZuulFilter {
         currentContext.setResponseStatusCode(401);
         //构建响应的信息
         CommonResult commonResult = CommonResult.fail("401","请求超时，请重新登录");
+        //转成json
+        String jsonString = JSON.toJSONString(commonResult);
+        currentContext.setResponseBody(jsonString);
+        //转成json，设置contentType
+        response.setContentType("application/json;charset=utf-8");
+    }
+
+    private void permissionDenied(RequestContext currentContext,HttpServletResponse response){
+
+        //拒绝访问
+        currentContext.setSendZuulResponse(false);
+        //设置响应代码
+        currentContext.setResponseStatusCode(403);
+        //构建响应的信息
+        CommonResult commonResult = CommonResult.fail("403","用户权限不足");
         //转成json
         String jsonString = JSON.toJSONString(commonResult);
         currentContext.setResponseBody(jsonString);
