@@ -6,6 +6,9 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Menu;
 import com.netlearning.framework.domain.userAuth.MenuItem;
 import com.netlearning.framework.domain.userAuth.MenuParam;
+import com.netlearning.framework.domain.userAuth.param.MenuAddParam;
+import com.netlearning.framework.domain.userAuth.param.MenuDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.MenuEditParam;
 
 import java.util.List;
 
@@ -20,11 +23,11 @@ public interface MenuService {
 
     CommonResult<CommonPageResult<Menu>> page(MenuParam menu, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(Menu menu);
+    CommonResult<Boolean> add(MenuAddParam menuAddParam);
 
-    CommonResult<Boolean> edit(Menu menu);
+    CommonResult<Boolean> edit(MenuEditParam menuEditParam);
 
-    CommonResult<Boolean> delete(Long menuId);
+    CommonResult<Boolean> delete(MenuDeleteParam menuDeleteParam);
 
     CommonResult<List<MenuItem>> tree(MenuParam menu);
 }

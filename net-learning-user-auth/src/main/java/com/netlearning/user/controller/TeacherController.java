@@ -130,7 +130,7 @@ public class TeacherController implements TeacherControllerApi {
     }
 
     @Override
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(Long teacherId){
         return teacherService.delete(teacherId);
     }

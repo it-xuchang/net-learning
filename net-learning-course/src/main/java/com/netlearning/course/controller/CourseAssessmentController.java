@@ -37,18 +37,18 @@ public class CourseAssessmentController {
         CommonPageInfo commonPageInfo = new CommonPageInfo(pageNum,pageSize);
         return courseAssessmentService.page(param,commonPageInfo);
     }
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody CourseAssessmentAddParam param){
 
         return courseAssessmentService.add(param);
     }
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody CourseAssessmentEditParam param){
 
         return courseAssessmentService.edit(param);
     }
 
-    @PostMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(@RequestBody CourseAssessmentDeleteParam param){
 
         return courseAssessmentService.delete(param.getCourseAssessmentId());

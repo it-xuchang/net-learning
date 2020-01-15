@@ -167,6 +167,23 @@ public class RoleMenuServiceImpl implements RoleMenuService {
     }
 
     @Override
+    public CommonResult<Boolean> addRoleAllMenu(RoleMenuRequest roleMenu) {
+        MenuExample example = new MenuExample();
+        List<Menu> menus = menuMapper.selectByExample(example);
+
+        List<RoleMenu> roleMenus = new ArrayList<>();
+        for (Menu menu : menus){
+            RoleMenu record = new RoleMenu();
+            record.setRoleId(roleMenu.getRoleId());
+            record.setMenuId(menu.getMenuId());
+            roleMenus.add(record);
+        }
+
+        roleMenuMapper.mutipartInsertSelective(roleMenus);
+        return CommonResult.success(true);
+    }
+
+    @Override
     public CommonResult<List<MenuItem>> tree(RoleTreeParam roleTreeParam) {
 
         //该角色的所有菜单资源

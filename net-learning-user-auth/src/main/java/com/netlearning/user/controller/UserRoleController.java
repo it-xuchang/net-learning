@@ -56,7 +56,7 @@ public class UserRoleController implements UserRoleControllerApi {
     }
 
     @Override
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(UserRole userRole){
         return userRoleService.delete(userRole);
     }

@@ -65,6 +65,12 @@ public class RoleMenuController implements RoleMenuControllerApi {
         return roleMenuService.add(roleMenu);
     }
 
+    @PostMapping("/add/All")
+    public CommonResult<Boolean> addRoleAllMenu(@RequestBody RoleMenuRequest roleMenu){
+
+        return roleMenuService.addRoleAllMenu(roleMenu);
+    }
+
     @Override
     @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody RoleMenu roleMenu){

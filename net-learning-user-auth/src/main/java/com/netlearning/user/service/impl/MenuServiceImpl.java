@@ -5,6 +5,10 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.param.MenuAddParam;
+import com.netlearning.framework.domain.userAuth.param.MenuDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.MenuEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.DateUtils;
@@ -87,11 +91,13 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public CommonResult<Boolean> add(Menu menu) {
+    public CommonResult<Boolean> add(MenuAddParam menuAddParam) {
         try {
-            menu.setMenuId(sequenceService.nextValue(null));
-            menu.setCreateTime(new Date());
-            menuMapper.insertSelective(menu);
+            Menu record = new Menu();
+            BeanCopyUtils.copyProperties(menuAddParam,record);
+            record.setMenuId(sequenceService.nextValue(null));
+            record.setCreateTime(new Date());
+            menuMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE002.message);
@@ -99,9 +105,12 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public CommonResult<Boolean> edit(Menu menu) {
+    public CommonResult<Boolean> edit(MenuEditParam menuEditParam) {
         try {
-            menuMapper.updateByPrimaryKeySelective(menu);
+            Menu record = new Menu();
+            BeanCopyUtils.copyProperties(menuEditParam,record);
+            record.setModifyTime(new Date());
+            menuMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE003.message);
@@ -109,9 +118,17 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long menuId) {
+    public CommonResult<Boolean> delete(MenuDeleteParam menuDeleteParam) {
         try {
-            menuMapper.deleteByPrimaryKey(menuId);
+            MenuExample example = new MenuExample();
+            MenuExample.Criteria criteria = example.createCriteria();
+            if (menuDeleteParam.getMenuId() != null){
+                criteria.andMenuIdEqualTo(menuDeleteParam.getMenuId());
+            }
+            if (menuDeleteParam.getParentId() != null){
+                criteria.andParentIdEqualTo(menuDeleteParam.getParentId());
+            }
+            menuMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);

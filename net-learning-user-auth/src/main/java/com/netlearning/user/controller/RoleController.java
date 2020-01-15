@@ -22,13 +22,13 @@ import java.util.List;
  * @time: 2019/12/20 14:44
  */
 @RestController
-@RequestMapping("role")
+@RequestMapping("/role")
 public class RoleController implements RoleControllerApi {
     @Autowired
     private RoleService roleService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<Role>> query(@RequestParam(value = "roleId",required = false) Long roleId,
                                           @RequestParam(value = "roleName",required = false) String roleName,
                                           @RequestParam(value = "remark",required = false) String remark,
@@ -43,7 +43,7 @@ public class RoleController implements RoleControllerApi {
         return roleService.query(roleParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Role>> page(@RequestParam(value = "roleId",required = false) Long roleId,
                                                      @RequestParam(value = "roleName",required = false) String roleName,
                                                      @RequestParam(value = "remark",required = false) String remark,
@@ -70,7 +70,7 @@ public class RoleController implements RoleControllerApi {
      * @return
      */
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody RoleAddRequest role){
         if (StringUtils.isEmpty(role.getRemark())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -85,13 +85,13 @@ public class RoleController implements RoleControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody RoleEditRequest roleEditRequest){
         return roleService.edit(roleEditRequest);
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest){
         return roleService.delete(roleDeleteRequest);
     }

@@ -4,6 +4,9 @@ import com.netlearning.api.userAuth.MenuControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.param.MenuAddParam;
+import com.netlearning.framework.domain.userAuth.param.MenuDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.MenuEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.domain.userAuth.Menu;
@@ -53,7 +56,7 @@ public class MenuController implements MenuControllerApi {
         return menuService.query(menu);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Menu>> page(@RequestParam(value = "menuId",required = false) Long menuId,
                                                      @RequestParam(value = "parentId",required = false) Long parentId,
                                                      @RequestParam(value = "menuName",required = false) String menuName,
@@ -85,7 +88,7 @@ public class MenuController implements MenuControllerApi {
     }
 
     @Override
-    @GetMapping("tree")
+    @GetMapping("/tree")
     public CommonResult<List<MenuItem>> tree(@RequestParam(value = "menuId",required = false) Long menuId,
                                              @RequestParam(value = "parentId",required = false) Long parentId,
                                              @RequestParam(value = "menuName",required = false) String menuName,
@@ -110,20 +113,20 @@ public class MenuController implements MenuControllerApi {
         return menuService.tree(menu);
     }
     @Override
-    @PostMapping("add")
-    public CommonResult<Boolean> add(@RequestBody Menu menu){
-        return menuService.add(menu);
+    @PostMapping("/add")
+    public CommonResult<Boolean> add(@RequestBody MenuAddParam menuAddParam){
+        return menuService.add(menuAddParam);
     }
 
     @Override
-    @PostMapping("edit")
-    public CommonResult<Boolean> edit(@RequestBody Menu menu){
-        return menuService.edit(menu);
+    @PostMapping("/edit")
+    public CommonResult<Boolean> edit(@RequestBody MenuEditParam menuEditParam){
+        return menuService.edit(menuEditParam);
     }
 
     @Override
-    @DeleteMapping("delete")
-    public CommonResult<Boolean> delete(Long menuId){
-        return menuService.delete(menuId);
+    @PostMapping("/delete")
+    public CommonResult<Boolean> delete(MenuDeleteParam menuDeleteParam){
+        return menuService.delete(menuDeleteParam);
     }
 }

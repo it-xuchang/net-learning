@@ -21,4 +21,6 @@ public interface RoleMenuService {
     CommonResult<Boolean> edit(RoleMenu roleMenu);
 
     CommonResult<Boolean> delete(RoleMenu roleMenu);
+
+    CommonResult<Boolean> addRoleAllMenu(RoleMenuRequest roleMenu);
 }

@@ -27,7 +27,7 @@ public class LoginLogController implements LoginLogControllerApi {
     private LoginLogService loginLogService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<LoginLog>> query(@RequestParam(value = "username",required = false) String username,
                                               @RequestParam(value = "startLoginTime",required = false) String startLoginTime,
                                               @RequestParam(value = "endLoginTime",required = false) String endLoginTime,
@@ -43,7 +43,7 @@ public class LoginLogController implements LoginLogControllerApi {
         return loginLogService.query(logParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<LoginLog>> page(@RequestParam(value = "username",required = false) String username,
                                                          @RequestParam(value = "startLoginTime",required = false) String startLoginTime,
                                                          @RequestParam(value = "endLoginTime",required = false) String endLoginTime,
@@ -65,19 +65,19 @@ public class LoginLogController implements LoginLogControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody LoginLog log){
         return loginLogService.add(log);
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody LoginLog log){
         return loginLogService.edit(log);
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(LoginLog log){
         return loginLogService.delete(log);
     }

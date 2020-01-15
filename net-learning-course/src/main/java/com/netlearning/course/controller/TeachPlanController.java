@@ -27,7 +27,7 @@ public class TeachPlanController {
     @Autowired
     private TeachPlanService teachPlanService;
 
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<BaseCourseTeachPlanResult>> query(@RequestParam(value = "teachplanId",required = false) Long teachplanId,
                                                          @RequestParam(value = "courseId",required = false)String courseId,
                                                          @RequestParam(value = "teachplanName",required = false)String teachplanName,
@@ -40,7 +40,7 @@ public class TeachPlanController {
         return teachPlanService.query(param);
     }
 
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<BaseCourseTeachPlanResult>> page(@RequestParam(value = "teachplanId",required = false) Long teachplanId,
                                                                           @RequestParam(value = "courseId",required = false)String courseId,
                                                                           @RequestParam(value = "teachplanName",required = false)String teachplanName,
@@ -59,19 +59,19 @@ public class TeachPlanController {
         return teachPlanService.page(param,commonPageInfo);
     }
 
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody TeachPlanAddParam request){
 
         return teachPlanService.add(request);
     }
 
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody TeachPlanEditParam request){
 
         return teachPlanService.edit(request);
     }
 
-    @PostMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(List<Long> ids){
 
         return teachPlanService.delete(ids);

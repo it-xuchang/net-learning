@@ -28,7 +28,7 @@ public class LogController implements LogControllerApi {
     private LogService logService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<Log>> query(@RequestParam(value = "id",required = false) Long id,
                                          @RequestParam(value = "username",required = false) String username,
                                          @RequestParam(value = "time",required = false) Long time,
@@ -48,7 +48,7 @@ public class LogController implements LogControllerApi {
         return logService.query(logParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Log>> page(@RequestParam(value = "id",required = false) Long id,
                                                      @RequestParam(value = "username",required = false) String username,
                                                      @RequestParam(value = "time",required = false) Long time,
@@ -74,19 +74,19 @@ public class LogController implements LogControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody Log log){
         return logService.add(log);
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody Log log){
         return logService.edit(log);
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(Long id){
         return logService.delete(id);
     }

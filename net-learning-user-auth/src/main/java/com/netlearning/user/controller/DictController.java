@@ -21,13 +21,13 @@ import java.util.List;
  * @time: 2019/12/20 14:43
  */
 @RestController
-@RequestMapping("dict")
+@RequestMapping("/dict")
 public class DictController implements DictControllerApi {
     @Autowired
     private DictService dictService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<Dict>> query(@RequestParam(value = "dictId",required = false) Long dictId,
                                           @RequestParam(value = "key",required = false) Long key,
                                           @RequestParam(value = "value",required = false) String value,
@@ -42,7 +42,7 @@ public class DictController implements DictControllerApi {
         return dictService.query(dictParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Dict>> page(@RequestParam(value = "dictId",required = false) Long dictId,
                                                      @RequestParam(value = "key",required = false) Long key,
                                                      @RequestParam(value = "value",required = false) String value,
@@ -64,19 +64,19 @@ public class DictController implements DictControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody Dict dict){
         return dictService.add(dict);
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody Dict dict){
         return dictService.edit(dict);
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(Long dictId){
         return dictService.delete(dictId);
     }

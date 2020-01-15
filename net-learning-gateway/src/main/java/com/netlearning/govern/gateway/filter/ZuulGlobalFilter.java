@@ -6,8 +6,6 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.auth.result.UserLoginResult;
-import com.netlearning.framework.model.response.CommonCode;
-import com.netlearning.framework.model.response.ResponseResult;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.CookieUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -111,7 +109,7 @@ public class ZuulGlobalFilter extends ZuulFilter {
     }
 
     //过虑器的内容
-    //测试的需求：过虑所有请求，判断头部信息是否有Authorization，如果没有则拒绝访问，否则转发到微服务。
+    //测试的需求：过虑所有请求，判断头部信息是否有名称为token的cookie，如果没有则拒绝访问，否则转发到微服务。
     @Override
     public Object run() throws ZuulException {
         RequestContext currentContext = RequestContext.getCurrentContext();
@@ -174,6 +172,11 @@ public class ZuulGlobalFilter extends ZuulFilter {
         response.setContentType("application/json;charset=utf-8");
     }
 
+    /**
+     * 权限不足
+     * @param currentContext
+     * @param response
+     */
     private void permissionDenied(RequestContext currentContext,HttpServletResponse response){
 
         //拒绝访问

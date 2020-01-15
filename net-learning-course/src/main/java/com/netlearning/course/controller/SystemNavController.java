@@ -22,7 +22,7 @@ public class SystemNavController {
     @Autowired
     private SystemNavService systemNavService;
 
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<SystemNavResult>> query(){
         return systemNavService.query();
     }

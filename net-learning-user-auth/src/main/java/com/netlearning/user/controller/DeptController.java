@@ -22,13 +22,13 @@ import java.util.List;
  * @time: 2019/12/20 14:40
  */
 @RestController
-@RequestMapping("dept")
+@RequestMapping("/dept")
 public class DeptController implements DeptControllerApi {
     @Autowired
     private DeptServcie deptServcie;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<Dept>> query(@RequestParam(value = "deptId",required = false) Long deptId,
                                           @RequestParam(value = "parentId",required = false) Long parentId,
                                           @RequestParam(value = "deptName",required = false) String deptName,
@@ -46,7 +46,7 @@ public class DeptController implements DeptControllerApi {
         return deptServcie.query(param);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<Dept>> page(@RequestParam(value = "deptId",required = false) Long deptId,
                                                      @RequestParam(value = "parentId",required = false) Long parentId,
                                                      @RequestParam(value = "deptName",required = false) String deptName,
@@ -72,7 +72,7 @@ public class DeptController implements DeptControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody Dept dept){
         if (StringUtils.isEmpty(dept.getDeptName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -81,7 +81,7 @@ public class DeptController implements DeptControllerApi {
     }
 
     @Override
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody Dept dept){
         if (StringUtils.isEmpty(dept.getDeptName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
@@ -93,7 +93,7 @@ public class DeptController implements DeptControllerApi {
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(Long deptId){
         return deptServcie.delete(deptId);
     }

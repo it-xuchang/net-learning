@@ -27,7 +27,7 @@ public class LearningCourseController {
     @Autowired
     private LearningCourseService learningCourseService;
 
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<UserLearningCourseResult> query(@RequestParam(value = "userId",required = false) Long userId,
                                                              @RequestParam(value = "teacherId",required = false) Long teacherId,
                                                              @RequestParam(value = "learningId",required = false) Long learningId,
@@ -47,11 +47,10 @@ public class LearningCourseController {
 
     /**
      * 查询学生下的学习的课程
-     *
      * 该教师的课程--课程下学习的学生
      * 查询教师下的学生的学习课程
      */
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<UserLearningCourseResult>> page(@RequestParam(value = "userId",required = false) Long userId,
                                                                          @RequestParam(value = "teacherId",required = false) Long teacherId,
                                                                          @RequestParam(value = "learningId",required = false) Long learningId,
@@ -79,7 +78,7 @@ public class LearningCourseController {
      * @param request
      * @return
      */
-    @PostMapping("/user/add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody LearningCourseAddParam request){
         return learningCourseService.add(request);
     }
@@ -89,7 +88,7 @@ public class LearningCourseController {
      * @param request
      * @return
      */
-    @PostMapping("/user/edit")
+    @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody LearningCourseEditParam request){
         return learningCourseService.edit(request);
     }
@@ -99,7 +98,7 @@ public class LearningCourseController {
      * @param ids
      * @return
      */
-    @PostMapping("/user/delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(@RequestBody List<Long> ids){
         return learningCourseService.delete(ids);
     }

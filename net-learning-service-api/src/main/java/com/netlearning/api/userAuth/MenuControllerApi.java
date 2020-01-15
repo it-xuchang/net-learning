@@ -4,6 +4,9 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Menu;
 import com.netlearning.framework.domain.userAuth.MenuItem;
+import com.netlearning.framework.domain.userAuth.param.MenuAddParam;
+import com.netlearning.framework.domain.userAuth.param.MenuDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.MenuEditParam;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,10 +57,10 @@ public interface MenuControllerApi {
                                              @RequestParam(value = "startCreateTime",required = false) String startCreateTime,
                                              @RequestParam(value = "endCreateTime",required = false) String endCreateTime);
 
-    public CommonResult<Boolean> add(@RequestBody Menu menu);
+    public CommonResult<Boolean> add(@RequestBody MenuAddParam menuAddParam);
 
-    public CommonResult<Boolean> edit(@RequestBody Menu menu);
+    public CommonResult<Boolean> edit(@RequestBody MenuEditParam menuEditParam);
 
-    public CommonResult<Boolean> delete(Long menuId);
+    public CommonResult<Boolean> delete(MenuDeleteParam menuDeleteParam);
 
 }

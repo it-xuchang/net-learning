@@ -85,7 +85,7 @@ public class UserConfigController implements UserConfigControllerApi {
     }
 
     @Override
-    @DeleteMapping("delete")
+    @PostMapping("delete")
     public CommonResult<Boolean> delete(Long userId){
         return userConfigService.delete(userId);
     }

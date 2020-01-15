@@ -59,7 +59,7 @@ public class CourseQuziController {
         return courseQuziService.edit(param);
     }
 
-    @PostMapping("delete")
+    @PostMapping("/delete")
     public CommonResult<Boolean> delete(@RequestBody CourseQuziDeleteParam param){
 
         return courseQuziService.delete(param);

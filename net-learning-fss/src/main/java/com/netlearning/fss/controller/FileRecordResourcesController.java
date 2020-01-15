@@ -26,7 +26,7 @@ public class FileRecordResourcesController {
     @Autowired
     private FileRecordResourcesService fileRecordResourcesService;
 
-    @GetMapping("query")
+    @GetMapping("/query")
     private CommonResult query(@RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
                                                                 @RequestParam(value = "recordId",required = false) Long recordId,
                                                                 @RequestParam(value = "fromSystemId",required = false) Long fromSystemId){
@@ -36,7 +36,7 @@ public class FileRecordResourcesController {
         param.setRecordResourcesId(recordResourcesId);
         return fileRecordResourcesService.query(param);
     }
-    @GetMapping("page")
+    @GetMapping("/page")
     private CommonResult page( @RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
                                @RequestParam(value = "recordId",required = false) Long recordId,
                                @RequestParam(value = "fromSystemId",required = false) Long fromSystemId,

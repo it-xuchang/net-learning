@@ -63,7 +63,7 @@ public class UserController implements UserControllerApi {
         return userService.query(userParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<UserResult>> page(@RequestParam(value = "userId",required = false) Long userId,
                                                      @RequestParam(value = "username",required = false) String username,
                                                      @RequestParam(value = "email",required = false) String email,
@@ -99,7 +99,7 @@ public class UserController implements UserControllerApi {
     }
 
     @Override
-    @PostMapping("add")
+    @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody UserAddRequest user){
         if (StringUtils.isEmpty(user.getUsername())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
