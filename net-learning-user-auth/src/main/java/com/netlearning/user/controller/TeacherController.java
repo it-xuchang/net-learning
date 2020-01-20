@@ -5,6 +5,9 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
+import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
+import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import com.netlearning.framework.exception.ExceptionCode;
@@ -113,15 +116,12 @@ public class TeacherController implements TeacherControllerApi {
 
     @Override
     @PostMapping("/edit")
-    public CommonResult<Boolean> edit(@RequestBody Teacher teacher){
+    public CommonResult<Boolean> edit(@RequestBody TeacherEditParam teacher){
         if (teacher.getTeacherId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }
         if (StringUtils.isEmpty(teacher.getTeacherName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
-        }
-        if (StringUtils.isEmpty(teacher.getPassword())){
-            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE009.code,ExceptionCode.UserAuthCode.CODE009.message);
         }
         if (StringUtils.isEmpty(teacher.getMobile()) && StringUtils.isEmpty(teacher.getEmail())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE010.code,ExceptionCode.UserAuthCode.CODE010.message);
@@ -131,8 +131,8 @@ public class TeacherController implements TeacherControllerApi {
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(Long teacherId){
-        return teacherService.delete(teacherId);
+    public CommonResult<Boolean> delete(@RequestBody TeacherDeleteParam param){
+        return teacherService.delete(param);
     }
 
     /**
@@ -144,6 +144,25 @@ public class TeacherController implements TeacherControllerApi {
     public CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(@RequestParam(value = "size",required = false) Long size){
 
         return teacherService.queryTeacherRecommendation(size);
+    }
+    @PostMapping("/change/password")
+    public CommonResult changePassword(@RequestBody UserChangePasswordParam param){
+        if (StringUtils.isEmpty(param.getOldPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE021.code,ExceptionCode.UserAuthCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(param.getNewPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE021.code,ExceptionCode.UserAuthCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(param.getMobile()) && StringUtils.isEmpty(param.getEmail())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE010.code,ExceptionCode.UserAuthCode.CODE010.message);
+        }
+        if (!StringUtils.isEmpty(param.getMobile()) && !RegexUtil.checkMobilePattern(param.getMobile())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE005.code,ExceptionCode.AuthCode.CODE005.message);
+        }
+        if (!RegexUtil.checkEmailPattern(param.getEmail()) && !StringUtils.isEmpty(param.getEmail())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE006.code,ExceptionCode.AuthCode.CODE006.message);
+        }
+        return teacherService.changePassword(param);
     }
 
 }

@@ -12,8 +12,12 @@ import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
 import com.netlearning.framework.domain.fss.result.FileRecordResult;
 import com.netlearning.framework.domain.userAuth.*;
 import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
+import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserEditParam;
 import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
+import com.netlearning.framework.em.FileConstants;
 import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
@@ -100,7 +104,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         Map<Long, FileRecordResult> fileRecordImagesResultMap = new HashMap<>();
-        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds);
+        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds, FileConstants.IsAvatar.AVATAR.getCode());
         if (fileRecordImagesResult.isSuccess()){
             List<FileRecordImagesResult> fileRecordImagesResultList = fileRecordImagesResult.getData();
             for (FileRecordImagesResult fileRecordImages : fileRecordImagesResultList){
@@ -172,7 +176,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         Map<Long, FileRecordResult> fileRecordImagesResultMap = new HashMap<>();
-        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds);
+        CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult = fileRecordImagesControllerClientApi.query(userIds,FileConstants.IsAvatar.AVATAR.getCode());
         if (fileRecordImagesResult.isSuccess()){
             List<FileRecordImagesResult> fileRecordImagesResultList = fileRecordImagesResult.getData();
             for (FileRecordImagesResult fileRecordImages : fileRecordImagesResultList){
@@ -202,7 +206,7 @@ public class UserServiceImpl implements UserService {
     public CommonResult<Boolean> add(UserAddRequest user) {
         try {
 
-            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSsex()) && !StringUtils.isEmpty(user.getSsex())){
+            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSex()) && !StringUtils.isEmpty(user.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
             //查询用户手机号-邮箱-用户名是否重复
@@ -214,7 +218,7 @@ public class UserServiceImpl implements UserService {
                     return CommonResult.fail(ExceptionCode.UserAuthCode.CODE018.code,ExceptionCode.UserAuthCode.CODE018.message);
                 }
             }
-            if (StringUtils.isEmpty(user.getMobile())){
+            if (!StringUtils.isEmpty(user.getMobile())){
                 UserExample example = new UserExample();
                 example.createCriteria().andMobileEqualTo(user.getMobile());
                 List<User> userList = userMapper.selectByExample(example);
@@ -222,7 +226,7 @@ public class UserServiceImpl implements UserService {
                     return CommonResult.fail(ExceptionCode.UserAuthCode.CODE020.code,ExceptionCode.UserAuthCode.CODE020.message);
                 }
             }
-            if (StringUtils.isEmpty(user.getEmail())){
+            if (!StringUtils.isEmpty(user.getEmail())){
                 UserExample example = new UserExample();
                 example.createCriteria().andEmailEqualTo(user.getEmail());
                 List<User> userList = userMapper.selectByExample(example);
@@ -237,7 +241,7 @@ public class UserServiceImpl implements UserService {
             record.setUserId(userId);
             record.setStatus(UserAuthConstants.UserType.UP.getCode());
             record.setCreateTime(new Date());
-            if (StringUtils.isEmpty(user.getSsex())){
+            if (StringUtils.isEmpty(user.getSex())){
                 record.setSsex(UserAuthConstants.UserSexType.NON.getCode());
             }
             record.setPassword(MD5Util.getStringMD5(user.getPassword()));
@@ -257,15 +261,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResult<Boolean> edit(User user) {
+    public CommonResult<Boolean> edit(UserEditParam user) {
         try {
             if (!UserAuthConstants.UserType.userTypeList().contains(user.getStatus())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
             }
-            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSsex())){
+            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
-            userMapper.updateByPrimaryKeySelective(user);
+            //查询用户手机号-邮箱-用户名是否重复
+            if (!StringUtils.isEmpty(user.getUsername())){
+                UserExample example = new UserExample();
+                example.createCriteria().andUsernameEqualTo(user.getUsername());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    if (!user.getUserId().equals(userList.get(0).getUserId())){
+                        return CommonResult.fail(ExceptionCode.UserAuthCode.CODE018.code,ExceptionCode.UserAuthCode.CODE018.message);
+                    }
+                }
+            }
+            if (!StringUtils.isEmpty(user.getMobile())){
+                UserExample example = new UserExample();
+                example.createCriteria().andMobileEqualTo(user.getMobile());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    if (!user.getUserId().equals(userList.get(0).getUserId())){
+                        return CommonResult.fail(ExceptionCode.UserAuthCode.CODE020.code,ExceptionCode.UserAuthCode.CODE020.message);
+                    }
+                }
+            }
+            if (!StringUtils.isEmpty(user.getEmail())){
+                UserExample example = new UserExample();
+                example.createCriteria().andEmailEqualTo(user.getEmail());
+                List<User> userList = userMapper.selectByExample(example);
+                if (!CollectionUtils.isEmpty(userList)){
+                    if (!user.getUserId().equals(userList.get(0).getUserId())){
+                        return CommonResult.fail(ExceptionCode.UserAuthCode.CODE019.code,ExceptionCode.UserAuthCode.CODE019.message);
+                    }
+                }
+            }
+            User record = new User();
+            BeanCopyUtils.copyProperties(user,record);
+            record.setModifyTime(new Date());
+            userMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE003.message);
@@ -273,9 +311,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long userId) {
+    public CommonResult<Boolean> delete(UserDeleteParam param) {
         try {
-            userMapper.deleteByPrimaryKey(userId);
+            if (CollectionUtils.isEmpty(param.getUserIds())){
+                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+            }
+            UserExample example = new UserExample();
+            UserExample.Criteria criteria = example.createCriteria();
+            if (!CollectionUtils.isEmpty(param.getUserIds())){
+                criteria.andUserIdIn(param.getUserIds());
+            }
+            userMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);
@@ -291,5 +337,48 @@ public class UserServiceImpl implements UserService {
         }
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public CommonResult changePassword(UserChangePasswordParam param) {
+
+        //输入密码是否一致
+        if (StringUtils.equals(param.getNewPassword(),param.getOldPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE025.code,ExceptionCode.UserAuthCode.CODE025.message);
+        }
+        //查询原密码是否正确
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        if (!StringUtils.isEmpty(param.getEmail())){
+            criteria.andEmailEqualTo(param.getEmail());
+        }
+        if (!StringUtils.isEmpty(param.getMobile())){
+            criteria.andMobileEqualTo(param.getMobile());
+        }
+        if (!StringUtils.isEmpty(param.getOldPassword())){
+            criteria.andPasswordEqualTo(MD5Util.getStringMD5(param.getOldPassword()));
+        }
+        List<User> userList = userMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(userList)){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE022.code,ExceptionCode.UserAuthCode.CODE022.message);
+        }
+        User user = userList.get(0);
+        if (StringUtils.equals(user.getStatus(),UserAuthConstants.UserType.DOWN.getCode())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE023.code,ExceptionCode.UserAuthCode.CODE023.message);
+        }
+        //新旧密码是否一致
+        if (StringUtils.equals(user.getPassword(),MD5Util.getStringMD5(param.getNewPassword()))){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE024.code,ExceptionCode.UserAuthCode.CODE024.message);
+        }
+        //修改旧密码
+        User record = new User();
+        record.setPassword(MD5Util.getStringMD5(param.getNewPassword()));
+        record.setModifyTime(new Date());
+        record.setUserId(user.getUserId());
+        userMapper.updateByPrimaryKeySelective(record);
+        //重新登录
+
+        return CommonResult.success(true);
     }
 }

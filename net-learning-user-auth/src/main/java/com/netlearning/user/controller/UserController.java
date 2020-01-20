@@ -6,6 +6,9 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
+import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserEditParam;
 import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 import com.netlearning.framework.exception.ExceptionCode;
@@ -98,6 +101,12 @@ public class UserController implements UserControllerApi {
         return userService.page(userParam,commonPageInfo);
     }
 
+    /**
+     * 添加学生用户
+     * 必填：手机号或者邮箱号、用户名 、 密码
+     * @param user
+     * @return
+     */
     @Override
     @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody UserAddRequest user){
@@ -110,31 +119,40 @@ public class UserController implements UserControllerApi {
         if (StringUtils.isEmpty(user.getMobile()) && StringUtils.isEmpty(user.getEmail())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE010.code,ExceptionCode.UserAuthCode.CODE010.message);
         }
+        if (!StringUtils.isEmpty(user.getMobile()) && !RegexUtil.checkMobilePattern(user.getMobile())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE005.code,ExceptionCode.AuthCode.CODE005.message);
+        }
+        if (!RegexUtil.checkEmailPattern(user.getEmail()) && !StringUtils.isEmpty(user.getEmail())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE006.code,ExceptionCode.AuthCode.CODE006.message);
+        }
         return userService.add(user);
     }
 
     @Override
     @PostMapping("/edit")
-    public CommonResult<Boolean> edit(@RequestBody User user){
+    public CommonResult<Boolean> edit(@RequestBody UserEditParam user){
         if (user.getUserId() == null){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }
         if (StringUtils.isEmpty(user.getUsername())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }
-        if (StringUtils.isEmpty(user.getPassword())){
-            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE009.code,ExceptionCode.UserAuthCode.CODE009.message);
-        }
         if (StringUtils.isEmpty(user.getMobile()) && StringUtils.isEmpty(user.getEmail())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE010.code,ExceptionCode.UserAuthCode.CODE010.message);
+        }
+        if (!StringUtils.isEmpty(user.getMobile()) && !RegexUtil.checkMobilePattern(user.getMobile())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE005.code,ExceptionCode.AuthCode.CODE005.message);
+        }
+        if (!RegexUtil.checkEmailPattern(user.getEmail()) && !StringUtils.isEmpty(user.getEmail())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE006.code,ExceptionCode.AuthCode.CODE006.message);
         }
         return userService.edit(user);
     }
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(Long userId){
-        return userService.delete(userId);
+    public CommonResult<Boolean> delete(@RequestBody UserDeleteParam param){
+        return userService.delete(param);
     }
 
     @GetMapping("/query/detail")
@@ -150,5 +168,24 @@ public class UserController implements UserControllerApi {
         MyCoursQueryParam param = new MyCoursQueryParam();
         param.setUserId(userId);
         return userService.queryMyCourse(param);
+    }
+    @PostMapping("/change/password")
+    public CommonResult changePassword(@RequestBody UserChangePasswordParam param){
+        if (StringUtils.isEmpty(param.getOldPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE021.code,ExceptionCode.UserAuthCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(param.getNewPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE021.code,ExceptionCode.UserAuthCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(param.getMobile()) && StringUtils.isEmpty(param.getEmail())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE010.code,ExceptionCode.UserAuthCode.CODE010.message);
+        }
+        if (!StringUtils.isEmpty(param.getMobile()) && !RegexUtil.checkMobilePattern(param.getMobile())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE005.code,ExceptionCode.AuthCode.CODE005.message);
+        }
+        if (!RegexUtil.checkEmailPattern(param.getEmail()) && !StringUtils.isEmpty(param.getEmail())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE006.code,ExceptionCode.AuthCode.CODE006.message);
+        }
+        return userService.changePassword(param);
     }
 }

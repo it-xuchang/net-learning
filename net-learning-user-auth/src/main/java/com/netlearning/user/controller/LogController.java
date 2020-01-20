@@ -4,6 +4,9 @@ import com.netlearning.api.userAuth.LogControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.param.LogAddParam;
+import com.netlearning.framework.domain.userAuth.param.LogDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.LogEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.domain.userAuth.Log;
@@ -75,20 +78,20 @@ public class LogController implements LogControllerApi {
 
     @Override
     @PostMapping("/add")
-    public CommonResult<Boolean> add(@RequestBody Log log){
-        return logService.add(log);
+    public CommonResult<Boolean> add(@RequestBody LogAddParam param){
+        return logService.add(param);
     }
 
     @Override
     @PostMapping("/edit")
-    public CommonResult<Boolean> edit(@RequestBody Log log){
-        return logService.edit(log);
+    public CommonResult<Boolean> edit(@RequestBody LogEditParam param){
+        return logService.edit(param);
     }
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(Long id){
-        return logService.delete(id);
+    public CommonResult<Boolean> delete(@RequestBody LogDeleteParam param){
+        return logService.delete(param);
     }
 
 }

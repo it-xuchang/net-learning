@@ -8,6 +8,7 @@ import com.netlearning.auth.service.UserAccessService;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
 import com.netlearning.framework.domain.auth.param.UserAccessChangePasswordParam;
+import com.netlearning.framework.domain.auth.param.UserAccessCodeParam;
 import com.netlearning.framework.domain.auth.param.UserAccessLoginParam;
 import com.netlearning.framework.domain.auth.param.UserAccessRegisterParam;
 import com.netlearning.framework.domain.auth.result.UserAccessLoginResult;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -56,6 +56,8 @@ public class UserAccessServiceImpl implements UserAccessService {
     private RedisTemplate redisTemplate;
     @Value("${tokenExpireTime}")
     private Long tokenExpireTime;
+    @Value("${codeExpireTime}")
+    private Long codeExpireTime;
     @Value("${cookieDomain}")
     private String cookieDomain;
     @Value("${cookiePath}")
@@ -322,20 +324,107 @@ public class UserAccessServiceImpl implements UserAccessService {
 
     @Override
     @Transactional
-    public CommonResult changePassword(UserAccessChangePasswordParam param) {
-        //登录状态
-        //未登录状态
+    public CommonResult forgetPassword(UserAccessChangePasswordParam param) {
+        //校验输入信息是否正确--正则校验
+        if (StringUtils.isEmpty(param.getUserAccount())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE007.code,ExceptionCode.AuthCode.CODE007.message);
+        }
+        if (StringUtils.isEmpty(param.getUserAccountType())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE008.code,ExceptionCode.AuthCode.CODE008.message);
+        }
+        if (StringUtils.isEmpty(param.getUserType())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE009.code,ExceptionCode.AuthCode.CODE009.message);
+        }
+        if (StringUtils.isEmpty(param.getCode())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE013.code,ExceptionCode.AuthCode.CODE013.message);
+        }
+        if (!UserAuthConstants.UserLoginType.userTypeList().contains(param.getUserAccountType())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE008.code,ExceptionCode.AuthCode.CODE008.message);
+        }
+        String code = (String) redisTemplate.opsForValue().get(param.getUserAccount());
+        if (StringUtils.isEmpty(code)){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE014.code,ExceptionCode.AuthCode.CODE014.message);
+        }
+        if (!StringUtils.equals(code,param.getCode())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE015.code,ExceptionCode.AuthCode.CODE015.message);
+        }
+
         try {
             if(StringUtils.equals(param.getUserType(),UserAuthConstants.UserLoginAccountType.TEACHER.getCode())){
+                User user = new User();
 
-
+                if (StringUtils.equals(param.getUserAccountType(), UserAuthConstants.UserLoginType.EMAIL.getCode())){
+                    CommonResult<List<UserResult>> userResult = userControllerClientApi.queryUserByEmail(param.getUserAccount());
+                    if (userResult.isSuccess()){
+                        if (CollectionUtils.isEmpty(userResult.getData())){
+                            return CommonResult.fail(ExceptionCode.AuthCode.CODE016.code,ExceptionCode.AuthCode.CODE016.message);
+                        }
+                        BeanCopyUtils.copyProperties(userResult.getData().get(0),user);
+                    }
+                }else {
+                    CommonResult<List<UserResult>> userResult = userControllerClientApi.queryUserByMobile(param.getUserAccount());
+                    if (userResult.isSuccess()){
+                        if (CollectionUtils.isEmpty(userResult.getData())){
+                            return CommonResult.fail(ExceptionCode.AuthCode.CODE016.code,ExceptionCode.AuthCode.CODE016.message);
+                        }
+                        BeanCopyUtils.copyProperties(userResult.getData().get(0),user);
+                    }
+                }
+                user.setPassword(MD5Util.getStringMD5(param.getPassword()));
+                userControllerClientApi.edit(user);
             } else if (StringUtils.equals(param.getUserType(),UserAuthConstants.UserLoginAccountType.USER.getCode())) {
-
+                Teacher teacher = new Teacher();
+                if (StringUtils.equals(param.getUserAccountType(), UserAuthConstants.UserLoginType.EMAIL.getCode())){
+                    CommonResult<List<TeacherResult>> teacherResult = teacherControllerClientApi.queryTeacherByEmail(param.getUserAccount());
+                    if (teacherResult.isSuccess()){
+                        if (CollectionUtils.isEmpty(teacherResult.getData())){
+                            return CommonResult.fail(ExceptionCode.AuthCode.CODE016.code,ExceptionCode.AuthCode.CODE016.message);
+                        }
+                    }
+                    BeanCopyUtils.copyProperties(teacherResult.getData().get(0),teacher);
+                }else {
+                    CommonResult<List<TeacherResult>> teacherResult = teacherControllerClientApi.queryTeacherByMobile(param.getUserAccount());
+                    if (teacherResult.isSuccess()){
+                        if (CollectionUtils.isEmpty(teacherResult.getData())){
+                            return CommonResult.fail(ExceptionCode.AuthCode.CODE016.code,ExceptionCode.AuthCode.CODE016.message);
+                        }
+                    }
+                    BeanCopyUtils.copyProperties(teacherResult.getData().get(0),teacher);
+                }
+                teacher.setPassword(MD5Util.getStringMD5(param.getPassword()));
+                teacherControllerClientApi.edit(teacher);
             }
 
             return CommonResult.success(true);
         }catch (Exception e){
-            return CommonResult.fail(ExceptionCode.AuthCode.CODE001.code,ExceptionCode.AuthCode.CODE001.message);
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE017.code,ExceptionCode.AuthCode.CODE017.message);
         }
+    }
+
+    @Override
+    @Transactional
+    public CommonResult getCode(UserAccessCodeParam param) {
+        if (StringUtils.isEmpty(param.getUserAccount())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE007.code,ExceptionCode.AuthCode.CODE007.message);
+        }
+        if (StringUtils.isEmpty(param.getUserAccount())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE007.code,ExceptionCode.AuthCode.CODE007.message);
+        }
+        //检验账号
+        if (!RegexUtil.checkEmailPattern(param.getUserAccount()) && !RegexUtil.checkMobilePattern(param.getUserAccount())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE012.code,ExceptionCode.AuthCode.CODE012.message);
+        }
+        if (!UserAuthConstants.UserLoginAccountType.userTypeList().contains(param.getUserType())){
+            return CommonResult.fail(ExceptionCode.AuthCode.CODE008.code,ExceptionCode.AuthCode.CODE008.message);
+        }
+        String code = RandomUtil.getRandom(6);
+        String value = (String) redisTemplate.opsForValue().get(param.getUserAccount());
+        if (StringUtils.isEmpty(value)){
+            redisTemplate.opsForValue().set(param.getUserAccount(),code,codeExpireTime,TimeUnit.MINUTES);
+        }else {
+            return CommonResult.success(value);
+        }
+        //发送短信或者发送邮件验证码
+        return CommonResult.success(code);
     }
 }

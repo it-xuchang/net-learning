@@ -5,6 +5,9 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Log;
 import com.netlearning.framework.domain.userAuth.LogParam;
+import com.netlearning.framework.domain.userAuth.param.LogAddParam;
+import com.netlearning.framework.domain.userAuth.param.LogDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.LogEditParam;
 
 import java.util.List;
 
@@ -19,9 +22,9 @@ public interface LogService {
 
     CommonResult<CommonPageResult<Log>> page(LogParam logParam, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(Log log);
+    CommonResult<Boolean> add(LogAddParam param);
 
-    CommonResult<Boolean> edit(Log log);
+    CommonResult<Boolean> edit(LogEditParam param);
 
-    CommonResult<Boolean> delete(Long id);
+    CommonResult<Boolean> delete(LogDeleteParam param);
 }

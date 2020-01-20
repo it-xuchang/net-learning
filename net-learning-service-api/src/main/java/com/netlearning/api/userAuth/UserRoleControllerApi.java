@@ -23,5 +23,5 @@ public interface UserRoleControllerApi {
 
     public CommonResult<Boolean> edit(@RequestBody UserRole userRole);
 
-    public CommonResult<Boolean> delete(UserRole userRole);
+    public CommonResult<Boolean> delete(@RequestBody UserRole userRole);
 }

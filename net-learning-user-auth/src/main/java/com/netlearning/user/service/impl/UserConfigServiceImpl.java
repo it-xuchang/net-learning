@@ -5,8 +5,13 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.param.UserConfigAddParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.UserConfigMapper;
 import com.netlearning.framework.domain.userAuth.UserConfig;
@@ -96,9 +101,11 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public CommonResult<Boolean> add(UserConfig userConfig) {
+    public CommonResult<Boolean> add(UserConfigAddParam userConfig) {
         try {
-            userConfigMapper.insertSelective(userConfig);
+            UserConfig record = new UserConfig();
+            BeanCopyUtils.copyProperties(userConfig,record);
+            userConfigMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE002.message);
@@ -106,9 +113,11 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public CommonResult<Boolean> edit(UserConfig userConfig) {
+    public CommonResult<Boolean> edit(UserConfigEditParam userConfig) {
         try {
-            userConfigMapper.updateByPrimaryKeySelective(userConfig);
+            UserConfig record = new UserConfig();
+            BeanCopyUtils.copyProperties(userConfig,record);
+            userConfigMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE003.message);
@@ -116,9 +125,17 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long userId) {
+    public CommonResult<Boolean> delete(UserConfigDeleteParam param) {
         try {
-            userConfigMapper.deleteByPrimaryKey(userId);
+            if (CollectionUtils.isEmpty(param.getUserIds())){
+                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+            }
+            UserConfigExample example = new UserConfigExample();
+            UserConfigExample.Criteria criteria =example.createCriteria();
+            if (CollectionUtils.isEmpty(param.getUserIds())){
+                criteria.andUserIdIn(param.getUserIds());
+            }
+            userConfigMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);

@@ -3,9 +3,10 @@ package com.netlearning.framework.domain.userAuth.param;
 
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 public class MenuDeleteParam {
-    private Long menuId;
-    private Long parentId;
+    private List<Long> menuIds;
 }

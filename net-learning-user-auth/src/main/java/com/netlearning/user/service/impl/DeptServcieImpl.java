@@ -5,8 +5,13 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
+import com.netlearning.framework.domain.userAuth.param.DeptAddParam;
+import com.netlearning.framework.domain.userAuth.param.DeptDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.DeptEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.DeptMapper;
@@ -81,11 +86,13 @@ public class DeptServcieImpl implements DeptServcie {
     }
 
     @Override
-    public CommonResult<Boolean> add(Dept dept) {
+    public CommonResult<Boolean> add(DeptAddParam dept) {
         try {
-            dept.setDeptId(sequenceService.nextValue(null));
-            dept.setCreateTime(new Date());
-            deptMapper.insertSelective(dept);
+            Dept record = new Dept();
+            BeanCopyUtils.copyProperties(dept,record);
+            record.setDeptId(sequenceService.nextValue(null));
+            record.setCreateTime(new Date());
+            deptMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE002.code,ExceptionCode.UserAuthCode.CODE004.message);
@@ -93,14 +100,16 @@ public class DeptServcieImpl implements DeptServcie {
     }
 
     @Override
-    public CommonResult<Boolean> edit(Dept dept) {
+    public CommonResult<Boolean> edit(DeptEditParam dept) {
         try {
             Optional<Dept> result = Optional.ofNullable(deptMapper.selectByPrimaryKey(dept.getDeptId()));
             if (result.isPresent()){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE008.code,ExceptionCode.UserAuthCode.CODE008.message);
             }
-            dept.setModifyTime(new Date());
-            deptMapper.updateByPrimaryKeySelective(dept);
+            Dept record = new Dept();
+            BeanCopyUtils.copyProperties(dept,record);
+            record.setModifyTime(new Date());
+            deptMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE004.message);
@@ -108,9 +117,17 @@ public class DeptServcieImpl implements DeptServcie {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long deptId) {
+    public CommonResult<Boolean> delete(DeptDeleteParam dept) {
         try {
-            deptMapper.deleteByPrimaryKey(deptId);
+            if (CollectionUtils.isEmpty(dept.getDeptIds())){
+                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+            }
+            DeptExample example = new DeptExample();
+            DeptExample.Criteria criteria = example.createCriteria();
+            if (!CollectionUtils.isEmpty(dept.getDeptIds())){
+                criteria.andDeptIdIn(dept.getDeptIds());
+            }
+            deptMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);

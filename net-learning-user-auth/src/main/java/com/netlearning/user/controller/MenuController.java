@@ -126,7 +126,7 @@ public class MenuController implements MenuControllerApi {
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(MenuDeleteParam menuDeleteParam){
+    public CommonResult<Boolean> delete(@RequestBody MenuDeleteParam menuDeleteParam){
         return menuService.delete(menuDeleteParam);
     }
 }

@@ -30,5 +30,5 @@ public interface RoleMenuControllerApi {
 
     public CommonResult<Boolean> edit(@RequestBody RoleMenu roleMenu);
 
-    public CommonResult<Boolean> delete(RoleMenu roleMenu);
+    public CommonResult<Boolean> delete(@RequestBody RoleMenu roleMenu);
 }

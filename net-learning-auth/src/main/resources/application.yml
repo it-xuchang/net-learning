@@ -79,6 +79,7 @@ hystrix:
           enabled: false
 
 tokenExpireTime: 30
+codeExpireTime: 5
 cookieDomain: 127.0.0.1
 cookiePath: /
 cookieTime: 1800

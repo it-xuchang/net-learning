@@ -4,10 +4,7 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
 import com.netlearning.framework.domain.course.param.TeachPlanMediaAddParam;
 import com.netlearning.framework.domain.course.param.TeachPlanMediaTencentAddParam;
-import com.netlearning.framework.domain.fss.FileRecord;
-import com.netlearning.framework.domain.fss.FileRecordExample;
-import com.netlearning.framework.domain.fss.FileRecordImages;
-import com.netlearning.framework.domain.fss.FileRecordResources;
+import com.netlearning.framework.domain.fss.*;
 import com.netlearning.framework.domain.fss.param.*;
 import com.netlearning.framework.domain.fss.result.FileRecordResult;
 import com.netlearning.framework.domain.fss.result.FileRecordUploadResult;
@@ -146,6 +143,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecordUploadResult.setRecordId(recordId);
         fileRecordUploadResult.setFromSystemId(param.getFromSystemId());
         if (StringUtils.equals(fileType, FileConstants.FileType.IMAGES.getCode()) || StringUtils.isEmpty(fileType)){
+            //用户课程图片
             FileRecordImages fileRecordImages = new FileRecordImages();
             fileRecordImages.setRecordId(recordId);
             fileRecordImages.setFromSystemId(param.getFromSystemId());
@@ -153,9 +151,11 @@ public class FileRecordServiceImpl implements FileRecordService {
             fileRecordUploadResult.setRecordImageId(recordImageId);
             fileRecordImages.setRecordImageId(recordImageId);
             fileRecordImages.setUserId(param.getUserId());
+            fileRecordImages.setIsDefaultIcon(FileConstants.IsAvatar.NON_AVATAR.getCode());
             fileRecordImagesMapper.insertSelective(fileRecordImages);
         }
         if (StringUtils.equals(fileType, FileConstants.FileType.DOCUMENT.getCode())){
+            //用户文档
             FileRecordResources fileRecordResources = new FileRecordResources();
             fileRecordResources.setRecordId(recordId);
             fileRecordResources.setFromSystemId(param.getFromSystemId());
@@ -166,6 +166,38 @@ public class FileRecordServiceImpl implements FileRecordService {
         }
         if (StringUtils.equals(fileType, FileConstants.FileType.MEDIA.getCode())){
             //调用课程视频的微服务
+        }
+        if (StringUtils.equals(fileType, FileConstants.FileType.AVATAR.getCode())){
+            //用户头像
+            //查询用户头像的图片是否存在
+            FileRecordImagesExample example = new FileRecordImagesExample();
+            FileRecordImagesExample.Criteria criteria = example.createCriteria();
+            if (param.getFromSystemId() != null){
+                criteria.andFromSystemIdEqualTo(param.getFromSystemId());
+            }
+            if (param.getUserId() != null){
+                criteria.andUserIdEqualTo(param.getUserId());
+            }
+            criteria.andIsDefaultIconEqualTo(FileConstants.IsAvatar.AVATAR.getCode());
+            List<FileRecordImages> fileRecordImagesList = fileRecordImagesMapper.selectByExample(example);
+            //存在则修改，不存在则添加
+            if (!CollectionUtils.isEmpty(fileRecordImagesList)){
+//                fileRecordImagesMapper.deleteByPrimaryKey(fileRecordImagesList.get(0).getRecordImageId());
+                FileRecordImages fileRecordImages = new FileRecordImages();
+                fileRecordImages.setRecordImageId(fileRecordImagesList.get(0).getRecordImageId());
+                fileRecordImages.setIsDefaultIcon(FileConstants.IsAvatar.NON_AVATAR.getCode());
+                fileRecordImagesMapper.updateByPrimaryKeySelective(fileRecordImages);
+            }
+            FileRecordImages fileRecordImages = new FileRecordImages();
+            fileRecordImages.setRecordId(recordId);
+            fileRecordImages.setFromSystemId(param.getFromSystemId());
+            Long recordImageId = sequenceService.nextValue(null);
+            fileRecordUploadResult.setRecordImageId(recordImageId);
+            fileRecordImages.setRecordImageId(recordImageId);
+            fileRecordImages.setUserId(param.getUserId());
+            fileRecordImages.setIsDefaultIcon(FileConstants.IsAvatar.AVATAR.getCode());
+            fileRecordImagesMapper.insertSelective(fileRecordImages);
+
         }
 
         return fileRecordUploadResult;

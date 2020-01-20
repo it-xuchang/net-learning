@@ -28,8 +28,14 @@ public interface TeacherControllerClientApi {
                                                           @RequestParam(value = "password",required = false) String password);
 
     @GetMapping("/teacher/query")
+    public CommonResult<List<TeacherResult>> queryTeacherByEmail(@RequestParam(value = "email",required = false) String email);
+
+    @GetMapping("/teacher/query")
     public CommonResult<List<TeacherResult>> queryByMobile(@RequestParam(value = "mobile",required = false) String mobile,
                                                            @RequestParam(value = "password",required = false) String password);
+    @GetMapping("/teacher/query")
+    public CommonResult<List<TeacherResult>> queryTeacherByMobile(@RequestParam(value = "mobile",required = false) String mobile);
+
 
     @PostMapping("/teacher/add")
     public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher);

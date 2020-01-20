@@ -4,6 +4,8 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Teacher;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
+import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,8 +53,8 @@ public interface TeacherControllerApi {
 
     public CommonResult<Boolean> add(@RequestBody TeacherAddRequest teacher);
 
-    public CommonResult<Boolean> edit(@RequestBody Teacher teacher);
+    public CommonResult<Boolean> edit(@RequestBody TeacherEditParam teacher);
 
-    public CommonResult<Boolean> delete(Long teacherId);
+    public CommonResult<Boolean> delete(@RequestBody TeacherDeleteParam param);
 
 }

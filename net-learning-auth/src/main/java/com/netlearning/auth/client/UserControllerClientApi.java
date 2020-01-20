@@ -27,10 +27,14 @@ public interface UserControllerClientApi {
     @GetMapping("/user/query")
     public CommonResult<List<UserResult>> queryByEmail(@RequestParam(value = "email",required = false) String email,
                                                        @RequestParam(value = "password",required = false) String password);
+    @GetMapping("/user/query")
+    public CommonResult<List<UserResult>> queryUserByEmail(@RequestParam(value = "email",required = false) String email);
 
     @GetMapping("/user/query")
     public CommonResult<List<UserResult>> queryByMobile( @RequestParam(value = "mobile",required = false) String mobile,
                                                          @RequestParam(value = "password",required = false) String password);
+    @GetMapping("/user/query")
+    public CommonResult<List<UserResult>> queryUserByMobile(@RequestParam(value = "mobile",required = false) String mobile);
 
     @PostMapping("/user/add")
     public CommonResult<Boolean> add(@RequestBody UserAddRequest user);

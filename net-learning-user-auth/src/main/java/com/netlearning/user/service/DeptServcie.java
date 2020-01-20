@@ -5,6 +5,9 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Dept;
 import com.netlearning.framework.domain.userAuth.DeptParam;
+import com.netlearning.framework.domain.userAuth.param.DeptAddParam;
+import com.netlearning.framework.domain.userAuth.param.DeptDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.DeptEditParam;
 
 import java.util.List;
 
@@ -19,9 +22,9 @@ public interface DeptServcie {
 
     CommonResult<CommonPageResult<Dept>> page(DeptParam dept, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(Dept dept);
+    CommonResult<Boolean> add(DeptAddParam dept);
 
-    CommonResult<Boolean> edit(Dept dept);
+    CommonResult<Boolean> edit(DeptEditParam dept);
 
-    CommonResult<Boolean> delete(Long deptId);
+    CommonResult<Boolean> delete(DeptDeleteParam dept);
 }

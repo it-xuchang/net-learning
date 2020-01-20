@@ -3,6 +3,9 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Dept;
+import com.netlearning.framework.domain.userAuth.param.DeptAddParam;
+import com.netlearning.framework.domain.userAuth.param.DeptDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.DeptEditParam;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +35,9 @@ public interface DeptControllerApi {
                                                      @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                      @RequestParam(value = "pageSize",required = false) Integer pageSize);
 
-    public CommonResult<Boolean> add(@RequestBody Dept dept);
+    public CommonResult<Boolean> add(@RequestBody DeptAddParam dept);
 
-    public CommonResult<Boolean> edit(@RequestBody Dept dept);
+    public CommonResult<Boolean> edit(@RequestBody DeptEditParam dept);
 
-    public CommonResult<Boolean> delete(Long deptId);
+    public CommonResult<Boolean> delete(@RequestBody DeptDeleteParam dept);
 }

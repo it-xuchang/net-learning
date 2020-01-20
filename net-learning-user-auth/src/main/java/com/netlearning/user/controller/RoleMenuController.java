@@ -79,7 +79,7 @@ public class RoleMenuController implements RoleMenuControllerApi {
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(RoleMenu roleMenu){
+    public CommonResult<Boolean> delete(@RequestBody RoleMenu roleMenu){
         return roleMenuService.delete(roleMenu);
     }
 }

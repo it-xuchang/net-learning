@@ -4,6 +4,9 @@ import com.netlearning.api.userAuth.UserConfigControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.param.UserConfigAddParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.domain.userAuth.UserConfig;
@@ -27,7 +30,7 @@ public class UserConfigController implements UserConfigControllerApi {
     private UserConfigService userConfigService;
 
     @Override
-    @GetMapping("query")
+    @GetMapping("/query")
     public CommonResult<List<UserConfig>> query(@RequestParam(value = "userId",required = false) Long userId,
                                                 @RequestParam(value = "theme",required = false) String theme,
                                                 @RequestParam(value = "layout",required = false) String layout,
@@ -46,7 +49,7 @@ public class UserConfigController implements UserConfigControllerApi {
         return userConfigService.query(userConfigParam);
     }
     @Override
-    @GetMapping("page")
+    @GetMapping("/page")
     public CommonResult<CommonPageResult<UserConfig>> page(@RequestParam(value = "userId",required = false) Long userId,
                                                            @RequestParam(value = "theme",required = false) String theme,
                                                            @RequestParam(value = "layout",required = false) String layout,
@@ -73,21 +76,21 @@ public class UserConfigController implements UserConfigControllerApi {
     }
 
     @Override
-    @PostMapping("add")
-    public CommonResult<Boolean> add(@RequestBody UserConfig userConfig){
+    @PostMapping("/add")
+    public CommonResult<Boolean> add(@RequestBody UserConfigAddParam userConfig){
         return userConfigService.add(userConfig);
     }
 
     @Override
-    @PostMapping("edit")
-    public CommonResult<Boolean> edit(@RequestBody UserConfig userConfig){
+    @PostMapping("/edit")
+    public CommonResult<Boolean> edit(@RequestBody UserConfigEditParam userConfig){
         return userConfigService.edit(userConfig);
     }
 
     @Override
-    @PostMapping("delete")
-    public CommonResult<Boolean> delete(Long userId){
-        return userConfigService.delete(userId);
+    @PostMapping("/delete")
+    public CommonResult<Boolean> delete(@RequestBody UserConfigDeleteParam userConfig){
+        return userConfigService.delete(userConfig);
     }
 
 }

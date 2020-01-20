@@ -92,7 +92,7 @@ public class RoleController implements RoleControllerApi {
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest){
+    public CommonResult<Boolean> delete(@RequestBody RoleDeleteRequest roleDeleteRequest){
         return roleService.delete(roleDeleteRequest);
     }
 }

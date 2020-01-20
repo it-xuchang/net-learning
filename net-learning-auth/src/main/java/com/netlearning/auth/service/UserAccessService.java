@@ -2,6 +2,7 @@ package com.netlearning.auth.service;
 
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.auth.param.UserAccessChangePasswordParam;
+import com.netlearning.framework.domain.auth.param.UserAccessCodeParam;
 import com.netlearning.framework.domain.auth.param.UserAccessLoginParam;
 import com.netlearning.framework.domain.auth.param.UserAccessRegisterParam;
 
@@ -16,5 +17,7 @@ public interface UserAccessService {
 
     CommonResult registry(UserAccessRegisterParam param);
 
-    CommonResult changePassword(UserAccessChangePasswordParam param);
+    CommonResult forgetPassword(UserAccessChangePasswordParam param);
+
+    CommonResult getCode(UserAccessCodeParam param);
 }

@@ -12,6 +12,7 @@ import com.netlearning.framework.domain.course.TeachPlanExample;
 import com.netlearning.framework.domain.course.TeachPlanMedia;
 import com.netlearning.framework.domain.course.TeachPlanMediaExample;
 import com.netlearning.framework.domain.course.param.TeachPlanAddParam;
+import com.netlearning.framework.domain.course.param.TeachPlanDeleteParam;
 import com.netlearning.framework.domain.course.param.TeachPlanEditParam;
 import com.netlearning.framework.domain.course.param.TeachPlanQueryParam;
 import com.netlearning.framework.domain.course.result.BaseCourseTeachPlanResult;
@@ -71,14 +72,14 @@ public class TeachPlanServiceImpl implements TeachPlanService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(List<Long> ids) {
+    public CommonResult<Boolean> delete(TeachPlanDeleteParam param) {
         try {
-            if (!CollectionUtils.isEmpty(ids)){
-                TeachPlanExample example = new TeachPlanExample();
-                example.createCriteria().andTeachplanIdIn(ids);
-                teachPlanMapper.deleteByExample(example);
+            if (CollectionUtils.isEmpty(param.getTeachplanIds())){
+                return CommonResult.fail(ExceptionCode.CourseCode.CODE007.code,ExceptionCode.CourseCode.CODE007.message);
             }
-
+            TeachPlanExample example = new TeachPlanExample();
+            example.createCriteria().andTeachplanIdIn(param.getTeachplanIds());
+            teachPlanMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.CourseCode.CODE004.code,ExceptionCode.CourseCode.CODE004.message);

@@ -3,10 +3,12 @@ package com.netlearning.user.service;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
-import com.netlearning.framework.domain.userAuth.User;
 import com.netlearning.framework.domain.userAuth.UserAddRequest;
 import com.netlearning.framework.domain.userAuth.UserParam;
 import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
+import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserEditParam;
 import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 
@@ -25,9 +27,11 @@ public interface UserService {
 
     CommonResult<Boolean> add(UserAddRequest user);
 
-    CommonResult<Boolean> edit(User user);
+    CommonResult<Boolean> edit(UserEditParam user);
 
-    CommonResult<Boolean> delete(Long userId);
+    CommonResult<Boolean> delete(UserDeleteParam param);
 
     CommonResult<MyCourseResult> queryMyCourse(MyCoursQueryParam param);
+
+    CommonResult changePassword(UserChangePasswordParam param);
 }

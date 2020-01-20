@@ -11,6 +11,7 @@ import com.netlearning.framework.domain.userAuth.param.MenuDeleteParam;
 import com.netlearning.framework.domain.userAuth.param.MenuEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.MenuMapper;
@@ -122,11 +123,8 @@ public class MenuServiceImpl implements MenuService {
         try {
             MenuExample example = new MenuExample();
             MenuExample.Criteria criteria = example.createCriteria();
-            if (menuDeleteParam.getMenuId() != null){
-                criteria.andMenuIdEqualTo(menuDeleteParam.getMenuId());
-            }
-            if (menuDeleteParam.getParentId() != null){
-                criteria.andParentIdEqualTo(menuDeleteParam.getParentId());
+            if (CollectionUtils.isEmpty(menuDeleteParam.getMenuIds())){
+                criteria.andMenuIdIn(menuDeleteParam.getMenuIds());
             }
             menuMapper.deleteByExample(example);
             return CommonResult.success(true);

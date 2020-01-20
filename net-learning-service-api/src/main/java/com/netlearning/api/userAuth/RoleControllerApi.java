@@ -39,5 +39,5 @@ public interface RoleControllerApi {
 
     public CommonResult<Boolean> edit(@RequestBody RoleEditRequest roleEditRequest);
 
-    public CommonResult<Boolean> delete(RoleDeleteRequest roleDeleteRequest);
+    public CommonResult<Boolean> delete(@RequestBody RoleDeleteRequest roleDeleteRequest);
 }

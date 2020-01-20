@@ -4,6 +4,8 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.User;
 import com.netlearning.framework.domain.userAuth.UserAddRequest;
+import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserEditParam;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,7 +52,7 @@ public interface UserControllerApi {
 
     public CommonResult<Boolean> add(@RequestBody UserAddRequest user);
 
-    public CommonResult<Boolean> edit(@RequestBody User user);
+    public CommonResult<Boolean> edit(@RequestBody UserEditParam user);
 
-    public CommonResult<Boolean> delete(Long userId);
+    public CommonResult<Boolean> delete(@RequestBody UserDeleteParam param);
 }

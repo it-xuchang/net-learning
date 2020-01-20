@@ -54,6 +54,11 @@ public class ExceptionCode {
         CODE018("CODE018" , "名称已存在"),
         CODE019("CODE019" , "邮箱已存在"),
         CODE020("CODE020" , "手机号已存在"),
+        CODE021("CODE021" , "密码不允许为空"),
+        CODE022("CODE022" , "账号或密码错误"),
+        CODE023("CODE023" , "账号被锁定"),
+        CODE024("CODE024" , "新旧密码一致"),
+        CODE025("CODE025" , "输入密码一致"),
         ;
         public final String code;
         public final String message;
@@ -83,6 +88,12 @@ public class ExceptionCode {
         CODE009("CODE009" , "用户类型有误"),
         CODE010("CODE010" , "用户角色有误"),
         CODE011("CODE011" , "用户角色资源有误"),
+        CODE012("CODE012" , "请输入正确的手机号或者邮箱"),
+        CODE013("CODE013" , "请输入验证码"),
+        CODE014("CODE014" , "请获取验证码"),
+        CODE015("CODE015" , "验证码输入有误"),
+        CODE016("CODE016" , "账号不存在，请注册"),
+        CODE017("CODE016" , "修改密码错误"),
         ;
         public final String code;
         public final String message;

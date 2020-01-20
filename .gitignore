@@ -1,5 +1,5 @@
 **/nb-*
-target
+/target/
 bin
 bak
 .pmd
@@ -21,3 +21,4 @@ logs
 /.metadata/
 
 /.metadata/
+/.idea/

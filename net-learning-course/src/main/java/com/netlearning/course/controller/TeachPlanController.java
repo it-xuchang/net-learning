@@ -5,6 +5,7 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.course.param.TeachPlanAddParam;
+import com.netlearning.framework.domain.course.param.TeachPlanDeleteParam;
 import com.netlearning.framework.domain.course.param.TeachPlanEditParam;
 import com.netlearning.framework.domain.course.param.TeachPlanQueryParam;
 import com.netlearning.framework.domain.course.result.BaseCourseTeachPlanResult;
@@ -72,9 +73,9 @@ public class TeachPlanController {
     }
 
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(List<Long> ids){
+    public CommonResult<Boolean> delete(@RequestBody TeachPlanDeleteParam param){
 
-        return teachPlanService.delete(ids);
+        return teachPlanService.delete(param);
     }
 
 

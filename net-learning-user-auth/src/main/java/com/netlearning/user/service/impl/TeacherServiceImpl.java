@@ -3,7 +3,11 @@ package com.netlearning.user.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
+import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
+import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
+import com.netlearning.framework.em.FileConstants;
 import com.netlearning.user.client.FileRecordControllerClientApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
@@ -105,7 +109,7 @@ public class TeacherServiceImpl implements TeacherService {
         Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(teacherIds)){
             //调用文件系统是微服务
-            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds);
+            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds, FileConstants.IsAvatar.AVATAR.getCode());
             List<FileRecordImagesResult> fileRecordResultList = fileRecordImagesResult.getData();
             for (FileRecordImagesResult fileRecord : fileRecordResultList){
                 if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())){
@@ -181,7 +185,7 @@ public class TeacherServiceImpl implements TeacherService {
         Map<Long,FileRecordResult> fileRecordResultMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(teacherIds)){
             //调用文件系统是微服务
-            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds);
+            CommonResult<List<FileRecordImagesResult>> fileRecordImagesResult =  fileRecordImagesControllerClientApi.query(teacherIds,FileConstants.IsAvatar.AVATAR.getCode());
             List<FileRecordImagesResult> fileRecordResultList = fileRecordImagesResult.getData();
             for (FileRecordImagesResult fileRecord : fileRecordResultList){
                 if (!fileRecordResultMap.containsKey(fileRecord.getRecord().getFromSystemId())){
@@ -262,17 +266,23 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
-    public CommonResult<Boolean> edit(Teacher teacher) {
+    public CommonResult<Boolean> edit(TeacherEditParam teacher) {
         try {
             if (!UserAuthConstants.UserType.userTypeList().contains(teacher.getStatus())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
             }
-            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacher.getSsex())){
+            if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacher.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
-            teacher.setModifyTime(new Date());
-            teacher.setPassword(MD5Util.getStringMD5(teacher.getPassword()));
-            teacherMapper.updateByPrimaryKeySelective(teacher);
+            Teacher record = new Teacher();
+            BeanCopyUtils.copyProperties(teacher,record);
+            record.setModifyTime(new Date());
+            if (StringUtils.isEmpty(teacher.getSex())){
+                record.setSsex(UserAuthConstants.UserSexType.NON.getCode());
+            }else {
+                record.setSsex(teacher.getSex());
+            }
+            teacherMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE003.code,ExceptionCode.UserAuthCode.CODE003.message);
@@ -280,9 +290,20 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long teacherId) {
+    public CommonResult<Boolean> delete(TeacherDeleteParam param) {
         try {
-            teacherMapper.deleteByPrimaryKey(teacherId);
+            if (param.getTeacherId() == null && CollectionUtils.isEmpty(param.getTeacherIds()) ){
+                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+            }
+            TeacherExample example = new TeacherExample();
+            TeacherExample.Criteria criteria = example.createCriteria();
+            if (param.getTeacherId() != null){
+                criteria.andTeacherIdEqualTo(param.getTeacherId());
+            }
+            if (!CollectionUtils.isEmpty(param.getTeacherIds())){
+                criteria.andTeacherIdIn(param.getTeacherIds());
+            }
+            teacherMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);
@@ -391,5 +412,42 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         return CommonResult.success(teacherRecommendationResults);
+    }
+
+    @Transactional
+    @Override
+    public CommonResult changePassword(UserChangePasswordParam param) {
+        //输入密码是否一致
+        if (StringUtils.equals(param.getNewPassword(),param.getOldPassword())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE025.code,ExceptionCode.UserAuthCode.CODE025.message);
+        }
+        TeacherExample example = new TeacherExample();
+        TeacherExample.Criteria criteria =example.createCriteria();
+        if (!StringUtils.isEmpty(param.getMobile())){
+            criteria.andMobileEqualTo(param.getMobile());
+        }
+        if (!StringUtils.isEmpty(param.getEmail())){
+            criteria.andEmailEqualTo(param.getEmail());
+        }
+        if (!StringUtils.isEmpty(param.getOldPassword())){
+            criteria.andPasswordEqualTo(MD5Util.getStringMD5(param.getOldPassword()));
+        }
+        List<Teacher> teacherList = teacherMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(teacherList)){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE022.code,ExceptionCode.UserAuthCode.CODE022.message);
+        }
+        Teacher teacher = teacherList.get(0);
+        if (StringUtils.equals(teacher.getStatus(),UserAuthConstants.UserType.DOWN.getCode())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE023.code,ExceptionCode.UserAuthCode.CODE023.message);
+        }
+        //新旧密码是否一致
+        if (StringUtils.equals(teacher.getPassword(),MD5Util.getStringMD5(param.getNewPassword()))){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE024.code,ExceptionCode.UserAuthCode.CODE024.message);
+        }
+        Teacher record = new Teacher();
+        record.setPassword(MD5Util.getStringMD5(param.getNewPassword()));
+        record.setTeacherId(teacher.getTeacherId());
+        teacherMapper.updateByPrimaryKeySelective(record);
+        return CommonResult.success(true);
     }
 }

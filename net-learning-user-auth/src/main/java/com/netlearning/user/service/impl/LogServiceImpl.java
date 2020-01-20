@@ -5,7 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.param.LogAddParam;
+import com.netlearning.framework.domain.userAuth.param.LogDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.LogEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
+import com.netlearning.framework.snowflake.SequenceService;
+import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.DateUtils;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.mapper.LogMapper;
@@ -31,6 +36,8 @@ import java.util.List;
 public class LogServiceImpl implements LogService {
     @Autowired
     private LogMapper logMapper;
+    @Autowired
+    private SequenceService sequenceService;
     @Override
     public CommonResult<List<Log>> query(LogParam logParam) {
         LogExample example = new LogExample();
@@ -87,11 +94,12 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public CommonResult<Boolean> add(Log log) {
+    public CommonResult<Boolean> add(LogAddParam param) {
         try {
             LogWithBLOBs record = new LogWithBLOBs();
-            BeanUtils.copyProperties(log,record);
-            log.setCreateTime(new Date());
+            BeanUtils.copyProperties(param,record);
+            record.setId(sequenceService.nextValue(null));
+            record.setCreateTime(new Date());
             logMapper.insertSelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
@@ -100,10 +108,10 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public CommonResult<Boolean> edit(Log log) {
+    public CommonResult<Boolean> edit(LogEditParam param) {
         try {
             LogWithBLOBs record = new LogWithBLOBs();
-            BeanUtils.copyProperties(log,record);
+            BeanUtils.copyProperties(param,record);
             logMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
@@ -112,9 +120,14 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public CommonResult<Boolean> delete(Long id) {
+    public CommonResult<Boolean> delete(LogDeleteParam param) {
         try {
-            logMapper.deleteByPrimaryKey(id);
+            LogExample example = new LogExample();
+            LogExample.Criteria criteria = example.createCriteria();
+            if (CollectionUtils.isEmpty(param.getIds())){
+                criteria.andIdIn(param.getIds());
+            }
+            logMapper.deleteByExample(example);
             return CommonResult.success(true);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE004.code,ExceptionCode.UserAuthCode.CODE004.message);

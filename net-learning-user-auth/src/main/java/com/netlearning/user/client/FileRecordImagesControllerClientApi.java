@@ -22,5 +22,7 @@ public interface FileRecordImagesControllerClientApi {
     @GetMapping("/file/record/images/query")
     public CommonResult<List<FileRecordImagesResult>> query(@RequestParam(value = "fromSystemIds",required = false) List<Long> fromSystemIds);
 
-
+    @GetMapping("/file/record/images/query")
+    public CommonResult<List<FileRecordImagesResult>> query(@RequestParam(value = "fromSystemIds",required = false) List<Long> fromSystemIds,
+                                                            @RequestParam(value = "isDefaultIcon",required = false) String isDefaultIcon);
 }

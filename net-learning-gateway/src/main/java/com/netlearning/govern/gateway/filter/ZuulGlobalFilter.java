@@ -52,8 +52,8 @@ public class ZuulGlobalFilter extends ZuulFilter {
         paths = new ArrayList<>();
         paths.add("/ams/user/access/login");
         paths.add("/ams/user/access/register");
-        paths.add("/ams/user/access/change/password");
-        paths.add("/ui/**");
+        paths.add("/ams/user/access/forget/password");
+        paths.add("/ams/user/access/get/code");
         paths.add("/**/swagger**/**");
         paths.add("/**/v2/api-docs");
         paths.add("/**/*.css");
@@ -108,8 +108,12 @@ public class ZuulGlobalFilter extends ZuulFilter {
         return uri;
     }
 
-    //过虑器的内容
-    //测试的需求：过虑所有请求，判断头部信息是否有名称为token的cookie，如果没有则拒绝访问，否则转发到微服务。
+    /**
+     * 过虑器的内容
+     * 过虑所有请求，判断头部信息是否有名称为token的cookie，如果没有则拒绝访问，否则转发到微服务。
+     * @return Object
+     * @throws ZuulException
+     */
     @Override
     public Object run() throws ZuulException {
         RequestContext currentContext = RequestContext.getCurrentContext();
@@ -158,7 +162,6 @@ public class ZuulGlobalFilter extends ZuulFilter {
      * @param response
      */
     private void accessDenied(RequestContext currentContext,HttpServletResponse response){
-
         //拒绝访问
         currentContext.setSendZuulResponse(false);
         //设置响应代码
@@ -178,7 +181,6 @@ public class ZuulGlobalFilter extends ZuulFilter {
      * @param response
      */
     private void permissionDenied(RequestContext currentContext,HttpServletResponse response){
-
         //拒绝访问
         currentContext.setSendZuulResponse(false);
         //设置响应代码

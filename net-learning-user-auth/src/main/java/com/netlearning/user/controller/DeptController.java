@@ -4,6 +4,9 @@ import com.netlearning.api.userAuth.DeptControllerApi;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.domain.userAuth.param.DeptAddParam;
+import com.netlearning.framework.domain.userAuth.param.DeptDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.DeptEditParam;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -73,7 +76,7 @@ public class DeptController implements DeptControllerApi {
 
     @Override
     @PostMapping("/add")
-    public CommonResult<Boolean> add(@RequestBody Dept dept){
+    public CommonResult<Boolean> add(@RequestBody DeptAddParam dept){
         if (StringUtils.isEmpty(dept.getDeptName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }
@@ -82,7 +85,7 @@ public class DeptController implements DeptControllerApi {
 
     @Override
     @PostMapping("/edit")
-    public CommonResult<Boolean> edit(@RequestBody Dept dept){
+    public CommonResult<Boolean> edit(@RequestBody DeptEditParam dept){
         if (StringUtils.isEmpty(dept.getDeptName())){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
         }
@@ -94,7 +97,7 @@ public class DeptController implements DeptControllerApi {
 
     @Override
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(Long deptId){
-        return deptServcie.delete(deptId);
+    public CommonResult<Boolean> delete(@RequestBody DeptDeleteParam dept){
+        return deptServcie.delete(dept);
     }
 }

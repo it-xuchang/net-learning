@@ -13,6 +13,6 @@ public class UserAccessChangePasswordParam {
     private String userType;
     private String userAccount;
     private String userAccountType;
-    private String originalPassword;
-    private String newPassword;
+    private String password;
+    private String code;
 }

@@ -38,11 +38,32 @@ public interface FileConstants {
             return typeList;
         }
     }
+    enum IsAvatar {
+        AVATAR("0", "用户头像"),
+        NON_AVATAR("1", "非用户头像"),
+        ;
+        private String code;
+        private String message;
+
+        IsAvatar(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
     enum FileType {
         IMAGES("0", "图片"),
         DOCUMENT("1", "文档"),
         MEDIA("2", "视频"),
         OTHER("3", "其他"),
+        AVATAR("4", "头像"),
         ;
 
         private String code;

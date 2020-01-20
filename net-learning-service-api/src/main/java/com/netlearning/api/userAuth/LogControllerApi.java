@@ -3,6 +3,9 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.Log;
+import com.netlearning.framework.domain.userAuth.param.LogAddParam;
+import com.netlearning.framework.domain.userAuth.param.LogDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.LogEditParam;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,10 +38,10 @@ public interface LogControllerApi {
                                                     @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                     @RequestParam(value = "pageSize",required = false) Integer pageSize);
 
-    public CommonResult<Boolean> add(@RequestBody Log log);
+    public CommonResult<Boolean> add(@RequestBody LogAddParam param);
 
-    public CommonResult<Boolean> edit(@RequestBody Log log);
+    public CommonResult<Boolean> edit(@RequestBody LogEditParam param);
 
-    public CommonResult<Boolean> delete(Long id);
+    public CommonResult<Boolean> delete(@RequestBody LogDeleteParam param);
 
 }

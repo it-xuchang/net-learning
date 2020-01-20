@@ -3,6 +3,9 @@ package com.netlearning.api.userAuth;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.UserConfig;
+import com.netlearning.framework.domain.userAuth.param.UserConfigAddParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigDeleteParam;
+import com.netlearning.framework.domain.userAuth.param.UserConfigEditParam;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,9 +39,9 @@ public interface UserConfigControllerApi {
                                                            @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                            @RequestParam(value = "pageSize",required = false) Integer pageSize);
 
-    public CommonResult<Boolean> add(@RequestBody UserConfig userConfig);
+    public CommonResult<Boolean> add(@RequestBody UserConfigAddParam userConfig);
 
-    public CommonResult<Boolean> edit(@RequestBody UserConfig userConfig);
+    public CommonResult<Boolean> edit(@RequestBody UserConfigEditParam userConfig);
 
-    public CommonResult<Boolean> delete(Long userId);
+    public CommonResult<Boolean> delete(@RequestBody UserConfigDeleteParam userConfig);
 }

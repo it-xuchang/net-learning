@@ -17,7 +17,7 @@ public class UserAddRequest {
 
     private String mobile;
 
-    private String ssex;
+    private String sex;
 
     private String description;
 
