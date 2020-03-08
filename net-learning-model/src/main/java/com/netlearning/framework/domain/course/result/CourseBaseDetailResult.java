@@ -3,6 +3,7 @@ package com.netlearning.framework.domain.course.result;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.netlearning.framework.domain.userAuth.Teacher;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import lombok.Data;
 
 @Data
@@ -18,7 +19,7 @@ public class CourseBaseDetailResult {
     private String category;
     private String subCategory;
     private Double courseCountTime;
-    private Teacher teacher;
+    private TeacherResult teacher;
     private Double courseAssessmentGrade;
     private BaseCourseTeachPlanResult courseTeachPlan;
 

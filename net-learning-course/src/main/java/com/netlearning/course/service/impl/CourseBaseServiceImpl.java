@@ -2,9 +2,7 @@ package com.netlearning.course.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.netlearning.course.client.FileRecordControllerClientApi;
-import com.netlearning.course.client.FileRecordImagesControllerClientApi;
-import com.netlearning.course.client.TeacherControllerClientApi;
+import com.netlearning.course.client.*;
 import com.netlearning.course.mapper.*;
 import com.netlearning.course.service.CourseBaseService;
 import com.netlearning.framework.base.CommonPageInfo;
@@ -12,22 +10,21 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
 import com.netlearning.framework.domain.course.*;
-import com.netlearning.framework.domain.course.param.CourseBaseAddParam;
-import com.netlearning.framework.domain.course.param.CourseBaseDeleteParam;
-import com.netlearning.framework.domain.course.param.CourseBaseEditParam;
-import com.netlearning.framework.domain.course.param.CourseBaseQueryParam;
+import com.netlearning.framework.domain.course.param.*;
 import com.netlearning.framework.domain.course.result.*;
 import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
+import com.netlearning.framework.domain.fss.result.FileRecordResourcesResult;
 import com.netlearning.framework.domain.fss.result.FileRecordResult;
-import com.netlearning.framework.domain.userAuth.Teacher;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
+import com.netlearning.framework.domain.userAuth.result.UserResult;
 import com.netlearning.framework.em.CourseConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.StringUtils;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +57,16 @@ public class CourseBaseServiceImpl implements CourseBaseService {
     private FileRecordControllerClientApi fileRecordControllerClientApi;
     @Autowired
     private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
+    @Autowired
+    private FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
+    @Autowired
+    private CourseQuziMapper courseQuziMapper;
+    @Autowired
+    private UserControllerClientApi userControllerClientApi;
+    @Autowired
+    private FileRecordResourcesControllerClientApi fileRecordResourcesControllerClientApi;
+    @Autowired
+    private TeachPlanMediaMapper teachPlanMediaMapper;
     @Override
     public CommonResult<List<CourseBaseResult>> query(CourseBaseQueryParam param) {
         CourseBaseExample example = new CourseBaseExample();
@@ -83,8 +90,28 @@ public class CourseBaseServiceImpl implements CourseBaseService {
             criteria.andCourseIdIn(param.getCouresIds());
         }
 
-        List<CourseBase> courseBaseList = courseBaseMapper.selectByExample(example);
+        List<CourseBase> courseBaseList = courseBaseMapper.selectByExampleWithBLOBs(example);
+        List<Long> courseIds = new ArrayList<>();
+        for (CourseBase courseBase : courseBaseList){
+            if (!courseIds.contains(courseBase.getCourseId())){
+                courseIds.add(courseBase.getCourseId());
+            }
+        }
+        Map<Long,String> courseImagesMap = new HashMap<>();
+        CommonResult<List<FileRecordImagesResult>> fileResordImagesResult = fileRecordImagesControllerClientApi.query(courseIds);
+        if (fileResordImagesResult.isSuccess()){
+            for (FileRecordImagesResult fileRecordImages : fileResordImagesResult.getData()){
+                if (!courseImagesMap.containsKey(fileRecordImages.getFromSystemId())){
+                    courseImagesMap.put(fileRecordImages.getFromSystemId(),fileRecordImages.getRecord().getFileAbsolutePath());
+                }
+            }
+        }
         List<CourseBaseResult> courseBaseResults = BeanCopyUtils.copy(courseBaseList,CourseBaseResult.class);
+        for (CourseBaseResult courseBase : courseBaseResults){
+            if (courseImagesMap.containsKey(courseBase.getCourseId())){
+                courseBase.setCourseImageUrl(courseImagesMap.get(courseBase.getCourseId()));
+            }
+        }
         return CommonResult.success(courseBaseResults);
     }
 
@@ -108,44 +135,79 @@ public class CourseBaseServiceImpl implements CourseBaseService {
             criteria.andCategoryEqualTo(param.getCategory());
         }
         PageHelper.startPage(commonPageInfo.getPageNum(),commonPageInfo.getPageSize());
-        Page<CourseBase> courseBaseList = (Page<CourseBase>) courseBaseMapper.selectByExample(example);
+        Page<CourseBase> courseBaseList = (Page<CourseBase>) courseBaseMapper.selectByExampleWithBLOBs(example);
         List<CourseBaseResult> courseBaseResults = BeanCopyUtils.copy(courseBaseList,CourseBaseResult.class);
+        List<Long> courseIds = new ArrayList<>();
+        for (CourseBaseResult courseBase : courseBaseResults){
+            if (!courseIds.contains(courseBase.getCourseId())){
+                courseIds.add(courseBase.getCourseId());
+            }
+        }
+        Map<Long,String> courseImagesMap = new HashMap<>();
+        CommonResult<List<FileRecordImagesResult>> fileResordImagesResult = fileRecordImagesControllerClientApi.query(courseIds);
+        if (fileResordImagesResult.isSuccess()){
+            for (FileRecordImagesResult fileRecordImages : fileResordImagesResult.getData()){
+                if (!courseImagesMap.containsKey(fileRecordImages.getFromSystemId())){
+                    courseImagesMap.put(fileRecordImages.getFromSystemId(),fileRecordImages.getRecord().getFileAbsolutePath());
+                }
+            }
+        }
+        for (CourseBaseResult courseBase : courseBaseResults){
+            if (courseImagesMap.containsKey(courseBase.getCourseId())){
+                courseBase.setCourseImageUrl(courseImagesMap.get(courseBase.getCourseId()));
+            }
+        }
         CommonPageResult<CourseBaseResult> result = CommonPageResult.build(courseBaseResults,commonPageInfo,courseBaseList.getTotal());
         return CommonResult.success(result);
     }
 
     @Override
-    public CommonResult<Boolean> add(CourseBaseAddParam request) {
-        CourseBase record = new CourseBase();
-        BeanCopyUtils.copyProperties(request,record);
-        record.setCourseId(sequenceService.nextValue(null));
-        courseBaseMapper.insertSelective(record);
-        return CommonResult.success(true);
+    @Transactional
+    public CommonResult add(CourseBaseAddParam request) {
+        try {
+            CourseBase record = new CourseBase();
+            BeanCopyUtils.copyProperties(request,record);
+            record.setCourseId(sequenceService.nextValue(null));
+            record.setStatus(CourseConstants.CourseType.UPLOAD_IMAGES.getCode());
+            courseBaseMapper.insertSelective(record);
+            return CommonResult.success(record);
+        }catch (Exception e){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE002.code,ExceptionCode.CourseCode.CODE002.message);
+        }
+
     }
 
     @Override
     public CommonResult<Boolean> edit(CourseBaseEditParam request) {
-        CourseBase record = new CourseBase();
-        BeanCopyUtils.copyProperties(request,record);
-        courseBaseMapper.updateByPrimaryKeySelective(record);
-        return null;
-    }
+        try {
+            CourseBase record = new CourseBase();
+            BeanCopyUtils.copyProperties(request,record);
+            courseBaseMapper.updateByPrimaryKeySelective(record);
+            return CommonResult.success(true);
+        }catch (Exception e){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE003.code,ExceptionCode.CourseCode.CODE003.message);
+        }
 
+    }
+    @Transactional
     @Override
     public CommonResult<Boolean> delete(CourseBaseDeleteParam request) {
-        CourseBaseExample example = new CourseBaseExample();
-        CourseBaseExample.Criteria criteria = example.createCriteria();
-        if (!CollectionUtils.isEmpty(request.getCourseIds())){
-            criteria.andCourseIdIn(request.getCourseIds());
+
+        try {
+            TeachPlanExample teachPlanExample = new TeachPlanExample();
+            teachPlanExample.createCriteria().andCourseIdEqualTo(String.valueOf(request.getCourseId()));
+            teachPlanMapper.deleteByExample(teachPlanExample);
+            FrequentlyAskedQuestionExample frequentlyAskedQuestionExample = new FrequentlyAskedQuestionExample();
+            frequentlyAskedQuestionExample.createCriteria().andCourseIdEqualTo(request.getCourseId());
+            frequentlyAskedQuestionMapper.deleteByExample(frequentlyAskedQuestionExample);
+            CourseQuziExample courseQuziExample = new CourseQuziExample();
+            courseQuziExample.createCriteria().andCourseIdEqualTo(request.getCourseId());
+            courseQuziMapper.deleteByExample(courseQuziExample);
+            courseBaseMapper.deleteByPrimaryKey(request.getCourseId());
+            return CommonResult.success(true);
+        }catch (Exception e){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE004.code,ExceptionCode.CourseCode.CODE004.message);
         }
-        if (request.getCourseId() != null){
-            criteria.andCourseIdEqualTo(request.getCourseId());
-        }
-        if (request.getTeacherId()!= null){
-            criteria.andTeacherIdEqualTo(request.getTeacherId());
-        }
-        courseBaseMapper.deleteByExample(example);
-        return CommonResult.success(true);
     }
 
     @Override
@@ -364,12 +426,340 @@ public class CourseBaseServiceImpl implements CourseBaseService {
         courseBaseDetailResult.setCourseAssessmentGrade(courseAssessmentGrade/allUserAssessmentGrade.size());
         //课程教师
         Long teacherId = courseBaseList.get(0).getTeacherId();
-        CommonResult<List<Teacher>> teacherResult = teacherControllerClientApi.query(teacherId);
+        CommonResult<List<TeacherResult>> teacherResult = teacherControllerClientApi.query(teacherId);
         if (teacherResult.isSuccess() && !CollectionUtils.isEmpty(teacherResult.getData())){
-            Teacher teacher = teacherResult.getData().get(0);
+            TeacherResult teacher = teacherResult.getData().get(0);
             courseBaseDetailResult.setTeacher(teacher);
         }
 
         return CommonResult.success(courseBaseDetailResult);
+    }
+
+    @Override
+    public CommonResult<CourseAllDetailResult> queryCourseAllDetail(CourseAllDetailParam param) {
+        CourseAllDetailResult courseAllDetailResult = new CourseAllDetailResult();
+
+        //获取课程信息
+        CourseBaseResult courseBaseResult = this.getCourseResult(param);
+        courseAllDetailResult.setCourseBaseResult(courseBaseResult);
+        //获取教师信息
+        TeacherResult teacherResult = this.getTeacherResult(param,courseBaseResult);
+        courseAllDetailResult.setTeacherResult(teacherResult);
+        //获取分类信息
+        CategoryResult categoryResult = this.getCategoryResult(param,courseBaseResult);
+        courseAllDetailResult.setCategoryResult(categoryResult);
+        //获取教学计划
+        List<TeachPlan> teachPlans = this.getTeachPlan(param,courseBaseResult);
+        List<TeachPlanResult> teachPlanResults = this.getTeachPlanResult(teachPlans);
+        courseAllDetailResult.setTeachPlans(teachPlanResults);
+        List<Double> allTeachPlanTime = new ArrayList<>();
+        Double countTeachPlanTime = 0.0;
+        for (TeachPlan teachPlan : teachPlans){
+            if (teachPlan.getTimeLength() != null){
+                allTeachPlanTime.add(teachPlan.getTimeLength());
+            }
+        }
+        for (Double time : allTeachPlanTime){
+            countTeachPlanTime += time;
+        }
+        courseAllDetailResult.setCourseCountTime(countTeachPlanTime);
+        //获取常见问题
+        List<FrequentlyAskedQuestionResult> frequentlyAskedQuestionResults = this.getFrequentAskedQuestionResult(param);
+        courseAllDetailResult.setFrequentlyAskedQuestionResults(frequentlyAskedQuestionResults);
+        //获取课程评价
+        List<CourseAssessmentResult> courseAssessmentResults = this.getCourseAssessmentResult(param);
+        courseAllDetailResult.setCourseAssessmentResults(courseAssessmentResults);
+        List<Double> allUserAssessmentGrade = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(courseAssessmentResults)){
+            for (CourseAssessmentResult courseAssessment : courseAssessmentResults){
+                if (courseAssessment.getCourseAssessmentGrade() != null){
+                    allUserAssessmentGrade.add(courseAssessment.getCourseAssessmentGrade());
+                }
+            }
+        }
+        Double courseAssessmentGrade = 0.0;
+        for (Double grade : allUserAssessmentGrade){
+            courseAssessmentGrade += grade;
+        }
+        if (!CollectionUtils.isEmpty(allUserAssessmentGrade)){
+            courseAssessmentGrade = courseAssessmentGrade/allUserAssessmentGrade.size();
+        }
+        courseAllDetailResult.setCourseAssessmentGrade(courseAssessmentGrade);
+        //获取课程问答
+        List<CourseQuziResult> courseQuziResults = this.getCourseQuziResult(param);
+        courseAllDetailResult.setCourseQuziResults(courseQuziResults);
+
+        //查询课程学习是否存在
+        LearningCourseExample example = new LearningCourseExample();
+        LearningCourseExample.Criteria criteria = example.createCriteria();
+        if (param.getCourseId() != null){
+            criteria.andCourseIdEqualTo(param.getCourseId());
+        }
+        if (param.getUserId() != null){
+            criteria.andUserIdEqualTo(param.getUserId());
+        }
+        List<LearningCourse> learningCourseList = learningCourseMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(learningCourseList)){
+            courseAllDetailResult.setLearning(true);
+        }
+        return CommonResult.success(courseAllDetailResult);
+    }
+
+    @Override
+    @Transactional
+    public CommonResult<Boolean> changeStatus(CourseBaseEditParam request) {
+        try {
+            CourseBase record = new CourseBase();
+            BeanCopyUtils.copyProperties(request,record);
+            courseBaseMapper.updateByPrimaryKeySelective(record);
+            return CommonResult.success(true);
+        }catch (Exception e){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE002.code,ExceptionCode.CourseCode.CODE002.message);
+        }
+    }
+
+    private List<TeachPlanResult> getTeachPlanResult(List<TeachPlan> teachPlans) {
+        List<TeachPlanResult> results = BeanCopyUtils.copy(teachPlans,TeachPlanResult.class);
+        List<Long> teachplanIds = new ArrayList<>();
+
+        for (TeachPlanResult teachPlan : results){
+            if (!teachplanIds.contains(teachPlan.getTeachplanId())){
+                teachplanIds.add(teachPlan.getTeachplanId());
+            }
+        }
+        Map<Long,List<TeachPlanMedia>> teachplanMediaMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(teachplanIds)){
+            TeachPlanMediaExample example = new TeachPlanMediaExample();
+           TeachPlanMediaExample.Criteria criteria = example.createCriteria();
+           criteria.andTeachplanIdIn(teachplanIds);
+
+            List<TeachPlanMedia> teachPlanMediaList = teachPlanMediaMapper.selectByExample(example);
+            for (TeachPlanMedia teachPlanMedia : teachPlanMediaList){
+                if (teachplanMediaMap.containsKey(teachPlanMedia.getTeachplanId())){
+                    teachplanMediaMap.get(teachPlanMedia.getTeachplanId()).add(teachPlanMedia);
+                }else {
+                    List<TeachPlanMedia> list = new ArrayList<>();
+                    list.add(teachPlanMedia);
+                    teachplanMediaMap.put(teachPlanMedia.getTeachplanId(),list);
+                }
+            }
+        }
+
+//        for (TeachPlanResult teachPlan : results){
+//            if (teachplanMediaMap.containsKey(teachPlan.getTeachplanId())){
+//                teachPlan.setMediaUrl(teachplanMediaMap.get(teachPlan.getTeachplanId()).getMediaUrl());
+//            }
+//        }
+        return getTreeTeachPlan(results,teachplanMediaMap);
+    }
+    /**
+     * 教学计划--教学资源
+     * @param teachPlanResults
+     * @param teachPlanMediaMap
+     * @return
+     */
+    private List<TeachPlanResult> getTreeTeachPlan(List<TeachPlanResult> teachPlanResults,
+                                                   Map<Long, List<TeachPlanMedia>> teachPlanMediaMap){
+        List<TeachPlanResult> results = new ArrayList<>();
+        //第一层
+        Map<Long,TeachPlanResult> oneTree = new HashMap<>();
+        for (TeachPlanResult teachPlanResult : teachPlanResults){
+            if (teachPlanMediaMap.containsKey(teachPlanResult.getTeachplanId())){
+                List<TeachPlanMediaResult> list = BeanCopyUtils.copy(teachPlanMediaMap.get(teachPlanResult.getTeachplanId()),TeachPlanMediaResult.class);
+                teachPlanResult.setTeachPlanMediaResults(list);
+            }
+
+            if (teachPlanResult.getParentId() == null){
+                if (!oneTree.containsKey(teachPlanResult.getTeachplanId())){
+                    oneTree.put(teachPlanResult.getTeachplanId(),teachPlanResult);
+                }
+            }
+        }
+        //第二层
+        Map<Long,List<TeachPlanResult>> twoTree = new HashMap<>();
+        for (TeachPlanResult teachPlanResult : teachPlanResults){
+            if (oneTree.containsKey(teachPlanResult.getParentId())){
+                if (twoTree.containsKey(teachPlanResult.getParentId())){
+                    twoTree.get(teachPlanResult.getParentId()).add(teachPlanResult);
+                }else {
+                    List<TeachPlanResult> list = new ArrayList<>();
+                    list.add(teachPlanResult);
+                    twoTree.put(teachPlanResult.getParentId(),list);
+                }
+            }
+        }
+        //第三层
+        Map<Long,List<TeachPlanResult>> threeTree = new HashMap<>();
+        for (Map.Entry<Long,List<TeachPlanResult>> twoEntey : twoTree.entrySet()){
+            List<TeachPlanResult> twoTreeVlaue = twoEntey.getValue();
+            for (TeachPlanResult twoMenu : twoTreeVlaue){
+                Long twoKey = twoMenu.getTeachplanId();
+                for (TeachPlanResult teachPlanResult : teachPlanResults){
+                    if (twoKey.equals(teachPlanResult.getParentId())){
+                        if (threeTree.containsKey(twoKey)){
+                            threeTree.get(twoKey).add(teachPlanResult);
+                        }else {
+                            List<TeachPlanResult> list = new ArrayList<>();
+                            list.add(teachPlanResult);
+                            threeTree.put(twoKey,list);
+                        }
+                    }
+                }
+            }
+        }
+        //封装返回
+        for (Map.Entry<Long,TeachPlanResult> oneEntry : oneTree.entrySet()){
+            TeachPlanResult oneTreeMenu = new TeachPlanResult();
+            Long oneKey = oneEntry.getKey();
+            TeachPlanResult oneValue = oneEntry.getValue();
+            BeanCopyUtils.copyProperties(oneValue,oneTreeMenu);
+            if (twoTree.containsKey(oneKey)){
+                List<TeachPlanResult> twoMenus = twoTree.get(oneKey);
+                List<TeachPlanResult> twoMenuItems = BeanCopyUtils.copy(twoMenus,TeachPlanResult.class);
+                if (CollectionUtils.isEmpty(twoMenuItems)){
+                    oneTreeMenu.setSubTeachPlanResult(new ArrayList<>());
+                }else {
+                    oneTreeMenu.setSubTeachPlanResult(twoMenuItems);
+                }
+
+                for (TeachPlanResult twoMenu : twoMenuItems){
+                    if (threeTree.containsKey(twoMenu.getTeachplanId())){
+                        List<TeachPlanResult> threeMenus = threeTree.get(twoMenu.getTeachplanId());
+                        List<TeachPlanResult> threeMenuItems = BeanCopyUtils.copy(threeMenus,TeachPlanResult.class);
+                        if (CollectionUtils.isEmpty(threeMenuItems)){
+                            twoMenu.setSubTeachPlanResult(new ArrayList<>());
+                        }else {
+                            twoMenu.setSubTeachPlanResult(threeMenuItems);
+                        }
+
+                    }
+                }
+            }else {
+                oneTreeMenu.setSubTeachPlanResult(new ArrayList<>());
+            }
+            results.add(oneTreeMenu);
+        }
+
+
+        return results;
+    }
+    private CategoryResult getCategoryResult(CourseAllDetailParam param, CourseBaseResult courseBaseResult) {
+
+        CategoryExample example = new CategoryExample();
+        if (!StringUtils.isEmpty(courseBaseResult.getCategory())){
+            example.createCriteria().andCategoryIdEqualTo(Long.valueOf(courseBaseResult.getCategory()));
+        }
+        CategoryResult categoryResult = new CategoryResult();
+        List<Category> categoryList = categoryMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(categoryList)){
+            BeanCopyUtils.copyProperties(categoryList.get(0),categoryResult);
+        }
+        return categoryResult;
+    }
+
+    private List<TeachPlan> getTeachPlan(CourseAllDetailParam param, CourseBaseResult courseBaseResult) {
+
+        Long teacherId = courseBaseResult.getTeacherId();
+        TeachPlanExample example = new TeachPlanExample();
+        TeachPlanExample.Criteria criteria = example.createCriteria();
+        if (param.getCourseId() != null){
+            criteria.andCourseIdEqualTo(String.valueOf(param.getCourseId()));
+        }
+        List<TeachPlan> teachPlanList = teachPlanMapper.selectByExample(example);
+        return teachPlanList;
+    }
+
+    private List<FrequentlyAskedQuestionResult> getFrequentAskedQuestionResult(CourseAllDetailParam param) {
+        FrequentlyAskedQuestionExample example = new FrequentlyAskedQuestionExample();
+        if (param.getCourseId() != null){
+            example.createCriteria().andCourseIdEqualTo(param.getCourseId());
+        }
+        example.setOrderByClause("create_time desc");
+        List<FrequentlyAskedQuestion> frequentlyAskedQuestionList = frequentlyAskedQuestionMapper.selectByExample(example);
+        List<FrequentlyAskedQuestionResult> results = BeanCopyUtils.copy(frequentlyAskedQuestionList,FrequentlyAskedQuestionResult.class);
+        return results;
+    }
+
+    private List<CourseAssessmentResult> getCourseAssessmentResult(CourseAllDetailParam param) {
+
+        CourseAssessmentExample example = new CourseAssessmentExample();
+        if (param.getCourseId() != null){
+            example.createCriteria().andCourseIdEqualTo(param.getCourseId());
+        }
+        example.setOrderByClause("create_time desc");
+        List<CourseAssessment> courseAssessmentList = courseAssessmentMapper.selectByExample(example);
+        List<CourseAssessmentResult> results = new ArrayList<>();
+        List<Long> userIds = new ArrayList<>();
+        for (CourseAssessment courseAssessmentResult : courseAssessmentList){
+            if (!userIds.contains(courseAssessmentResult.getUserId())){
+                userIds.add(courseAssessmentResult.getUserId());
+            }
+        }
+        CommonResult<List<UserResult>> userResult = userControllerClientApi.query(userIds);
+        Map<Long,UserResult> userResultMap = new HashMap<>();
+        if (userResult.isSuccess()){
+            List<UserResult> userResultList = userResult.getData();
+            for (UserResult result : userResultList){
+                if (!userResultMap.containsKey(result.getUserId())){
+                    userResultMap.put(result.getUserId(),result);
+                }
+            }
+        }
+        for (CourseAssessment courseAssessment : courseAssessmentList){
+            CourseAssessmentResult courseAssessmentResult = new CourseAssessmentResult();
+            BeanCopyUtils.copyProperties(courseAssessment,courseAssessmentResult);
+            if (userResultMap.containsKey(courseAssessment.getUserId())){
+                courseAssessmentResult.setUserResult(userResultMap.get(courseAssessment.getUserId()));
+            }
+            results.add(courseAssessmentResult);
+        }
+
+        return results;
+    }
+
+    private List<CourseQuziResult> getCourseQuziResult(CourseAllDetailParam param) {
+        CourseQuziExample example = new CourseQuziExample();
+        if (param.getCourseId() != null){
+            example.createCriteria().andCourseIdEqualTo(param.getCourseId());
+        }
+        example.setOrderByClause("is_over_head desc,create_time desc");
+        List<CourseQuzi> courseQuziList = courseQuziMapper.selectByExample(example);
+
+        List<CourseQuziResult> results = BeanCopyUtils.copy(courseQuziList,CourseQuziResult.class);
+        return results;
+    }
+
+    private TeacherResult getTeacherResult(CourseAllDetailParam param, CourseBaseResult courseBaseResult) {
+        Long teacherId = courseBaseResult.getTeacherId();
+        CommonResult<List<TeacherResult>> teacherResult = teacherControllerClientApi.query(teacherId);
+        TeacherResult result = new TeacherResult();
+        if (teacherResult.isSuccess()){
+            if (!CollectionUtils.isEmpty(teacherResult.getData())){
+                BeanCopyUtils.copyProperties(teacherResult.getData().get(0),result);
+            }
+        }
+
+        return result;
+    }
+
+    private CourseBaseResult getCourseResult(CourseAllDetailParam param) {
+        CourseBaseExample example = new CourseBaseExample();
+        CourseBaseExample.Criteria criteria = example.createCriteria();
+        if (param.getCourseId() != null){
+            criteria.andCourseIdEqualTo(param.getCourseId());
+        }
+        criteria.andStatusEqualTo(CourseConstants.CourseType.RELEASE.getCode());
+        CourseBaseResult courseBaseResult = new CourseBaseResult();
+        List<CourseBase> courseBaseList = courseBaseMapper.selectByExampleWithBLOBs(example);
+        if (!CollectionUtils.isEmpty(courseBaseList)){
+            BeanCopyUtils.copyProperties(courseBaseList.get(0),courseBaseResult);
+        }
+        List<Long> courseIds = new ArrayList<>();
+        courseIds.add(param.getCourseId());
+        CommonResult<List<FileRecordImagesResult>> imagesResult = fileRecordImagesControllerClientApi.query(courseIds);
+        if (imagesResult.isSuccess()){
+            courseBaseResult.setCourseImageUrl(imagesResult.getData().get(0).getRecord().getFileAbsolutePath());
+        }
+        return courseBaseResult;
     }
 }

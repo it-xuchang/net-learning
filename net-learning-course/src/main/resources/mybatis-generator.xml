@@ -12,7 +12,11 @@
     <sqlMapGenerator targetPackage="com.netlearning.course.mapper" targetProject="src/main/java" />
     <javaClientGenerator targetPackage="com.netlearning.course.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
-    <table tableName="t_teachplan_media_tencent" domainObjectName="TeachPlanMediaTencent" enableCountByExample="true"
+    <table tableName="t_course_favorite" domainObjectName="CourseFavorite" enableCountByExample="true"
+           enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+           selectByExampleQueryId="true">
+    </table>
+    <table tableName="t_learning_teachplan" domainObjectName="LearningTeachplan" enableCountByExample="true"
            enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
            selectByExampleQueryId="true">
     </table>

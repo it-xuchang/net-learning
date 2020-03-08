@@ -39,7 +39,7 @@ public class FileRecordResourcesServiceImpl implements FileRecordResourcesServic
     @Autowired
     private FileRecordMapper fileRecordMapper;
     @Override
-    public CommonResult query(FileRecordResourcesQueryParam param) {
+    public CommonResult<List<FileRecordResourcesResult>> query(FileRecordResourcesQueryParam param) {
         FileRecordResourcesExample example = new FileRecordResourcesExample();
         FileRecordResourcesExample.Criteria criteria = example.createCriteria();
         if (param.getRecordId() != null){
@@ -50,6 +50,9 @@ public class FileRecordResourcesServiceImpl implements FileRecordResourcesServic
         }
         if (param.getFromSystemId() != null){
             criteria.andFromSystemIdEqualTo(param.getFromSystemId());
+        }
+        if (!CollectionUtils.isEmpty(param.getFromSystemIds())){
+            criteria.andFromSystemIdIn(param.getFromSystemIds());
         }
         List<FileRecordResources> fileRecordResourcesList = fileRecordResourcesMapper.selectByExample(example);
         List<Long> recordIds = new ArrayList<>();

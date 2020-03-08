@@ -11,6 +11,7 @@ import com.netlearning.framework.domain.course.param.CategoryQueryParam;
 import com.netlearning.framework.domain.course.result.CategoryResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
+import com.netlearning.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,13 +60,26 @@ public class CategoryController {
     }
     @PostMapping("/add")
     public CommonResult<Boolean> add(@RequestBody CategoryAddParam request){
-
+        if (StringUtils.isEmpty(request.getCategoryName())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE017.code,ExceptionCode.CourseCode.CODE017.message);
+        }
+        if (StringUtils.isEmpty(request.getLabel())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE018.code,ExceptionCode.CourseCode.CODE018.message);
+        }
         return categoryService.add(request);
     }
 
     @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody CategoryEditParam request){
-
+        if (request.getCategoryId() == null ){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE016.code,ExceptionCode.CourseCode.CODE016.message);
+        }
+        if (StringUtils.isEmpty(request.getCategoryName())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE017.code,ExceptionCode.CourseCode.CODE017.message);
+        }
+        if (StringUtils.isEmpty(request.getLabel())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE018.code,ExceptionCode.CourseCode.CODE018.message);
+        }
         return categoryService.edit(request);
     }
 

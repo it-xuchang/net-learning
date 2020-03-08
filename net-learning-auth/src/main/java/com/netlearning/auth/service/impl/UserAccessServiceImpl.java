@@ -168,22 +168,27 @@ public class UserAccessServiceImpl implements UserAccessService {
         }
         userLoginResult.setRole(userRoleResult.getData().get(0).getRole());
         userAccessLoginResult.setRoleId(userRoleResult.getData().get(0).getRole().getRoleId());
-        CommonResult<RoleMenuResult> roleMenuResultCommonResult = roleMenuControllerClientApi.query(userRoleResult.getData().get(0).getRole().getRoleId());
+        CommonResult<List<MenuItem>> roleMenuResultCommonResult = roleMenuControllerClientApi.tree(userRoleResult.getData().get(0).getRole().getRoleId());
         if (!userRoleResult.isSuccess()){
             return CommonResult.fail(userRoleResult.getReturnCode(),"调用用户角色资源微服务失败");
         }
-        if (CollectionUtils.isEmpty(roleMenuResultCommonResult.getData().getMenus())){
+        if (CollectionUtils.isEmpty(roleMenuResultCommonResult.getData())){
             return CommonResult.fail(ExceptionCode.AuthCode.CODE011.code,ExceptionCode.AuthCode.CODE011.message);
         }
         //查询用户菜单
+        //查询用户菜单
+        CommonResult<RoleMenuResult> roleMenuResult = roleMenuControllerClientApi.query(userRoleResult.getData().get(0).getRole().getRoleId());
+        if (!roleMenuResult.isSuccess()){
+            return CommonResult.fail(roleMenuResult.getReturnCode(),"调用用户角色资源微服务失败");
+        }
         List<String> menus = new ArrayList<>();
-        for (Menu menu : roleMenuResultCommonResult.getData().getMenus()){
+        for (Menu menu : roleMenuResult.getData().getMenus()){
             if (!menus.contains(menu.getPath()) && !StringUtils.isEmpty(menu.getPath())){
                 menus.add(menu.getPath());
             }
         }
         userLoginResult.setMenus(menus);
-        userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
+        userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData());
         userAccessLoginResult.setUserId(teacher.getTeacherId());
         userLoginResult.setTokenValue(teacherId);
         redisTemplate.opsForValue().set(teacherId,token,tokenExpireTime, TimeUnit.MINUTES);
@@ -194,7 +199,9 @@ public class UserAccessServiceImpl implements UserAccessService {
         HttpServletRequest request = servletRequestAttributes.getRequest();
         HttpServletResponse response = servletRequestAttributes.getResponse();
         CookieUtil.addCookie(response,cookieDomain,cookiePath,"token",token, cookieTime,true);
-
+        response.setHeader("token",token);
+//        CookieUtil.setCookie(response,cookiePath,"token",token, cookieTime);
+        userAccessLoginResult.setToken(token);
         return CommonResult.success(userAccessLoginResult);
     }
 
@@ -260,22 +267,26 @@ public class UserAccessServiceImpl implements UserAccessService {
         }
         userLoginResult.setRole(userRoleResult.getData().get(0).getRole());
         userAccessLoginResult.setRoleId(userRoleResult.getData().get(0).getRole().getRoleId());
-        CommonResult<RoleMenuResult> roleMenuResultCommonResult = roleMenuControllerClientApi.query(userRoleResult.getData().get(0).getRole().getRoleId());
+        CommonResult<List<MenuItem>> roleMenuResultCommonResult = roleMenuControllerClientApi.tree(userRoleResult.getData().get(0).getRole().getRoleId());
         if (!userRoleResult.isSuccess()){
             return CommonResult.fail(userRoleResult.getReturnCode(),"调用用户角色资源微服务失败");
         }
-        if (CollectionUtils.isEmpty(roleMenuResultCommonResult.getData().getMenus())){
+        if (CollectionUtils.isEmpty(roleMenuResultCommonResult.getData())){
             return CommonResult.fail(ExceptionCode.AuthCode.CODE011.code,ExceptionCode.AuthCode.CODE011.message);
         }
         //查询用户菜单
+        CommonResult<RoleMenuResult> roleMenuResult = roleMenuControllerClientApi.query(userRoleResult.getData().get(0).getRole().getRoleId());
+        if (!roleMenuResult.isSuccess()){
+            return CommonResult.fail(roleMenuResult.getReturnCode(),"调用用户角色资源微服务失败");
+        }
         List<String> menus = new ArrayList<>();
-        for (Menu menu : roleMenuResultCommonResult.getData().getMenus()){
+        for (Menu menu : roleMenuResult.getData().getMenus()){
             if (!menus.contains(menu.getPath()) && !StringUtils.isEmpty(menu.getPath())){
                 menus.add(menu.getPath());
             }
         }
         userLoginResult.setMenus(menus);
-        userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData().getMenus());
+        userAccessLoginResult.setMenus(roleMenuResultCommonResult.getData());
         userAccessLoginResult.setUserId(userResult.getUserId());
         userLoginResult.setTokenValue(userId);
         redisTemplate.opsForValue().set(userId,token,tokenExpireTime, TimeUnit.MINUTES);
@@ -286,6 +297,10 @@ public class UserAccessServiceImpl implements UserAccessService {
         HttpServletRequest request = servletRequestAttributes.getRequest();
         HttpServletResponse response = servletRequestAttributes.getResponse();
         CookieUtil.addCookie(response,cookieDomain,cookiePath,"token",token, cookieTime,true);
+//        CookieUtil.setCookie(response,cookiePath,"token",token, cookieTime);
+        //头部响应token
+        response.setHeader("token",token);
+        userAccessLoginResult.setToken(token);
         return CommonResult.success(userAccessLoginResult);
     }
 

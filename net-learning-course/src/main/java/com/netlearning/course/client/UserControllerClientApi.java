@@ -3,6 +3,7 @@ package com.netlearning.course.client;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
 import com.netlearning.framework.domain.userAuth.User;
+import com.netlearning.framework.domain.userAuth.result.UserResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -25,4 +26,6 @@ public interface UserControllerClientApi {
     @GetMapping(value = "/user/query/detail",produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     public CommonResult<List<User>> queryByUserIds(@RequestParam(value = "userIds",required = false) List<Long> userIds);
 
+    @GetMapping(value = "/user/query",produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+    public CommonResult<List<UserResult>> query(@RequestParam(value = "userIds",required = false) List<Long> userIds);
 }

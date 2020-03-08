@@ -3,9 +3,8 @@ package com.netlearning.user.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
-import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
-import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
-import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.*;
+import com.netlearning.framework.domain.userAuth.result.RoleResult;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import com.netlearning.framework.em.FileConstants;
 import com.netlearning.user.client.FileRecordControllerClientApi;
@@ -27,6 +26,7 @@ import com.netlearning.framework.utils.MD5Util;
 import com.netlearning.framework.utils.StringUtils;
 import com.netlearning.user.client.CourseBaseClientApi;
 import com.netlearning.user.client.FileRecordImagesControllerClientApi;
+import com.netlearning.user.mapper.RoleMapper;
 import com.netlearning.user.mapper.TeacherMapper;
 import com.netlearning.user.mapper.UserRoleMapper;
 import com.netlearning.user.service.TeacherService;
@@ -57,6 +57,8 @@ public class TeacherServiceImpl implements TeacherService {
     private FileRecordControllerClientApi fileRecordControllerClientApi;
     @Autowired
     private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
+    @Autowired
+    private RoleMapper roleMapper;
     @Override
     public CommonResult<List<TeacherResult>> query(TeacherParam teacherParam) {
         TeacherExample example = new TeacherExample();
@@ -117,6 +119,30 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
         }
+
+        Map<Long, RoleResult> teacherRoleMap = new HashMap<>();
+        UserRoleExample userRoleExample = new UserRoleExample();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            userRoleExample.createCriteria().andUserIdIn(teacherIds);
+            List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
+            //roleId role
+            Map<Long, Role> roleMap = new HashMap<>();
+            List<Role> roleList = roleMapper.selectByExample(new RoleExample());
+            for (Role role : roleList){
+                if (!roleMap.containsKey(role.getRoleId())){
+                    roleMap.put(role.getRoleId(),role);
+                }
+            }
+            for (UserRole userRole : userRoleList){
+                if(!teacherRoleMap.containsKey(userRole.getUserId())){
+                    if (roleMap.containsKey(userRole.getRoleId())){
+                        RoleResult roleResult = new RoleResult();
+                        BeanCopyUtils.copyProperties(roleMap.get(userRole.getRoleId()),roleResult);
+                        teacherRoleMap.put(userRole.getUserId(),roleResult);
+                    }
+                }
+            }
+        }
         for (Teacher teacher : result){
             TeacherResult teacherResult = new TeacherResult();
             BeanCopyUtils.copyProperties(teacher,teacherResult);
@@ -124,6 +150,9 @@ public class TeacherServiceImpl implements TeacherService {
                 teacherResult.setTeacherImageUrl(fileRecordResultMap.get(teacher.getTeacherId()).getFileAbsolutePath());
             }else {
                 teacherResult.setTeacherImageUrl("");
+            }
+            if(teacherRoleMap.containsKey(teacher.getTeacherId())){
+                teacherResult.setRoleResult(teacherRoleMap.get(teacher.getTeacherId()));
             }
             teacherResults.add(teacherResult);
         }
@@ -193,6 +222,30 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
         }
+
+        Map<Long, RoleResult> teacherRoleMap = new HashMap<>();
+        UserRoleExample userRoleExample = new UserRoleExample();
+        if (!CollectionUtils.isEmpty(teacherIds)){
+            userRoleExample.createCriteria().andUserIdIn(teacherIds);
+            List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
+            //roleId role
+            Map<Long, Role> roleMap = new HashMap<>();
+            List<Role> roleList = roleMapper.selectByExample(new RoleExample());
+            for (Role role : roleList){
+                if (!roleMap.containsKey(role.getRoleId())){
+                    roleMap.put(role.getRoleId(),role);
+                }
+            }
+            for (UserRole userRole : userRoleList){
+                if(!teacherRoleMap.containsKey(userRole.getUserId())){
+                    if (roleMap.containsKey(userRole.getRoleId())){
+                        RoleResult roleResult = new RoleResult();
+                        BeanCopyUtils.copyProperties(roleMap.get(userRole.getRoleId()),roleResult);
+                        teacherRoleMap.put(userRole.getUserId(),roleResult);
+                    }
+                }
+            }
+        }
         for (Teacher teacher : result.getResult()){
             TeacherResult teacherResult = new TeacherResult();
             BeanCopyUtils.copyProperties(teacher,teacherResult);
@@ -201,8 +254,12 @@ public class TeacherServiceImpl implements TeacherService {
             }else {
                 teacherResult.setTeacherImageUrl("");
             }
+            if(teacherRoleMap.containsKey(teacher.getTeacherId())){
+                teacherResult.setRoleResult(teacherRoleMap.get(teacher.getTeacherId()));
+            }
             teacherResults.add(teacherResult);
         }
+
         CommonPageResult<TeacherResult> pageResult = CommonPageResult.build(teacherResults,commonPageInfo,result.getTotal());
         return CommonResult.success(pageResult);
     }
@@ -268,8 +325,10 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = {Exception.class})
     public CommonResult<Boolean> edit(TeacherEditParam teacher) {
         try {
-            if (!UserAuthConstants.UserType.userTypeList().contains(teacher.getStatus())){
-                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+            if (!StringUtils.isEmpty(teacher.getStatus())){
+                if (!UserAuthConstants.UserType.userTypeList().contains(teacher.getStatus())){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+                }
             }
             if (!UserAuthConstants.UserSexType.userSexTypeList().contains(teacher.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
@@ -447,6 +506,16 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher record = new Teacher();
         record.setPassword(MD5Util.getStringMD5(param.getNewPassword()));
         record.setTeacherId(teacher.getTeacherId());
+        teacherMapper.updateByPrimaryKeySelective(record);
+        return CommonResult.success(true);
+    }
+
+    @Override
+    @Transactional
+    public CommonResult changeStatus(TeacherChangeStatusParam param) {
+        Teacher record = new Teacher();
+        record.setTeacherId(param.getTeacherId());
+        record.setStatus(param.getStatus());
         teacherMapper.updateByPrimaryKeySelective(record);
         return CommonResult.success(true);
     }

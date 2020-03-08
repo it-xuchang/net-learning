@@ -123,7 +123,7 @@ public class MenuServiceImpl implements MenuService {
         try {
             MenuExample example = new MenuExample();
             MenuExample.Criteria criteria = example.createCriteria();
-            if (CollectionUtils.isEmpty(menuDeleteParam.getMenuIds())){
+            if (!CollectionUtils.isEmpty(menuDeleteParam.getMenuIds())){
                 criteria.andMenuIdIn(menuDeleteParam.getMenuIds());
             }
             menuMapper.deleteByExample(example);

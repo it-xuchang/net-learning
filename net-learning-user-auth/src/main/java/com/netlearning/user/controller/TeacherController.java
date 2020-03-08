@@ -5,11 +5,10 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
-import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
-import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
-import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.*;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
+import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -113,7 +112,17 @@ public class TeacherController implements TeacherControllerApi {
         }
         return teacherService.add(teacher);
     }
+    @PostMapping("/change/status")
+    public CommonResult changeStatus(@RequestBody TeacherChangeStatusParam param){
+        if (param.getTeacherId() == null){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
+        if (!UserAuthConstants.UserType.userTypeList().contains(param.getStatus())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+        }
+        return teacherService.changeStatus(param);
 
+    }
     @Override
     @PostMapping("/edit")
     public CommonResult<Boolean> edit(@RequestBody TeacherEditParam teacher){

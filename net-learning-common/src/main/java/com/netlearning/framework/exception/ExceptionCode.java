@@ -122,6 +122,21 @@ public class ExceptionCode {
         CODE008("CODE008" , "课程不存在"),
         CODE009("CODE009" , "课程id输入有误"),
         CODE010("CODE010" , "课程暂无教学计划"),
+        CODE011("CODE011" , "已加入课程"),
+        CODE012("CODE012" , "课程id为空"),
+        CODE013("CODE013" , "用户id为空"),
+        CODE014("CODE014" , "课程计划id为空"),
+        CODE015("CODE015" , "课程已收藏"),
+        CODE016("CODE016" , "课程分类id为空"),
+        CODE017("CODE017" , "课程分类名称为空"),
+        CODE018("CODE018" , "课程分类描述为空"),
+        CODE019("CODE019" , "课程名为空"),
+        CODE020("CODE020" , "课程分类为空"),
+        CODE021("CODE021" , "课程描述为空"),
+        CODE022("CODE022" , "学习模式为空"),
+        CODE023("CODE023" , "教学模式为空"),
+        CODE024("CODE024" , "教师id为空"),
+        CODE025("CODE025" , "课程状态有误"),
 
         ;
         public final String code;

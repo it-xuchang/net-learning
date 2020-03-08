@@ -3,6 +3,7 @@ package com.netlearning.course.client;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.client.NetLearningServiceList;
 import com.netlearning.framework.domain.userAuth.Teacher;
+import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,6 @@ import java.util.List;
 public interface TeacherControllerClientApi {
 
     @GetMapping("/teacher/query")
-    public CommonResult<List<Teacher>> query(@RequestParam(value = "teacherId",required = false) Long teacherId);
+    public CommonResult<List<TeacherResult>> query(@RequestParam(value = "teacherId",required = false) Long teacherId);
 
 }

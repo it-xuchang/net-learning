@@ -44,8 +44,9 @@ public interface CourseConstants {
     }
     enum CourseType {
         RELEASE("0", "发布"),
-        NON_RELEASE("1", "未发布"),
-        OFF_LINE("2", "下线"),
+        UPLOAD_IMAGES("1", "上传图片"),
+        ADD_LEARNING_COURSE("2", "添加课程计划"),
+        OFF_LINE("3", "下线"),
         ;
 
         private String code;

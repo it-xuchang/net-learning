@@ -46,14 +46,14 @@ public class TeachPlanServiceImpl implements TeachPlanService {
     private SequenceService sequenceService;
 
     @Override
-    public CommonResult<Boolean> add(TeachPlanAddParam request) {
+    public CommonResult add(TeachPlanAddParam request) {
         try {
             //添加教学计划，教学计划的资源
             TeachPlan record = new TeachPlan();
             BeanCopyUtils.copyProperties(request,record);
             record.setTeachplanId(sequenceService.nextValue(null));
             teachPlanMapper.insertSelective(record);
-            return CommonResult.success(true);
+            return CommonResult.success(record);
         }catch (Exception e){
             return CommonResult.fail(ExceptionCode.CourseCode.CODE002.code,ExceptionCode.CourseCode.CODE002.message);
         }
@@ -99,7 +99,7 @@ public class TeachPlanServiceImpl implements TeachPlanService {
         if (!StringUtils.isEmpty(param.getTeachplanName())){
             criteria.andTeachplanNameLike("%"+param.getTeachplanName()+"%");
         }
-        if (StringUtils.isEmpty(param.getStatus())){
+        if (!StringUtils.isEmpty(param.getStatus())){
             criteria.andStatusEqualTo(param.getStatus());
         }
         List<TeachPlan> teachPlanList = teachPlanMapper.selectByExample(example);
@@ -121,15 +121,17 @@ public class TeachPlanServiceImpl implements TeachPlanService {
         TeachPlanMediaExample teachPlanMediaExample = new TeachPlanMediaExample();
         TeachPlanMediaExample.Criteria teachPlanMediaExampleCriteria = teachPlanMediaExample.createCriteria();
         teachPlanMediaExampleCriteria.andTeachplanIdIn(teachplanIds);
-        List<TeachPlanMedia> teachPlanMediaList = teachPlanMediaMapper.selectByExample(teachPlanMediaExample);
         Map<Long,List<TeachPlanMedia>> teachPlanMediaMap = new HashMap<>();
-        for (TeachPlanMedia teachPlanMedia : teachPlanMediaList){
-            if (teachPlanMediaMap.containsKey(teachPlanMedia.getTeachplanId())){
-                teachPlanMediaMap.get(teachPlanMedia.getTeachplanId()).add(teachPlanMedia);
-            }else {
-                List<TeachPlanMedia> list = new ArrayList<>();
-                list.add(teachPlanMedia);
-                teachPlanMediaMap.put(teachPlanMedia.getTeachplanId(),list);
+        if (!CollectionUtils.isEmpty(teachplanIds)){
+            List<TeachPlanMedia> teachPlanMediaList = teachPlanMediaMapper.selectByExample(teachPlanMediaExample);
+            for (TeachPlanMedia teachPlanMedia : teachPlanMediaList){
+                if (teachPlanMediaMap.containsKey(teachPlanMedia.getTeachplanId())){
+                    teachPlanMediaMap.get(teachPlanMedia.getTeachplanId()).add(teachPlanMedia);
+                }else {
+                    List<TeachPlanMedia> list = new ArrayList<>();
+                    list.add(teachPlanMedia);
+                    teachPlanMediaMap.put(teachPlanMedia.getTeachplanId(),list);
+                }
             }
         }
 
@@ -249,7 +251,7 @@ public class TeachPlanServiceImpl implements TeachPlanService {
         if (!StringUtils.isEmpty(param.getTeachplanName())){
             criteria.andTeachplanNameLike("%"+param.getTeachplanName()+"%");
         }
-        if (StringUtils.isEmpty(param.getStatus())){
+        if (!StringUtils.isEmpty(param.getStatus())){
             criteria.andStatusEqualTo(param.getStatus());
         }
         List<TeachPlan> teachPlanList = teachPlanMapper.selectByExample(example);
@@ -271,15 +273,17 @@ public class TeachPlanServiceImpl implements TeachPlanService {
         TeachPlanMediaExample teachPlanMediaExample = new TeachPlanMediaExample();
         TeachPlanMediaExample.Criteria teachPlanMediaExampleCriteria = teachPlanMediaExample.createCriteria();
         teachPlanMediaExampleCriteria.andTeachplanIdIn(teachplanIds);
-        List<TeachPlanMedia> teachPlanMediaList = teachPlanMediaMapper.selectByExample(teachPlanMediaExample);
         Map<Long,List<TeachPlanMedia>> teachPlanMediaMap = new HashMap<>();
-        for (TeachPlanMedia teachPlanMedia : teachPlanMediaList){
-            if (teachPlanMediaMap.containsKey(teachPlanMedia.getTeachplanId())){
-                teachPlanMediaMap.get(teachPlanMedia.getTeachplanId()).add(teachPlanMedia);
-            }else {
-                List<TeachPlanMedia> list = new ArrayList<>();
-                list.add(teachPlanMedia);
-                teachPlanMediaMap.put(teachPlanMedia.getTeachplanId(),list);
+        if (!CollectionUtils.isEmpty(teachplanIds)){
+            List<TeachPlanMedia> teachPlanMediaList = teachPlanMediaMapper.selectByExample(teachPlanMediaExample);
+            for (TeachPlanMedia teachPlanMedia : teachPlanMediaList){
+                if (teachPlanMediaMap.containsKey(teachPlanMedia.getTeachplanId())){
+                    teachPlanMediaMap.get(teachPlanMedia.getTeachplanId()).add(teachPlanMedia);
+                }else {
+                    List<TeachPlanMedia> list = new ArrayList<>();
+                    list.add(teachPlanMedia);
+                    teachPlanMediaMap.put(teachPlanMedia.getTeachplanId(),list);
+                }
             }
         }
 

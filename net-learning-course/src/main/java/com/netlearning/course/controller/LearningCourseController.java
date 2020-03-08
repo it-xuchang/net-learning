@@ -7,6 +7,8 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.course.param.LearningCourseAddParam;
 import com.netlearning.framework.domain.course.param.LearningCourseEditParam;
 import com.netlearning.framework.domain.course.param.LearningCourseQueryParam;
+import com.netlearning.framework.domain.course.param.PersonCourseParam;
+import com.netlearning.framework.domain.course.result.PersonCourseResult;
 import com.netlearning.framework.domain.course.result.UserLearningCourseResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
@@ -101,5 +103,28 @@ public class LearningCourseController {
     @PostMapping("/delete")
     public CommonResult<Boolean> delete(@RequestBody List<Long> ids){
         return learningCourseService.delete(ids);
+    }
+
+    /**
+     * 查询学生课程中心
+     * @param userId
+     * @param orderBy 按学习时间进行排序 按加入时间进行排序 全部课程 名称 课程类别
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/person/course/page")
+    public CommonResult<CommonPageResult<PersonCourseResult>> queryPersonCourse(@RequestParam(value = "userId",required = false) Long userId,
+                                                                    @RequestParam(value = "orderBy",required = false) String orderBy,
+                                                                    @RequestParam(value = "pageNum",required = false) Integer pageNum,
+                                                                    @RequestParam(value = "pageSize",required = false) Integer pageSize){
+        if (pageNum == null ||  pageSize == null || !RegexUtil.checkPositiveNum(pageNum) || !RegexUtil.checkPositiveNum(pageSize)){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE005.code,ExceptionCode.UserAuthCode.CODE005.message);
+        }
+        PersonCourseParam param = new PersonCourseParam();
+        param.setOrderBy(orderBy);
+        param.setUserId(userId);
+        CommonPageInfo commonPageInfo = new CommonPageInfo(pageNum,pageSize);
+        return learningCourseService.queryPersonCourse(param,commonPageInfo);
     }
 }

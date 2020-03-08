@@ -5,9 +5,7 @@ import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.TeacherAddRequest;
 import com.netlearning.framework.domain.userAuth.TeacherParam;
-import com.netlearning.framework.domain.userAuth.param.TeacherDeleteParam;
-import com.netlearning.framework.domain.userAuth.param.TeacherEditParam;
-import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
+import com.netlearning.framework.domain.userAuth.param.*;
 import com.netlearning.framework.domain.userAuth.result.TeacherRecommendationResult;
 import com.netlearning.framework.domain.userAuth.result.TeacherResult;
 
@@ -33,4 +31,6 @@ public interface TeacherService {
     CommonResult<List<TeacherRecommendationResult>> queryTeacherRecommendation(Long size);
 
     CommonResult changePassword(UserChangePasswordParam param);
+
+    CommonResult changeStatus(TeacherChangeStatusParam param);
 }

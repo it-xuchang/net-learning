@@ -5,6 +5,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netlearning.framework.base.CommonResult;
+import com.netlearning.framework.bean.BeanCopyUtils;
 import com.netlearning.framework.domain.auth.result.UserLoginResult;
 import com.netlearning.framework.utils.CollectionUtils;
 import com.netlearning.framework.utils.CookieUtil;
@@ -54,6 +55,12 @@ public class ZuulGlobalFilter extends ZuulFilter {
         paths.add("/ams/user/access/register");
         paths.add("/ams/user/access/forget/password");
         paths.add("/ams/user/access/get/code");
+        paths.add("/ums/teacher/query/teacher/recommendation");
+        paths.add("/cms/base/course/query/recommended/course/direction");
+        paths.add("/cms/base/course/query/course/recommendation");
+        paths.add("/cms/system/nav/query");
+        paths.add("/cms/category/query");
+        paths.add("/cms/base/course/query/course/all/detail");
         paths.add("/**/swagger**/**");
         paths.add("/**/v2/api-docs");
         paths.add("/**/*.css");
@@ -110,7 +117,7 @@ public class ZuulGlobalFilter extends ZuulFilter {
 
     /**
      * 过虑器的内容
-     * 过虑所有请求，判断头部信息是否有名称为token的cookie，如果没有则拒绝访问，否则转发到微服务。
+     * 过虑所有请求，判断头部信息是否有名称为token的cookie 或者请求头是否存在名为token，如果没有则拒绝访问，否则转发到微服务。
      * @return Object
      * @throws ZuulException
      */
@@ -121,15 +128,26 @@ public class ZuulGlobalFilter extends ZuulFilter {
         HttpServletRequest request = currentContext.getRequest();
         //得到response
         HttpServletResponse response = currentContext.getResponse();
-        //取cookie中的身份令牌
-        String token = CookieUtil.getCookie(request.getCookies(),tokenName);
 
-        if (StringUtils.isEmpty(token)) {
+        //取cookie中的身份令牌
+        String cookieToken = CookieUtil.getCookie(request.getCookies(),tokenName);
+        //header中获取令牌
+        String headerToken = request.getHeader(tokenName);
+
+        if (StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(headerToken)) {
             this.accessDenied(currentContext,response);
             return null;
         }
         //判断token是否存在redis中
-        UserLoginResult userLoginResult = (UserLoginResult) redisTemplate.opsForValue().get(token);
+        UserLoginResult userLoginResult = null;
+        //cookie 认证
+        if (!StringUtils.isEmpty(cookieToken)){
+            userLoginResult = (UserLoginResult) redisTemplate.opsForValue().get(cookieToken);
+        }
+        //header 认证
+        if (!StringUtils.isEmpty(headerToken)){
+            userLoginResult = (UserLoginResult) redisTemplate.opsForValue().get(headerToken);
+        }
         if (userLoginResult == null){
             this.accessDenied(currentContext,response);
             return null;
@@ -148,10 +166,18 @@ public class ZuulGlobalFilter extends ZuulFilter {
         }
         String tokenValue = userLoginResult.getTokenValue();
         //更新redis的过期时间
-        redisTemplate.expire(token,tokenExpireTime, TimeUnit.MINUTES);
+        //cookie 刷新
+        if (!StringUtils.isEmpty(cookieToken)){
+            redisTemplate.expire(cookieToken,tokenExpireTime, TimeUnit.MINUTES);
+        }
+        //header 刷新
+        if (!StringUtils.isEmpty(headerToken)){
+            redisTemplate.expire(headerToken,tokenExpireTime, TimeUnit.MINUTES);
+        }
         redisTemplate.expire(tokenValue,tokenExpireTime, TimeUnit.MINUTES);
         //重新更新cookie
-        CookieUtil.updateCookie(request,response,cookieDomain,cookiePath,tokenName,token, cookieTime,true);
+        CookieUtil.updateCookie(request,response,cookieDomain,cookiePath,tokenName,cookieToken, cookieTime,true);
+//        CookieUtil.updateCookie(request,response,cookiePath,tokenName,cookieToken, cookieTime);
         return null;
     }
 

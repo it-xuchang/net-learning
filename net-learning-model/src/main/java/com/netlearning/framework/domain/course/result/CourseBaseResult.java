@@ -31,4 +31,6 @@ public class CourseBaseResult {
 
     private String description;
 
+    private String courseImageUrl;
+
 }

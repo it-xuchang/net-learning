@@ -42,4 +42,6 @@ public class TeacherResult {
     private String avatar;
 
     private String teacherImageUrl;
+
+    private RoleResult roleResult;
 }

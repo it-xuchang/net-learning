@@ -11,10 +11,7 @@ import com.netlearning.framework.domain.course.result.UserLearningCourseResult;
 import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
 import com.netlearning.framework.domain.fss.result.FileRecordResult;
 import com.netlearning.framework.domain.userAuth.*;
-import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
-import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
-import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
-import com.netlearning.framework.domain.userAuth.param.UserEditParam;
+import com.netlearning.framework.domain.userAuth.param.*;
 import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
 import com.netlearning.framework.em.FileConstants;
@@ -66,7 +63,7 @@ public class UserServiceImpl implements UserService {
             criteria.andUserIdIn(userParam.getUserIds());
         }
         if (!StringUtils.isEmpty(userParam.getUsername())){
-            criteria.andUsernameLike(userParam.getUsername());
+            criteria.andUsernameLike("%"+userParam.getUsername()+"%");
         }
         if (!StringUtils.isEmpty(userParam.getPassword())){
             criteria.andPasswordEqualTo(MD5Util.getStringMD5(userParam.getPassword()));
@@ -137,7 +134,7 @@ public class UserServiceImpl implements UserService {
             criteria.andUserIdEqualTo(userParam.getUserId());
         }
         if (!StringUtils.isEmpty(userParam.getUsername())){
-            criteria.andUsernameLike(userParam.getUsername());
+            criteria.andUsernameLike("%"+userParam.getUsername()+"%");
         }
         if (!StringUtils.isEmpty(userParam.getPassword())){
             criteria.andPasswordEqualTo(MD5Util.getStringMD5(userParam.getPassword()));
@@ -263,9 +260,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public CommonResult<Boolean> edit(UserEditParam user) {
         try {
-            if (!UserAuthConstants.UserType.userTypeList().contains(user.getStatus())){
-                return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+            if (!StringUtils.isEmpty(user.getStatus())){
+                if (!UserAuthConstants.UserType.userTypeList().contains(user.getStatus())){
+                    return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+                }
             }
+
             if (!UserAuthConstants.UserSexType.userSexTypeList().contains(user.getSex())){
                 return CommonResult.fail(ExceptionCode.UserAuthCode.CODE012.code,ExceptionCode.UserAuthCode.CODE012.message);
             }
@@ -303,6 +303,7 @@ public class UserServiceImpl implements UserService {
             User record = new User();
             BeanCopyUtils.copyProperties(user,record);
             record.setModifyTime(new Date());
+            record.setSsex(user.getSex());
             userMapper.updateByPrimaryKeySelective(record);
             return CommonResult.success(true);
         }catch (Exception e){
@@ -379,6 +380,15 @@ public class UserServiceImpl implements UserService {
         userMapper.updateByPrimaryKeySelective(record);
         //重新登录
 
+        return CommonResult.success(true);
+    }
+
+    @Override
+    public CommonResult changeStatus(UserChangeStatusParam param) {
+        User record = new User();
+        record.setUserId(param.getUserId());
+        record.setStatus(param.getStatus());
+        userMapper.updateByPrimaryKeySelective(record);
         return CommonResult.success(true);
     }
 }

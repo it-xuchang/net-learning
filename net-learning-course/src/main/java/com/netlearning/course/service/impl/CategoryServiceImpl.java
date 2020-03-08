@@ -18,6 +18,7 @@ import com.netlearning.framework.domain.course.result.CategoryResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
 import com.netlearning.framework.utils.CollectionUtils;
+import com.netlearning.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,17 @@ public class CategoryServiceImpl  implements CategoryService {
     private SequenceService sequenceService;
     @Override
     public CommonResult<List<CategoryResult>> query(CategoryQueryParam param) {
-        return null;
+        CategoryExample example = new CategoryExample();
+        CategoryExample.Criteria criteria =example.createCriteria();
+        if (param.getCategoryId() != null){
+            criteria.andCategoryIdEqualTo(param.getCategoryId());
+        }
+        if (!StringUtils.isEmpty(param.getCategoryName())){
+            criteria.andCategoryNameLike("%"+param.getCategoryName()+"%");
+        }
+        List<Category> categoryList = categoryMapper.selectByExample(example);
+        List<CategoryResult> categoryResults = BeanCopyUtils.copy(categoryList,CategoryResult.class);
+        return CommonResult.success(categoryResults);
     }
 
     @Override

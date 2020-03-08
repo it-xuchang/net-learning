@@ -35,4 +35,6 @@ public class TeachPlanResult {
 
     private List<TeachPlanResult> subTeachPlanResult;
 
+    private String mediaUrl;
+
 }

@@ -6,6 +6,8 @@ import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.course.param.LearningCourseAddParam;
 import com.netlearning.framework.domain.course.param.LearningCourseEditParam;
 import com.netlearning.framework.domain.course.param.LearningCourseQueryParam;
+import com.netlearning.framework.domain.course.param.PersonCourseParam;
+import com.netlearning.framework.domain.course.result.PersonCourseResult;
 import com.netlearning.framework.domain.course.result.UserLearningCourseResult;
 
 import java.util.List;
@@ -26,4 +28,6 @@ public interface LearningCourseService {
     CommonResult<Boolean> edit(LearningCourseEditParam request);
 
     CommonResult<Boolean> delete(List<Long> ids);
+
+    CommonResult<CommonPageResult<PersonCourseResult>> queryPersonCourse(PersonCourseParam param, CommonPageInfo commonPageInfo);
 }

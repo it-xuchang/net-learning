@@ -3,14 +3,8 @@ package com.netlearning.course.service;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
-import com.netlearning.framework.domain.course.param.CourseBaseAddParam;
-import com.netlearning.framework.domain.course.param.CourseBaseDeleteParam;
-import com.netlearning.framework.domain.course.param.CourseBaseEditParam;
-import com.netlearning.framework.domain.course.param.CourseBaseQueryParam;
-import com.netlearning.framework.domain.course.result.CourseBaseDetailResult;
-import com.netlearning.framework.domain.course.result.CourseBaseResult;
-import com.netlearning.framework.domain.course.result.CourseRecommendationResult;
-import com.netlearning.framework.domain.course.result.RecommendedCourseDirectionResult;
+import com.netlearning.framework.domain.course.param.*;
+import com.netlearning.framework.domain.course.result.*;
 
 import java.util.List;
 
@@ -25,7 +19,7 @@ public interface CourseBaseService {
 
     CommonResult<CommonPageResult<CourseBaseResult>> page(CourseBaseQueryParam param, CommonPageInfo commonPageInfo);
 
-    CommonResult<Boolean> add(CourseBaseAddParam request);
+    CommonResult add(CourseBaseAddParam request);
 
     CommonResult<Boolean> edit(CourseBaseEditParam request);
 
@@ -36,4 +30,8 @@ public interface CourseBaseService {
     CommonResult<List<RecommendedCourseDirectionResult>> queryRecommendedCourseDirection(Long size, Long categoryId, String grade);
 
     CommonResult<CourseBaseDetailResult> queryCouresDetail(CourseBaseQueryParam param);
+
+    CommonResult<CourseAllDetailResult> queryCourseAllDetail(CourseAllDetailParam param);
+
+    CommonResult<Boolean> changeStatus(CourseBaseEditParam request);
 }

@@ -61,7 +61,7 @@ public class TeachPlanController {
     }
 
     @PostMapping("/add")
-    public CommonResult<Boolean> add(@RequestBody TeachPlanAddParam request){
+    public CommonResult add(@RequestBody TeachPlanAddParam request){
 
         return teachPlanService.add(request);
     }

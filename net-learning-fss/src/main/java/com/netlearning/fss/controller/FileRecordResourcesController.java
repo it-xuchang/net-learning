@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * @program: net-learning
@@ -27,17 +29,19 @@ public class FileRecordResourcesController {
     private FileRecordResourcesService fileRecordResourcesService;
 
     @GetMapping("/query")
-    private CommonResult query(@RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
-                                                                @RequestParam(value = "recordId",required = false) Long recordId,
-                                                                @RequestParam(value = "fromSystemId",required = false) Long fromSystemId){
+    public CommonResult<List<FileRecordResourcesResult>> query(@RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
+                               @RequestParam(value = "recordId",required = false) Long recordId,
+                               @RequestParam(value = "fromSystemId",required = false) Long fromSystemId,
+                               @RequestParam(value = "fromSystemIds",required = false) List<Long> fromSystemIds){
         FileRecordResourcesQueryParam param = new FileRecordResourcesQueryParam();
         param.setFromSystemId(fromSystemId);
         param.setRecordId(recordId);
         param.setRecordResourcesId(recordResourcesId);
+        param.setFromSystemIds(fromSystemIds);
         return fileRecordResourcesService.query(param);
     }
     @GetMapping("/page")
-    private CommonResult page( @RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
+    public CommonResult page( @RequestParam(value = "recordResourcesId",required = false) Long recordResourcesId,
                                @RequestParam(value = "recordId",required = false) Long recordId,
                                @RequestParam(value = "fromSystemId",required = false) Long fromSystemId,
                                @RequestParam(value = "pageNum",required = false) Integer pageNum,

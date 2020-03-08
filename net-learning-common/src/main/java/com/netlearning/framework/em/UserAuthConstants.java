@@ -117,7 +117,7 @@ public interface UserAuthConstants {
 
         public static List<String> userSexTypeList() {
             List<String> typeList = new ArrayList<>();
-            for (UserType v : UserType.values()) {
+            for (UserSexType v : UserSexType.values()) {
                 typeList.add(v.code);
             }
             return typeList;

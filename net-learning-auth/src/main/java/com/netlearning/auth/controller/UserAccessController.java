@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.ipc.netty.http.server.HttpServerRequest;
 
 /**
  * @program: net-learning
@@ -32,8 +33,7 @@ public class UserAccessController {
      * @return
      */
     @PostMapping("/login")
-    public CommonResult<UserAccessLoginResult> login(@RequestBody UserAccessLoginParam param){
-
+    public CommonResult<UserAccessLoginResult> login(@RequestBody UserAccessLoginParam param, HttpServerRequest request){
         return userAccessService.login(param);
     }
 

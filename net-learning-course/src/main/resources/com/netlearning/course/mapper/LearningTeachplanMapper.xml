@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netlearning.course.mapper.LearningTeachplanMapper">
+  <resultMap id="BaseResultMap" type="com.netlearning.framework.domain.course.LearningTeachplan">
+    <id column="learning_teachplan_id" jdbcType="BIGINT" property="learningTeachplanId" />
+    <result column="teachplan_id" jdbcType="BIGINT" property="teachplanId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="learning_time" jdbcType="DOUBLE" property="learningTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    learning_teachplan_id, teachplan_id, user_id, learning_time, create_time, end_time,
+    status, course_id
+  </sql>
+  <select id="selectByExample" parameterType="com.netlearning.framework.domain.course.LearningTeachplanExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_learning_teachplan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_learning_teachplan
+    where learning_teachplan_id = #{learningTeachplanId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_learning_teachplan
+    where learning_teachplan_id = #{learningTeachplanId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.netlearning.framework.domain.course.LearningTeachplanExample">
+    delete from t_learning_teachplan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.netlearning.framework.domain.course.LearningTeachplan">
+    insert into t_learning_teachplan (learning_teachplan_id, teachplan_id, user_id,
+      learning_time, create_time, end_time,
+      status, course_id)
+    values (#{learningTeachplanId,jdbcType=BIGINT}, #{teachplanId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{learningTime,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR}, #{courseId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.netlearning.framework.domain.course.LearningTeachplan">
+    insert into t_learning_teachplan
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="learningTeachplanId != null">
+        learning_teachplan_id,
+      </if>
+      <if test="teachplanId != null">
+        teachplan_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="learningTime != null">
+        learning_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="learningTeachplanId != null">
+        #{learningTeachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="teachplanId != null">
+        #{teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="learningTime != null">
+        #{learningTime,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.netlearning.framework.domain.course.LearningTeachplanExample" resultType="java.lang.Long">
+    select count(*) from t_learning_teachplan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_learning_teachplan
+    <set>
+      <if test="record.learningTeachplanId != null">
+        learning_teachplan_id = #{record.learningTeachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="record.teachplanId != null">
+        teachplan_id = #{record.teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.learningTime != null">
+        learning_time = #{record.learningTime,jdbcType=DOUBLE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_learning_teachplan
+    set learning_teachplan_id = #{record.learningTeachplanId,jdbcType=BIGINT},
+      teachplan_id = #{record.teachplanId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      learning_time = #{record.learningTime,jdbcType=DOUBLE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=VARCHAR},
+      course_id = #{record.courseId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.netlearning.framework.domain.course.LearningTeachplan">
+    update t_learning_teachplan
+    <set>
+      <if test="teachplanId != null">
+        teachplan_id = #{teachplanId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="learningTime != null">
+        learning_time = #{learningTime,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where learning_teachplan_id = #{learningTeachplanId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.LearningTeachplan">
+    update t_learning_teachplan
+    set teachplan_id = #{teachplanId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      learning_time = #{learningTime,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=BIGINT}
+    where learning_teachplan_id = #{learningTeachplanId,jdbcType=BIGINT}
+  </update>
+</mapper>

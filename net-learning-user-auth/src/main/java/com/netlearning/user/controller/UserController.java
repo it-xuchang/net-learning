@@ -5,12 +5,10 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.userAuth.UserAddRequest;
-import com.netlearning.framework.domain.userAuth.param.MyCoursQueryParam;
-import com.netlearning.framework.domain.userAuth.param.UserChangePasswordParam;
-import com.netlearning.framework.domain.userAuth.param.UserDeleteParam;
-import com.netlearning.framework.domain.userAuth.param.UserEditParam;
+import com.netlearning.framework.domain.userAuth.param.*;
 import com.netlearning.framework.domain.userAuth.result.MyCourseResult;
 import com.netlearning.framework.domain.userAuth.result.UserResult;
+import com.netlearning.framework.em.UserAuthConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
 import com.netlearning.framework.utils.StringUtils;
@@ -147,6 +145,17 @@ public class UserController implements UserControllerApi {
             return CommonResult.fail(ExceptionCode.AuthCode.CODE006.code,ExceptionCode.AuthCode.CODE006.message);
         }
         return userService.edit(user);
+    }
+    @PostMapping("/change/status")
+    public CommonResult changeStatus(@RequestBody UserChangeStatusParam param){
+        if (param.getUserId() == null){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE007.code,ExceptionCode.UserAuthCode.CODE007.message);
+        }
+        if (!UserAuthConstants.UserType.userTypeList().contains(param.getStatus())){
+            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE011.code,ExceptionCode.UserAuthCode.CODE011.message);
+        }
+        return userService.changeStatus(param);
+
     }
 
     @Override

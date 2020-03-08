@@ -18,7 +18,7 @@ import java.util.List;
  * @time: 2019/12/25 22:28
  */
 public interface TeachPlanService {
-    CommonResult<Boolean> add(TeachPlanAddParam request);
+    CommonResult add(TeachPlanAddParam request);
 
     CommonResult<Boolean> edit(TeachPlanEditParam request);
 

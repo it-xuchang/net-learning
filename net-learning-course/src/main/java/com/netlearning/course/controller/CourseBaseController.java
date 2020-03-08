@@ -5,13 +5,12 @@ import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.domain.course.param.*;
-import com.netlearning.framework.domain.course.result.CourseBaseDetailResult;
-import com.netlearning.framework.domain.course.result.CourseBaseResult;
-import com.netlearning.framework.domain.course.result.CourseRecommendationResult;
-import com.netlearning.framework.domain.course.result.RecommendedCourseDirectionResult;
+import com.netlearning.framework.domain.course.result.*;
 import com.netlearning.framework.domain.userAuth.Teacher;
+import com.netlearning.framework.em.CourseConstants;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.utils.RegexUtil;
+import com.netlearning.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,19 +66,66 @@ public class CourseBaseController {
         return courseBaseService.page(param,commonPageInfo);
     }
     @PostMapping("/add")
-    public CommonResult<Boolean> add(@RequestBody CourseBaseAddParam request){
-
+    public CommonResult add(@RequestBody CourseBaseAddParam request){
+        if (StringUtils.isEmpty(request.getCourseName())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE019.code,ExceptionCode.CourseCode.CODE019.message);
+        }
+        if (StringUtils.isEmpty(request.getCategory())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE020.code,ExceptionCode.CourseCode.CODE020.message);
+        }
+        if (StringUtils.isEmpty(request.getDescription())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE021.code,ExceptionCode.CourseCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(request.getStudymodel())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE022.code,ExceptionCode.CourseCode.CODE022.message);
+        }
+        if (StringUtils.isEmpty(request.getUsers())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE023.code,ExceptionCode.CourseCode.CODE023.message);
+        }
+        if (request.getTeacherId() == null){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE024.code,ExceptionCode.CourseCode.CODE024.message);
+        }
         return courseBaseService.add(request);
     }
 
     @PostMapping("/edit")
-    public CommonResult<Boolean> edit(CourseBaseEditParam request){
-
+    public CommonResult<Boolean> edit(@RequestBody CourseBaseEditParam request){
+        if (StringUtils.isEmpty(request.getCourseName())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE019.code,ExceptionCode.CourseCode.CODE019.message);
+        }
+        if (StringUtils.isEmpty(request.getCategory())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE020.code,ExceptionCode.CourseCode.CODE020.message);
+        }
+        if (StringUtils.isEmpty(request.getDescription())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE021.code,ExceptionCode.CourseCode.CODE021.message);
+        }
+        if (StringUtils.isEmpty(request.getStudymodel())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE022.code,ExceptionCode.CourseCode.CODE022.message);
+        }
+        if (StringUtils.isEmpty(request.getUsers())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE023.code,ExceptionCode.CourseCode.CODE023.message);
+        }
+        if (request.getTeacherId() == null){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE024.code,ExceptionCode.CourseCode.CODE024.message);
+        }
         return courseBaseService.edit(request);
     }
 
+    @PostMapping("/change/status")
+    public CommonResult<Boolean> changeStatus(@RequestBody CourseBaseEditParam request){
+        if (request.getCourseId() == null){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE012.code,ExceptionCode.CourseCode.CODE012.message);
+        }
+        if (!CourseConstants.CourseType.courseTypeList().contains(request.getStatus())){
+            return CommonResult.fail(ExceptionCode.CourseCode.CODE025.code,ExceptionCode.CourseCode.CODE025.message);
+        }
+        return courseBaseService.changeStatus(request);
+    }
+
+
+
     @PostMapping("/delete")
-    public CommonResult<Boolean> delete(CourseBaseDeleteParam request){
+    public CommonResult<Boolean> delete(@RequestBody CourseBaseDeleteParam request){
 
         return courseBaseService.delete(request);
     }
@@ -127,6 +173,20 @@ public class CourseBaseController {
         CourseBaseQueryParam param = new CourseBaseQueryParam();
         param.setCourseId(couresId);
         return courseBaseService.queryCouresDetail(param);
+    }
+
+    /**
+     * 课程详情页面的所有数据
+     * @param couresId
+     * @return
+     */
+    @GetMapping("/query/course/all/detail")
+    public CommonResult<CourseAllDetailResult> queryCourseAllDetail(@RequestParam(value = "couresId",required = false) Long couresId,
+                                                                    @RequestParam(value = "userId",required = false) Long userId){
+        CourseAllDetailParam param = new CourseAllDetailParam();
+        param.setCourseId(couresId);
+        param.setUserId(userId);
+        return courseBaseService.queryCourseAllDetail(param);
     }
 
 

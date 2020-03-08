@@ -1,6 +1,9 @@
 package com.netlearning.framework.domain.auth.result;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.netlearning.framework.domain.userAuth.Menu;
+import com.netlearning.framework.domain.userAuth.MenuItem;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +16,10 @@ import java.util.List;
  */
 @Data
 public class UserAccessLoginResult {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long roleId;
-    private List<Menu> menus;
+    private List<MenuItem> menus;
+    private String token;
 }

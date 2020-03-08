@@ -92,18 +92,12 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public CommonResult<Boolean> edit(UserRole userRole) {
         UserRoleExample example =  new UserRoleExample();
-        example.createCriteria().andUserIdEqualTo(userRole.getRoleId());
+        example.createCriteria().andUserIdEqualTo(userRole.getUserId());
         List<UserRole> result = userRoleMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(result)){
             return CommonResult.fail(ExceptionCode.UserAuthCode.CODE016.code,ExceptionCode.UserAuthCode.CODE016.message);
         }
 
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andUserIdEqualTo(userRole.getUserId());
-        List<User> userList = userMapper.selectByExample(userExample);
-        if (CollectionUtils.isEmpty(userList)){
-            return CommonResult.fail(ExceptionCode.UserAuthCode.CODE014.code,ExceptionCode.UserAuthCode.CODE014.message);
-        }
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andRoleIdEqualTo(userRole.getRoleId());
         List<Role> roleList = roleMapper.selectByExample(roleExample);
