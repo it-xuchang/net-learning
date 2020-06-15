@@ -1,5 +1,5 @@
 server:
-  port: 60001
+  port: 110001
 spring:
   application:
     name: net-learning-user-auth
@@ -57,7 +57,7 @@ eureka:
 pagehelper:
   helper-dialect: mysql
 mybatis:
-  mapper-locations: classpath:com.netlearning.user.mapper/*.xml
+  mapper-locations: classpath:com.netlearning.shiro.mapper/*.xml
 
 sequence:
   enable: true

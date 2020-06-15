@@ -26,5 +26,7 @@ public interface LearningTeachplanMapper {
 
     int updateByPrimaryKeySelective(LearningTeachplan record);
 
+    int multipartUpdateByPrimaryKey(@Param("records") List<LearningTeachplan> records);
+
     int updateByPrimaryKey(LearningTeachplan record);
 }

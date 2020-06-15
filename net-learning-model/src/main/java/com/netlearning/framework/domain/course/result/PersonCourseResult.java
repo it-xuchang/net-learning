@@ -1,7 +1,9 @@
 package com.netlearning.framework.domain.course.result;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,5 +15,10 @@ import java.util.List;
 @Data
 public class PersonCourseResult {
     private CourseBaseResult courseBaseResult;
-    private TeachPlanResult teachPlan;
+    private TeachPlanResult learningTeachPlan;
+    private List<TeachPlanResult> teachPlans;
+    private int progressBar;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    private Date createTime;
+    private String status;
 }

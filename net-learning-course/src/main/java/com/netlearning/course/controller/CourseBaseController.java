@@ -49,6 +49,7 @@ public class CourseBaseController {
                                                                   @RequestParam(value = "teacherId",required = false) Long teacherId,
                                                                   @RequestParam(value = "courseName",required = false) String courseName,
                                                                   @RequestParam(value = "users",required = false) String users,
+                                                                  @RequestParam(value = "grade",required = false) String grade,
                                                                   @RequestParam(value = "category",required = false) String category,
                                                                   @RequestParam(value = "pageNum",required = false) Integer pageNum,
                                                                   @RequestParam(value = "pageSize",required = false) Integer pageSize){
@@ -61,6 +62,7 @@ public class CourseBaseController {
         param.setCourseName(courseName);
         param.setUsers(users);
         param.setCategory(category);
+        param.setGrade(grade);
         CommonPageInfo commonPageInfo = new CommonPageInfo(pageNum,pageSize);
 
         return courseBaseService.page(param,commonPageInfo);

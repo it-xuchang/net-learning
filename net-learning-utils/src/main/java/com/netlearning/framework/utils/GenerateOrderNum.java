@@ -54,7 +54,7 @@ public class GenerateOrderNum {
 
     public static void main(String[] args) {
         // 测试多线程调用订单号生成工具
-        /*try {
+        try {
             for (int i = 0; i < 200; i++) {
                 Thread t1 = new Thread(new Runnable() {
                     public void run() {
@@ -74,7 +74,7 @@ public class GenerateOrderNum {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
         System.out.println(System.currentTimeMillis());
     }
 }

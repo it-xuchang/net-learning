@@ -246,6 +246,35 @@
     </set>
     where learning_teachplan_id = #{learningTeachplanId,jdbcType=BIGINT}
   </update>
+  <update id="multipartUpdateByPrimaryKey">
+    <foreach collection="records" separator=";" item="item">
+      update t_learning_teachplan
+      <set>
+        <if test="item.teachplanId != null">
+          teachplan_id = #{item.teachplanId,jdbcType=BIGINT},
+        </if>
+        <if test="item.userId != null">
+          user_id = #{item.userId,jdbcType=BIGINT},
+        </if>
+        <if test="item.learningTime != null">
+          learning_time = #{item.learningTime,jdbcType=DOUBLE},
+        </if>
+        <if test="item.createTime != null">
+          create_time = #{item.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.endTime != null">
+          end_time = #{item.endTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.status != null and item.status != ''">
+          status = #{item.status,jdbcType=VARCHAR},
+        </if>
+        <if test="item.courseId != null">
+          course_id = #{item.courseId,jdbcType=BIGINT},
+        </if>
+      </set>
+      where learning_teachplan_id = #{item.learningTeachplanId,jdbcType=BIGINT}
+    </foreach>
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.netlearning.framework.domain.course.LearningTeachplan">
     update t_learning_teachplan
     set teachplan_id = #{teachplanId,jdbcType=BIGINT},

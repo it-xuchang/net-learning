@@ -134,6 +134,9 @@ public class CourseBaseServiceImpl implements CourseBaseService {
         if (!StringUtils.isEmpty(param.getCategory())){
             criteria.andCategoryEqualTo(param.getCategory());
         }
+        if (!StringUtils.isEmpty(param.getGrade())){
+            criteria.andGradeEqualTo(param.getGrade());
+        }
         PageHelper.startPage(commonPageInfo.getPageNum(),commonPageInfo.getPageSize());
         Page<CourseBase> courseBaseList = (Page<CourseBase>) courseBaseMapper.selectByExampleWithBLOBs(example);
         List<CourseBaseResult> courseBaseResults = BeanCopyUtils.copy(courseBaseList,CourseBaseResult.class);

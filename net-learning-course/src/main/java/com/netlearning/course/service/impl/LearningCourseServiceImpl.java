@@ -6,23 +6,18 @@ import com.netlearning.course.client.FileRecordResourcesControllerClientApi;
 import com.netlearning.course.mapper.CourseBaseMapper;
 import com.netlearning.course.mapper.LearningCourseMapper;
 import com.netlearning.course.mapper.LearningTeachplanMapper;
+import com.netlearning.course.mapper.TeachPlanMapper;
 import com.netlearning.course.service.LearningCourseService;
 import com.netlearning.framework.base.CommonPageInfo;
 import com.netlearning.framework.base.CommonPageResult;
 import com.netlearning.framework.base.CommonResult;
 import com.netlearning.framework.bean.BeanCopyUtils;
-import com.netlearning.framework.domain.course.CourseBase;
-import com.netlearning.framework.domain.course.CourseBaseExample;
-import com.netlearning.framework.domain.course.LearningCourse;
-import com.netlearning.framework.domain.course.LearningCourseExample;
+import com.netlearning.framework.domain.course.*;
 import com.netlearning.framework.domain.course.param.LearningCourseAddParam;
 import com.netlearning.framework.domain.course.param.LearningCourseEditParam;
 import com.netlearning.framework.domain.course.param.LearningCourseQueryParam;
 import com.netlearning.framework.domain.course.param.PersonCourseParam;
-import com.netlearning.framework.domain.course.result.CourseBaseResult;
-import com.netlearning.framework.domain.course.result.LearningCourseResult;
-import com.netlearning.framework.domain.course.result.PersonCourseResult;
-import com.netlearning.framework.domain.course.result.UserLearningCourseResult;
+import com.netlearning.framework.domain.course.result.*;
 import com.netlearning.framework.domain.fss.result.FileRecordImagesResult;
 import com.netlearning.framework.exception.ExceptionCode;
 import com.netlearning.framework.snowflake.SequenceService;
@@ -50,6 +45,8 @@ public class LearningCourseServiceImpl implements LearningCourseService {
     private SequenceService sequenceService;
     @Autowired
     private LearningTeachplanMapper learningTeachplanMapper;
+    @Autowired
+    private TeachPlanMapper teachPlanMapper;
     @Autowired
     private FileRecordImagesControllerClientApi fileRecordImagesControllerClientApi;
     @Autowired
@@ -309,10 +306,15 @@ public class LearningCourseServiceImpl implements LearningCourseService {
         }
         List<LearningCourse> learningCourseList =  learningCourseMapper.selectByExample(example);
         List<Long> courseIds = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (LearningCourse learningCourse : learningCourseList){
             if (!courseIds.contains(learningCourse.getCourseId())){
                 courseIds.add(learningCourse.getCourseId());
             }
+            ids.add(String.valueOf(learningCourse.getCourseId()));
+        }
+        if (CollectionUtils.isEmpty(courseIds)){
+            CommonResult.success(CommonPageResult.build(new ArrayList<>(),commonPageInfo,0));
         }
         //课程id  课程的url
         Map<Long,String> imagesUrlMap = new HashMap<>();
@@ -342,7 +344,50 @@ public class LearningCourseServiceImpl implements LearningCourseService {
                 }
             }
         }
-        //正在学习的-
+        //所有的教学计划
+        TeachPlanExample teachPlanExample = new TeachPlanExample();
+        teachPlanExample.createCriteria().andCourseIdIn(ids);
+        List<TeachPlan> teachPlanList = teachPlanMapper.selectByExample(teachPlanExample);
+        //课程id-教学计划
+        Map<Long,List<TeachPlanResult>> teachPlanResultMap = new HashMap<>();
+        //教学计划id -- 教学计划信息
+        Map<Long,TeachPlanResult> teachPlanMap = new HashMap<>();
+        for (TeachPlan teachPlan : teachPlanList){
+            TeachPlanResult teachPlanResult = new TeachPlanResult();
+            BeanCopyUtils.copyProperties(teachPlan,teachPlanResult);
+            if (teachPlanResultMap.containsKey(Long.valueOf(teachPlan.getCourseId()))){
+                teachPlanResultMap.get(Long.valueOf(teachPlan.getCourseId())).add(teachPlanResult);
+            }else {
+                List<TeachPlanResult> list = new ArrayList<>();
+                list.add(teachPlanResult);
+                teachPlanResultMap.put(Long.valueOf(teachPlan.getCourseId()),list);
+            }
+            teachPlanMap.put(teachPlan.getTeachplanId(),teachPlanResult);
+        }
+        LearningTeachplanExample learningTeachplanExample = new LearningTeachplanExample();
+        learningTeachplanExample.createCriteria().andUserIdEqualTo(param.getUserId()).andCourseIdIn(courseIds);
+        List<LearningTeachplan> learningTeachplanList = learningTeachplanMapper.selectByExample(learningTeachplanExample);
+        //课程id 学习资源
+        Map<Long,List<LearningTeachplanResult>> learningTeachplanResultMap = new HashMap<>();
+        //课程id 课程完成数
+        Map<Long,Integer> courseLearningMap = new HashMap<>();
+        //课程id 正在学习
+        Map<Long,TeachPlanResult> learningTeachPlanMap = new HashMap<>();
+        for (LearningTeachplan learningTeachplan : learningTeachplanList){
+            LearningTeachplanResult learningTeachplanResult = new LearningTeachplanResult();
+            BeanCopyUtils.copyProperties(learningTeachplan,learningTeachplanResult);
+            if (learningTeachplanResultMap.containsKey(learningTeachplan.getCourseId())){
+                learningTeachplanResultMap.get(learningTeachplan.getCourseId()).add(learningTeachplanResult);
+            }else {
+                List<LearningTeachplanResult> list = new ArrayList<>();
+                list.add(learningTeachplanResult);
+                learningTeachplanResultMap.put(learningTeachplan.getCourseId(),list);
+            }
+            if (StringUtils.equals(learningTeachplan.getStatus(),"0") && teachPlanMap.containsKey(learningTeachplan.getTeachplanId())){
+                learningTeachPlanMap.put(learningTeachplan.getCourseId(),teachPlanMap.get(learningTeachplan.getTeachplanId()));
+            }
+        }
+        //正在学习的
         List<PersonCourseResult> results = new ArrayList<>();
         for (LearningCourse learningCourse : learningCourseList){
             PersonCourseResult personCourseResult = new PersonCourseResult();
@@ -350,6 +395,22 @@ public class LearningCourseServiceImpl implements LearningCourseService {
                 CourseBaseResult courseBaseResult = new CourseBaseResult();
                 BeanCopyUtils.copyProperties(courseBaseResultMap.get(learningCourse.getCourseId()),courseBaseResult);
                 personCourseResult.setCourseBaseResult(courseBaseResult);
+            }
+            if (learningTeachPlanMap.containsKey(learningCourse.getCourseId())){
+                personCourseResult.setLearningTeachPlan(learningTeachPlanMap.get(learningCourse.getCourseId()));
+            }
+            personCourseResult.setCreateTime(learningCourse.getCreateTime());
+            personCourseResult.setStatus("继续学习");
+            if (learningTeachplanResultMap.containsKey(learningCourse.getCourseId()) && teachPlanResultMap.containsKey(learningCourse.getCourseId())){
+                List<LearningTeachplanResult> learningTeachplanResultList = learningTeachplanResultMap.get(learningCourse.getCourseId());
+                List<TeachPlanResult> teachPlanResultList = teachPlanResultMap.get(learningCourse.getCourseId());
+                if (learningTeachplanResultList.size() == teachPlanResultList.size()){
+                    personCourseResult.setStatus("课程完成");
+                    personCourseResult.setProgressBar(100);
+                }else {
+                    int count = learningTeachplanResultList.size()/teachPlanResultList.size();
+                    personCourseResult.setProgressBar(count);
+                }
             }
             results.add(personCourseResult);
         }
